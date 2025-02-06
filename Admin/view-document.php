@@ -36,7 +36,13 @@ if (!isset($_SESSION['id']) && empty($_SESSION['id'])) {
             }, 2000)
         })
     </script>
+<style>
+    td{
+        padding-top:18px !important;
+        padding-bottom:18px !important;
 
+    }
+</style>
 </head>
 
 <body>
@@ -56,8 +62,8 @@ if (!isset($_SESSION['id']) && empty($_SESSION['id'])) {
         <!----------------Main Page Design--------------------->
         <main id="page-content">
             <div class="col-lg-12 mb-6 page-name">
-                <h2>Documents Record</h2>
-                <h5>Home / Files</h5>
+                <h2>Documents </h2>
+                <h5>Home / Files Data</h5>
             </div>
             <!-----------alert message------------->
             <?php if (isset($_SESSION['message'])) { ?>
@@ -82,6 +88,10 @@ if (!isset($_SESSION['id']) && empty($_SESSION['id'])) {
                                 <h2 class="mb-1">Table Data</h2>
                                 <p class="mb-0">Manage your records efficiently</p>
                             </div>
+       
+                        </div>
+                        <div class="mr-5">
+                        <a href="TrackRecord.php" class="btn btn-info">Track File</a>
                         </div>
 
                     </div>
@@ -123,20 +133,21 @@ if (!isset($_SESSION['id']) && empty($_SESSION['id'])) {
                 </form>
                 <div class="table-section">
                     <table width="100%">
-                        <thead>
+                        <thead width="100%">
                             <tr>
-                                <th>ID</th>
-                                <th><span class="las la-sort"></span>Filename</th>
-                                <th><span class="las la-sort"></span>Barcode</th>
-                                <th><span class="las la-sort"></span>Date</th>
-                               
-                                <th><span class="las la-sort"></span>Action</th>
+                                <th style="width:80px">S-N</th>
+                                <th style="width:180px"><span class="las la-sort"></span>Filename</th>
+                                <th style="width:320px"><span class="las la-sort"></span>Title</th>
+                                <th style="width:150px"><span class="las la-sort"></span>Barcode</th>
+                                <th style="width:200px; padding-left:40px"><span class="las la-sort"></span>Date</th> 
+                                <th ><span class="las la-sort"></span>Action</th>
                         </thead>
 
                         <?php
                         include('../connection.php');
                         $page = isset($_GET['page']) ? (int) $_GET['page'] : 1;
                         $offset = ($page - 1) * $limit;
+                        $CountNumber=1;
                         $query = "select * from documents ORDER BY id LIMIT {$offset},{$limit}";
                         $stmt = mysqli_prepare($con, $query);
                         mysqli_stmt_execute($stmt);
@@ -146,25 +157,22 @@ if (!isset($_SESSION['id']) && empty($_SESSION['id'])) {
                         <tbody>
                             <tr>
                                 <td>#
-                                    <?php echo $row['id']; ?>.
+                                    <?php echo $CountNumber ?>.
                                 </td>
                                 <td>
                                     <?php echo $row['filename']; ?>
+                                </td>
+                                <td class="des">
+                                    <?php echo $row['fileTitle']; ?>
                                 </td>
                                 <td style="text-transform:none">
                                     <?php echo $row['barcode']; ?>
                                 </td>
 
-
-
                                 <td style="padding-left:40px">
                                     <?php echo $row['created_at']; ?>
-                                </td style="padding-left:40px">
-                                <td>
+                                </td >
                                     
-                                    
-
-
                                 <td class="action">
                                     <a href="update-document.php?id=<?php echo $row['id']; ?>"><i
                                             class="fa-solid fa-pen-to-square"></i></a>
@@ -181,7 +189,9 @@ if (!isset($_SESSION['id']) && empty($_SESSION['id'])) {
 
                 </div>
 
-                <?php }
+                <?php $CountNumber++; 
+                
+            }
                         // Close the statement
                         mysqli_stmt_close($stmt);
                         ?>

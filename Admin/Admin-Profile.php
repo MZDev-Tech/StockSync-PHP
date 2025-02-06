@@ -160,7 +160,7 @@ if (isset($_COOKIE['access_token'])) {
                             <!-- Admin profile Sidebar-->
                                 <div class="admin-card pb-3">
                                     <div class="admin-card-cover"
-                                        style="background-image: url(https://picsum.photos/400/300);">
+                                        style="background-image: url(https://picsum.photos/seed/picsum/200/100);">
                                         <a class="btn btn-style-1 btn-white btn-sm" href="#" data-toggle="tooltip" title=""
                                             data-original-title="You currently have 290 Reward points to spend"><i
                                                 class="fa fa-award text-md"></i>&nbsp;active</a>

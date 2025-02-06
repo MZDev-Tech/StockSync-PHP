@@ -126,7 +126,7 @@ if (!isset($_SESSION['id']) && empty($_SESSION['id'])) {
                     <table width="100%">
                         <thead>
                             <tr>
-                                <th>ID</th>
+                                <th>S-N</th>
                                 <th><span class="las la-sort"></span>Name</th>
                                 <th><span class="las la-sort"></span>Image</th>
                                 <th style="width:340px"><span class="las la-sort"></span>Detail</th>
@@ -138,6 +138,7 @@ if (!isset($_SESSION['id']) && empty($_SESSION['id'])) {
                         include('../connection.php');
                         $page = isset($_GET['page']) ? (int) $_GET['page'] : 1;
                         $offset = ($page - 1) * $limit;
+                        $CountNumber=1;
                         $query = "select * from category ORDER BY id LIMIT {$offset},{$limit}";
                         $stmt = mysqli_prepare($con, $query);
                         mysqli_stmt_execute($stmt);
@@ -147,7 +148,7 @@ if (!isset($_SESSION['id']) && empty($_SESSION['id'])) {
                         <tbody>
                             <tr>
                                 <td>#
-                                    <?php echo $row['id']; ?>.
+                                    <?php echo $CountNumber ?>.
                                 </td>
                                 <td>
                                     <?php echo $row['name']; ?>
@@ -177,7 +178,8 @@ if (!isset($_SESSION['id']) && empty($_SESSION['id'])) {
 
                 </div>
 
-                <?php }
+                <?php $CountNumber++;
+                }
                         // Close the statement
                         mysqli_stmt_close($stmt);
                         ?>
