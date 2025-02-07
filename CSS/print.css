@@ -1,0 +1,142 @@
+@media print {
+    body * {
+        visibility: hidden;
+    }
+
+    /* Show only the documentContent */
+    #documentContent, #documentContent * {
+        visibility: visible;
+    }
+
+    #documentContent {
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    /* Ensure the parent container takes full width */
+    .single-recordParent {
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    /* Adjust the child container for full width */
+    .single-recordParent .single-recordChild {
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 20px !important;
+        border-radius: 0 !important;
+        background-color: #fff !important;
+    }
+
+    /* Ensure the header and content take full width */
+    .single-recordParent .single-recordChild .file-header,
+    .single-recordParent .single-recordChild .file-content {
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 20px !important;
+    }
+
+    /* Ensure the footer is fixed at the bottom */
+    .single-recordParent .file-footer {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        text-align: center;
+        background-color: #fff;
+        padding: 10px 0;
+    }
+
+    /* Hide unnecessary elements */
+    .single-recordChild2,
+    .file-topics{
+        display: none !important;
+    }
+    .sidebar-part {
+        display: none !important;
+    }
+
+    .single-recordParent .single-recordChild .file-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-bottom: 1px solid rgb(221, 221, 221);
+        padding-top: 20px;
+        padding-bottom: 8px;
+    }
+
+    .single-recordParent .single-recordChild .file-header h2 {
+        font-family: "YAFdJjbTu24 1", _fb_, auto;
+        font-size: 34px;
+        font-weight: 600;
+        color: rgb(0, 0, 0);
+        line-height: 46px;
+        letter-spacing: 0em;
+        text-transform: uppercase;
+    }
+
+    .single-recordParent .single-recordChild .file-header .user-data p {
+        color: #000;
+        font-size: 14px;
+        font-weight: 400;
+        text-transform: none;
+        font-style: italic;
+    }
+
+    .single-recordParent .single-recordChild .file-header .user-data p span {
+        color: rgba(49, 49, 49, 0.747);
+        font-size: 12px;
+        margin-left: 10px;
+        font-weight: 500;
+    }
+
+    .single-recordParent .single-recordChild .file-content {
+        padding: 60px 25px 80px 25px;
+    }
+
+    .single-recordParent .single-recordChild .file-content .title-part {
+        padding: 5px 0 16px 0;
+    }
+
+    .single-recordParent .single-recordChild .file-content .title-part h3 {
+        font-size: 20px;
+        color: rgb(28, 33, 32);
+        line-height: 29px;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        font-weight: 500;
+    }
+
+    .single-recordParent .single-recordChild .file-content .title-part p {
+        font-size: 15px;
+        color: #000;
+    }
+
+    .single-recordParent .single-recordChild .file-content .text-part h1,
+    .single-recordParent .single-recordChild .file-content .text-part h2,
+    .single-recordParent .single-recordChild .file-content .text-part h3,
+    .single-recordParent .single-recordChild .file-content .text-part h4,
+    .single-recordParent .single-recordChild .file-content .text-part h5,
+    .single-recordParent .single-recordChild .file-content .text-part h6,
+    .single-recordParent .single-recordChild .file-content .text-part b {
+        font-size: 20px !important;
+        font-weight: 600 !important;
+        text-transform: uppercase;
+    }
+
+    .single-recordParent .single-recordChild .file-content .text-part p {
+        font-size: 14px;
+        text-align: justify;
+        text-align-last: left;
+    }
+
+    .single-recordParent .file-footer p {
+        text-align: center;
+        font-style: italic;
+        font-weight: 400;
+        color: #222222;
+        font-size: 14px;
+    }
+}

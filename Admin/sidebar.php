@@ -16,10 +16,10 @@ if (!isset($_SESSION['id']) && empty($_SESSION['id'])) {
 //get the current file name
  $current_page = basename($_SERVER['PHP_SELF']);
  $is_category_page = ($current_page == 'View-category.php' || $current_page == 'AddCategory.php' || $current_page == 'update-category.php');
- $is_product_page = ($current_page == 'View-products.php' || $current_page == 'AddProducts.php' || $current_page == 'update-product.php' || ($current_page == 'single-products.php' && isset($_GET['id'])));
+ $is_product_page = ($current_page == 'View-products.php' || $current_page == 'AddProducts.php' || $current_page == 'update-product.php' || ($current_page == 'single-product.php'));
  $is_Admin_page = ($current_page == 'Admin-Profile.php' || $current_page == 'update-profile.php');
  $is_user_page = ($current_page == 'View-user.php' ||$current_page == 'single-user.php'|| $current_page == 'AddUser.php' || $current_page == 'update-user.php');
- $is_document_page = ($current_page == 'view-document.php' ||$current_page == 'single-document.php'|| $current_page == 'AddDocument.php' || $current_page == 'update-document.php');
+ $is_document_page = ($current_page == 'view-document.php' ||$current_page == 'TrackRecord.php' ||$current_page == 'single-document.php'|| $current_page == 'AddDocument.php' || $current_page == 'update-document.php');
 
 
 
@@ -38,6 +38,7 @@ if (!isset($_SESSION['id']) && empty($_SESSION['id'])) {
     <link rel="stylesheet" href="../CSS/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <link rel="stylesheet" href="../CSS/print.css" media="print">
 
 
 </head>

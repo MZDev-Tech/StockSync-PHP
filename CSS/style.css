@@ -88,11 +88,12 @@ li {
 .sidebar-part::-webkit-scrollbar-thumb {
     background-color: #239ca521;
     border: 1px solid #42a6ad57;
-    
+
     border-radius: 5px;
 
 
 }
+
 .sidebar-part .cross-icon {
     margin-left: 210px;
     display: none;
@@ -102,16 +103,17 @@ li {
     border-radius: 50%;
     background: rgb(204, 243, 238);
     margin-top: 16px;
-    text-align:center;
+    text-align: center;
 
 }
 
-.sidebar-part .cross-icon i{
+.sidebar-part .cross-icon i {
     font-size: 15px;
     transition: all .3s ease;
     cursor: pointer;
 }
-.sidebar-part .cross-icon i:hover{
+
+.sidebar-part .cross-icon i:hover {
     color: var(--blue);
 }
 
@@ -186,6 +188,7 @@ li {
     margin-top: 18px;
     overflow-y: hidden;
     transition: max-height 1.5s ease;
+    padding-left: 0;
 }
 
 .sidebar-part .side-menu li.list-item {
@@ -273,11 +276,12 @@ li {
     justify-content: center;
 }
 
-#header-part .search-box input{
+#header-part .search-box input {
     background: transparent;
-    border:none;
+    border: none;
     width: 50%;
 }
+
 #header-part .search-box input::placeholder {
     font-size: 14px;
     color: #3e3e3fe8;
@@ -373,11 +377,11 @@ li {
 }
 
 /*token btn*/
-.token-btn{
-    background-color:#c6f0be; 
-    color:rgb(64, 100, 57); 
-    border-radius:4px; 
-    display:none;
+.token-btn {
+    background-color: #c6f0be;
+    color: rgb(64, 100, 57);
+    border-radius: 4px;
+    display: none;
 }
 
 /* Dashboard Page Start here */
@@ -607,34 +611,37 @@ li {
     border-radius: 4px;
     background-color: #fff;
 }
-#page-content .records span.status{ 
-        padding: 4px 16px !important;
-        border-radius: 20px;
-        background: rgba(136, 243, 154, 0.911);
-        color: #08550c;
-        text-transform: none !important;
+
+#page-content .records span.status {
+    padding: 4px 16px !important;
+    border-radius: 20px;
+    background: rgba(136, 243, 154, 0.911);
+    color: #08550c;
+    text-transform: none !important;
 }
 
-#page-content .records span.bg-active{
+#page-content .records span.bg-active {
     background: rgba(136, 243, 154, 0.911);
     color: #08550c;
 }
 
-#page-content .records span.bg-inactive{
+#page-content .records span.bg-inactive {
     background: rgba(241, 133, 151, 0.911);
     color: #850b0b;
 }
 
-.profile-records h6{
+.profile-records h6 {
     font-size: 15px;
     color: var(--black);
     text-transform: capitalize;
 }
-.profile-records .text-data{
+
+.profile-records .text-data {
     font-size: 14px;
     text-transform: none !important;
 }
-.profile-records .status span{
+
+.profile-records .status span {
     padding: 4px 18px !important;
     border-radius: 20px;
     background: rgba(136, 243, 154, 0.911);
@@ -797,7 +804,7 @@ li {
     text-overflow: ellipsis;
     overflow: hidden;
     white-space: nowrap;
-    transition: .3s all ease;
+    transition: all .3s ease !important;
 
 }
 
@@ -908,21 +915,24 @@ li {
 }
 
 /* Generate report design part */
-.top-recordParent h4{
-    font-size: 17px; 
-    font-weight: 500; 
-    margin: 10px 0 12px 8px; 
-    color:rgba(0, 0, 0, 0.97);
+.top-recordParent h4 {
+    font-size: 17px;
+    font-weight: 500;
+    margin: 10px 0 12px 8px;
+    color: rgba(0, 0, 0, 0.97);
 }
-.top-recordParent label{
+
+.top-recordParent label {
     font-size: 13px;
-    font-weight:400;
-    padding-left:6px;
-  }
-  .top-recordParent select{
+    font-weight: 400;
+    padding-left: 6px;
+}
+
+.top-recordParent select {
     font-size: 14px;
     color: #333;
-  }
+}
+
 /* single page css */
 
 #page-content .detail-part {
@@ -1081,7 +1091,7 @@ li {
     text-transform: none !important;
 }
 
- .has-value {
+.has-value {
     background-color: #c5e9f73a;
     border: 1px solid #93ddfa79;
 }
@@ -1289,22 +1299,25 @@ ul.data-product {
 .details-sec p.parah-data::first-letter {
     text-transform: uppercase;
 }
+
 /* admin profile page design  */
 .admin-card {
     position: relative;
     padding-bottom: 48px;
     background-color: #fff;
     box-shadow: 0 12px 20px 1px rgba(64, 64, 64, .09);
-  }
-  .admin-card .admin-card-cover {
+}
+
+.admin-card .admin-card-cover {
     position: relative;
     width: 100%;
     height: 100px;
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
-  }
-  .admin-card .admin-card-cover::after {
+}
+
+.admin-card .admin-card-cover::after {
     display: block;
     position: absolute;
     top: 0;
@@ -1313,14 +1326,16 @@ ul.data-product {
     height: 100%;
     content: '';
     opacity: 0.5;
-  }
-  .admin-card .admin-card-cover > .btn {
+}
+
+.admin-card .admin-card-cover>.btn {
     position: absolute;
     top: 12px;
     right: 12px;
     padding: 0 10px;
-  }
-  .admin-card .admin-card-profile {
+}
+
+.admin-card .admin-card-profile {
     display: table;
     position: relative;
     margin-top: -22px;
@@ -1328,161 +1343,182 @@ ul.data-product {
     padding-bottom: 16px;
     padding-left: 20px;
     z-index: 5;
-  }
-  .admin-card .admin-card-profile .admin-card-avatar, .admin-card .admin-card-profile .admin-card-details {
+}
+
+.admin-card .admin-card-profile .admin-card-avatar,
+.admin-card .admin-card-profile .admin-card-details {
     display: table-cell;
     vertical-align: middle;
-  }
-  .admin-card .admin-card-profile .admin-card-avatar {
+}
+
+.admin-card .admin-card-profile .admin-card-avatar {
     width: 85px;
     border-radius: 50%;
     box-shadow: 0 8px 20px 0 rgba(0, 0, 0, .15);
     overflow: hidden;
-  }
-  .admin-card .admin-card-profile .admin-card-avatar > img {
+}
+
+.admin-card .admin-card-profile .admin-card-avatar>img {
     display: block;
     width: 100%;
-  }
-  .admin-card .admin-card-profile .admin-card-details {
+}
+
+.admin-card .admin-card-profile .admin-card-details {
     padding-top: 20px;
     padding-left: 15px;
-  }
-  .admin-card .admin-card-profile .admin-card-name {
+}
+
+.admin-card .admin-card-profile .admin-card-name {
     margin-bottom: 2px;
     font-size: 14px;
     font-weight: bold;
-  }
-  .admin-card .admin-card-profile .admin-card-position {
+}
+
+.admin-card .admin-card-profile .admin-card-position {
     display: block;
     color: #8c8c8c;
     font-size: 12px;
     font-weight: 600;
-  }
-  .admin-card .admin-card-info {
+}
+
+.admin-card .admin-card-info {
     margin-bottom: 0;
     padding: 0 25px;
     font-size: 13px;
-  }
-  .admin-card .admin-card-social-bar-wrap {
+}
+
+.admin-card .admin-card-social-bar-wrap {
     position: absolute;
     bottom: -18px;
     left: 0;
     width: 100%;
-  }
-  .admin-card .admin-card-social-bar-wrap .admin-card-social-bar {
+}
+
+.admin-card .admin-card-social-bar-wrap .admin-card-social-bar {
     display: table;
     margin: auto;
     background-color: #fff;
     box-shadow: 0 12px 20px 1px rgba(64, 64, 64, .11);
-  }
-  .btn-style-1.btn-white {
-      background-color: #fff;
-  }
+}
 
-  .adminprofile-part1 .profile-sidebar .list-group{
-list-style-type: none;
+.btn-style-1.btn-white {
+    background-color: #fff;
+}
 
-  }
+.adminprofile-part1 .profile-sidebar .list-group {
+    list-style-type: none;
 
-  .adminprofile-part1 .profile-sidebar .list-group .list-group-item::before .active {
+}
+
+.adminprofile-part1 .profile-sidebar .list-group .list-group-item::before .active {
     border-left: 2px solid var(--blue);
-  }
+}
 
-  .adminprofile-part2 h4{
+.adminprofile-part2 h4 {
     font-size: 18px;
     font-weight: 600;
     color: var(--blue);
     padding: 10px 0 20px 0;
-  }
+}
 
-  .adminprofile-part2 h6{
+.adminprofile-part2 h6 {
     font-size: 15px;
     color: var(--black);
     text-transform: capitalize;
 }
-.adminprofile-part2 .text-data{
+
+.adminprofile-part2 .text-data {
     font-size: 14px;
     text-transform: none !important;
 }
 
- 
-  .mr-1, .mx-1 {
-      margin-right: .25rem !important;
-  }
 
-  .list-group-item{
+.mr-1,
+.mx-1 {
+    margin-right: .25rem !important;
+}
+
+.list-group-item {
     padding-top: 16px;
     padding-bottom: 16px;
     -webkit-transition: all .3s;
     transition: all .3s;
     border: 1px solid #e7e7e7 !important;
     border-radius: 0 !important;
-    
+
 }
+
 .list-group-item {
     position: relative;
     display: block;
     padding: .75rem 1.25rem;
     margin-bottom: -1px;
     background-color: #fff;
-    border: 1px solid rgba(0,0,0,0.125);
+    border: 1px solid rgba(0, 0, 0, 0.125);
     cursor: pointer;
     transition: all .5s ease;
 }
 
- .list-group-item li{
+.list-group-item li {
     text-transform: uppercase;
     color: #404040;
     font-size: 12px;
     font-weight: 600;
     letter-spacing: .08em;
 
-  }
-  .list-group-item:hover,
-  .list-group-item.active {
-      border-left: 2px solid var(--blue) !important;
-      color: var(--blue);
-      background: none !important;
-  }
-  .list-group-item:hover li,
-  .list-group-item.active li{
-     color:var(--blue);
-  }
-  
- /* Single document File design here */
-
-.single-recordParent{
-    width:100%;
-    height:100%;
-    
 }
-.single-recordBorder{
+
+.list-group-item:hover,
+.list-group-item.active {
+    border-left: 2px solid var(--blue) !important;
+    color: var(--blue);
+    background: none !important;
+}
+
+.list-group-item:hover li,
+.list-group-item.active li {
+    color: var(--blue);
+}
+
+/* Single document File design here */
+
+.single-recordParent {
+    width: 100%;
+    height: 100%;
+
+}
+
+.single-recordBorder {
     padding: 16px 8px;
     border: 1px solid #86868630;
     border-radius: 8px;
     display: flex;
-    margin:15px 15px 20px 15px;
+    margin: 15px 15px 20px 15px;
 }
-.single-recordChild2{
+
+.single-recordChild2 {
     width: 25%;
     margin: 20px 10px 0 0;
 }
-.single-recordParent .single-recordChild{
-    width:75%;
+
+.single-recordParent .single-recordChild {
+    width: 75%;
     margin: 20px 22px 60px 10px;
     padding: 42px 50px;
     border-radius: 4px;
     background-color: #fff;
 }
-.single-recordParent .single-recordChild .file-header{
-display: flex;
-align-items: center;
-justify-content: space-between;
-border-bottom: 1px solid rgb(221, 221, 221);
-padding-top: 20px;
-padding-bottom: 8px;
+
+.single-recordParent .single-recordChild .file-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid rgb(221, 221, 221);
+    padding-top: 20px;
+    padding-bottom: 8px;
 }
-.single-recordParent .single-recordChild .file-header h2{
+
+.single-recordParent .single-recordChild .file-header h2 {
     font-family: "YAFdJjbTu24 1", _fb_, auto;
     font-size: 34px;
     font-weight: 600;
@@ -1495,35 +1531,40 @@ padding-bottom: 8px;
     --uYCVzQ: none;
     list-style-type: none;
 }
-.single-recordParent .single-recordChild .file-header .user-data{
+
+.single-recordParent .single-recordChild .file-header .user-data {
     margin-right: 16px;
 }
-.single-recordParent .single-recordChild .file-header .user-data p{
+
+.single-recordParent .single-recordChild .file-header .user-data p {
     color: #000;
     font-size: 14px;
     font-weight: 400;
     text-transform: none;
     font-style: italic;
-    
+
 }
 
-.single-recordParent .single-recordChild .file-header .user-data p span{
+.single-recordParent .single-recordChild .file-header .user-data p span {
     color: rgba(49, 49, 49, 0.747);
     font-size: 12px;
     margin-left: 10px;
     font-weight: 500;
 }
 
-.single-recordParent .single-recordChild .file-header .user-data p:first-child{
+.single-recordParent .single-recordChild .file-header .user-data p:first-child {
     margin: 0;
 }
-.single-recordParent .single-recordChild .file-content{
+
+.single-recordParent .single-recordChild .file-content {
     padding: 60px 25px 80px 25px;
 }
-.single-recordParent .single-recordChild .file-content .title-part{
+
+.single-recordParent .single-recordChild .file-content .title-part {
     padding: 5px 0 16px 0;
 }
-.single-recordParent .single-recordChild .file-content .title-part h3{
+
+.single-recordParent .single-recordChild .file-content .title-part h3 {
     font-size: 20px;
     color: rgb(28, 33, 32);
     line-height: 29px;
@@ -1532,52 +1573,56 @@ padding-bottom: 8px;
     list-style-type: none;
     font-weight: 500;
 }
-.single-recordParent .single-recordChild .file-content .title-part p{
+
+.single-recordParent .single-recordChild .file-content .title-part p {
     font-size: 15px;
     color: #000;
 }
+
 .single-recordParent .single-recordChild .file-content .text-part h1,
 .single-recordParent .single-recordChild .file-content .text-part h2,
 .single-recordParent .single-recordChild .file-content .text-part h3,
 .single-recordParent .single-recordChild .file-content .text-part h4,
 .single-recordParent .single-recordChild .file-content .text-part h5,
 .single-recordParent .single-recordChild .file-content .text-part h6,
-.single-recordParent .single-recordChild .file-content .text-part b{
+.single-recordParent .single-recordChild .file-content .text-part b {
     font-size: 20px !important;
     font-weight: 600 !important;
     text-transform: uppercase;
 }
-.single-recordParent .single-recordChild .file-content .text-part p{
+
+.single-recordParent .single-recordChild .file-content .text-part p {
     font-size: 14px;
     text-align: justify;
-    text-align-last:left;
-    
+    text-align-last: left;
+
 }
-.single-recordParent .file-footer p{
-text-align: center;
-font-style:italic;
-font-weight: 400;
-color: #222222;
-font-size: 14px;
+
+.single-recordParent .file-footer p {
+    text-align: center;
+    font-style: italic;
+    font-weight: 400;
+    color: #222222;
+    font-size: 14px;
 
 }
 
 .file-topics {
     background-color: #fff;
     padding: 30px 20px;
-    
+
 }
 
 .file-topics ul {
     margin-top: 15px;
 }
 
-.file-topics h4{
+.file-topics h4 {
     font-size: 20px;
     font-weight: 600;
     color: var(--blue);
     font-style: italic;
-   
+
 }
 
 .file-topics ul li {
@@ -1586,12 +1631,13 @@ font-size: 14px;
     border-bottom: 1px solid #d8d6d6a9;
     display: flex;
     align-items: center;
-    gap:12px
-
+    gap: 12px
 }
-.file-topics ul li i{
+
+.file-topics ul li i {
     color: var(--blue);
 }
+
 .file-topics ul li a {
     text-decoration: none;
     font-weight: 500;
@@ -1606,21 +1652,23 @@ font-size: 14px;
 }
 
 /* Track Document record design */
-.track-recordParent{
+.track-recordParent {
     padding: 8px 10px 14px 10px;
     border: 1px solid #86868630;
     border-radius: 8px;
-    margin:15px 45px 20px 45px;
+    margin: 15px 45px 20px 45px;
 }
-.track-record{
-    width:90%;
+
+.track-record {
+    width: 90%;
     margin: 10px 15px 14px 15px;
     padding: 20px 30px;
     border-radius: 4px;
     background-color: #fff;
 
 }
-.track-record h2{
+
+.track-record h2 {
     font-family: "YAFdJjbTu24 1", _fb_, auto;
     font-size: 24px;
     font-weight: 600;
@@ -1637,74 +1685,122 @@ font-size: 14px;
     padding-top: 14px;
 }
 
-.search-record .input-box{
+.search-record .input-box {
     position: relative;
-    width:100%;
-  }
-  
-  .search-record .input-box i {
+    width: 100%;
+}
+
+.search-record .input-box i {
     position: absolute;
     right: 13px;
-    top:15px;
-    color:var(--blue);
-  
-  }
-  .search-record input{
-    border:1px solid var(--blue);
+    top: 15px;
+    color: var(--blue);
+
+}
+
+.search-record input {
+    border: 1px solid var(--blue);
     font-size: 15px;
     padding-left: 8px;
     transition: .3s all ease;
     color: #1d1d1d;
-  }
-  .search-record input::placeholder {
-    font-size:14px;
+}
+
+.search-record input::placeholder {
+    font-size: 14px;
     color: #5c5c5cde;
-  }
-  .search-record input:hover{
+}
+
+.search-record input:hover {
     padding-left: 15px;
-  }
-  .search-record .form-control{
+}
+
+.search-record .form-control {
     height: 50px;
     background-color: #faf8f8fb;
-  }
-  
-  .search-record .form-control:focus{
+}
+
+.search-record .form-control:focus {
     background-color: #f5f4f4fb;
     box-shadow: none;
 
-  }
-  .result-part{
-    width:90%;
+}
+
+.result-part {
+    width: 90%;
     margin: 10px 15px 14px 15px;
-  }
-  .result-part .head{
-    background-color: #eef6fa;
-  }
-
- 
- 
-
-.result-part .activity-wid {
-    margin-left: 16px;
 }
-.result-part .mb-0 {
-    margin-bottom: 0!important;
+
+.result-part .head {
+    background-color: #fff;
+    font-size: 16px;
+    text-transform: uppercase;
 }
-.result-part .list-unstyled {
+
+
+
+.result-part .header-title {
+    margin: 8px 0 16px -10px;
+    font-size: 16px;
+    color: #444444;
+}
+
+.result-part .Track-subpart {
+    background-color: #b5e9d413;
+
+
+}
+
+.result-part .Track-subpart .card-body {
+    padding: 1rem 1.25rem;
+}
+
+.result-part ul.track-list {
     padding-left: 0;
     list-style: none;
+    margin-left: 26px;
+    margin-bottom: 0 !important;
+
 }
 
-.result-part .activity-wid .activity-list {
+.result-part ul.track-list .status-btn {
+    padding: 5px 10px;
+    font-size: 12px;
+    margin-left: 10px;
+    margin-top: 8px;
+    margin-bottom: 10px
+}
+
+.result-part ul.track-list .activity-list {
     position: relative;
-    padding: 0 0 33px 30px;
+    padding: 0 0 12px 30px;
+}
+
+.result-part ul.track-list .trackdata {
+    font-size: 14px;
+    font-weight: 500;
+    color: #383838;
+    margin-bottom: 6px;
+}
+
+.result-part ul.track-list .trackdata i {
+    color: #585858;
+    margin-right: 4px;
+}
+
+.result-part ul.track-list .trackdata2 {
+    font-size: 13px;
+    color: #8a8989;
+    margin-left: 14px;
+    margin-bottom: 12px;
+
 }
 
 .result-part .activity-border:before {
     content: "";
     position: absolute;
-    height: 68px;
-    border-left: 3px solid #d9dcdf;
+    height: 206px;
+    border-left: 2px solid #d9dcdf;
     top: 40px;
     left: 0;
 }
@@ -1715,7 +1811,8 @@ font-size: 14px;
     top: 0;
     z-index: 2;
 }
-.result-part .avatar-sm {
+
+.result-part .Imgfile {
     height: 2.5rem;
     width: 2.5rem;
 }
@@ -1730,26 +1827,30 @@ font-size: 14px;
 }
 
 .result-part .me-3 {
-    margin-right: 1rem!important;
+    margin-right: 1rem !important;
 }
 
-.result-part .font-size-15 {
-    font-size: 15px!important;
+.result-part .result-name {
+    font-size: 15px !important;
+    color: rgb(39, 158, 167);
+    margin-bottom: 0;
+
 }
 
-.result-part .font-size-14 {
-    font-size: 14px!important;
+.result-part .result-name2 {
+    font-size: 14px !important;
+    color: #4f4f50 !important;
+    margin-bottom: 0;
 }
-.result-part .text-muted {
-    color: #74788d!important;
-}
+
+
 
 .result-part .text-end {
-    text-align: right!important;
+    text-align: right !important;
 }
 
 .result-part .font-size-13 {
-    font-size: 13px!important;
+    font-size: 13px !important;
 }
 
 .result-part .avatar-title {
@@ -1765,12 +1866,75 @@ font-size: 14px;
     justify-content: center;
     width: 100%;
 }
+
 .result-part .bg-soft-primary {
-    background-color: rgba(82,92,229,.25)!important;
+    background-color: rgba(82, 92, 229, .25) !important;
 }
+
 .result-part .bg-soft-success {
-    background-color: rgba(35,197,143,.25)!important;
+    background-color: rgba(35, 197, 143, .25) !important;
 }
+
+/* Dropdown style in view documents page for operations */
+.dots-btn .no-btn {
+    text-decoration: none; /* Remove underline */
+    background: none;
+    border: none;
+    padding: 0;
+    color: inherit;
+}
+
+.dots-btn .no-btn:focus,
+.dots-btn .no-btn:active {
+    outline: none;
+    box-shadow: none;
+}
+.dots-btn .dropdown-toggle::after{
+    display:none;
+}
+.dots-btn .dropdown-item {
+
+    font-size: 15px;
+    
+}
+.dots-btn i.dots{
+    color: #353535 !important;
+    transition: .3s all ease !important;
+
+}
+.dots-btn .dropdown-item i{
+    
+    color: #353535 !important;
+    margin-right: 8px !important;
+    transition: .3s all ease !important;
+}
+.dots-btn i.dots:hover,
+.dots-btn .dropdown-item:hover i{
+    color:var(--blue) !important;
+}
+/* .dots-btn {
+    position: relative; 
+}
+
+.dots-btn .dropdown-menu {
+    position: absolute; 
+    top: 100%;           
+    left: 0;             
+    display: block;
+    visibility: hidden;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: 0.3s ease-in-out;
+    z-index: 1000;       }
+
+.dots-btn .dropdown-menu.show {
+    visibility: visible;
+    opacity: 1;
+    transform: translateY(0);
+} */
+
+
+
 /* media queries for smal screen for single product page*/
 @media screen and (max-width:1100px) {
 
@@ -1802,9 +1966,72 @@ font-size: 14px;
         padding-right: 20px;
     }
 
-    
+
 }
 
+@media screen and (max-width:920px) {
+
+    .track-recordParent {
+       
+        margin: 15px 20px 20px 20px;
+    }
+    .track-record {
+        width: 94%;
+    }
+    .result-part {
+        width: 94%;
+    }
+    .single-recordBorder {
+        padding: 6px 0 12px 0;
+        flex-wrap: wrap;
+        margin: 6px 12px 16px 12px;
+    }
+    .single-recordParent .single-recordChild {
+        width: 90%;
+        margin: 10px 8px 12px 28px;
+        padding: 32px 28px;
+     
+    }
+    .single-recordParent .single-recordChild .file-header h2 {
+        font-size: 19px;
+        line-height: 32px;
+    }
+    .single-recordParent .single-recordChild .file-header .user-data {
+        margin-right: 16px;
+    }
+    .single-recordParent .single-recordChild .file-header .user-data p {
+        font-size: 14px;
+       
+    }
+    .single-recordParent .single-recordChild .file-content {
+        padding: 26px 30px 80px 30px;
+    }
+    .single-recordParent .single-recordChild .file-content .title-part h3 {
+        font-size: 18px;
+        
+    }
+    .single-recordParent .single-recordChild .file-content .title-part p {
+        font-size: 14px;
+    }
+    .single-recordParent .single-recordChild .file-content .text-part h1, .single-recordParent .single-recordChild .file-content .text-part h2, .single-recordParent .single-recordChild .file-content .text-part h3, .single-recordParent .single-recordChild .file-content .text-part h4, .single-recordParent .single-recordChild .file-content .text-part h5, .single-recordParent .single-recordChild .file-content .text-part h6, .single-recordParent .single-recordChild .file-content .text-part b {
+        font-size: 18px !important;
+        
+    }
+    .single-recordParent .single-recordChild .file-content .title-part {
+        padding: 5px 0 12px 0;
+    }
+    .single-recordParent .single-recordChild .file-content .text-part p {
+        font-size: 12px;
+      
+    }
+    .single-recordParent .file-footer p {
+        font-size: 12px;
+    }
+    .single-recordChild2 {
+        width: 90%;
+        margin: 10px 8px 10px 28px;
+    }
+}
 
 @media screen and (max-width:768px) {
 
@@ -1832,6 +2059,7 @@ font-size: 14px;
     .sidebar-part.active {
         left: 0;
     }
+
     .sidebar-part .cross-icon {
         display: block;
     }
@@ -1840,9 +2068,11 @@ font-size: 14px;
         gap: 8px;
         margin-right: 10px;
     }
-    #header-part .header-icons .messIcon{
+
+    #header-part .header-icons .messIcon {
         display: none;
     }
+
     #header-part {
         width: calc(100% - 20px);
         position: fixed;
@@ -1863,6 +2093,7 @@ font-size: 14px;
     #page-content .records .record-header h4 {
         font-size: 16px;
     }
+
     #page-content .records .record-header p {
         font-size: 12px;
         line-height: 16px;
@@ -1881,12 +2112,15 @@ font-size: 14px;
     #page-content .records .select-box label {
         font-size: 14px;
     }
+
     #page-content .pagination-part .pagination-info {
         font-size: 12px;
     }
+
     #page-content .pagination-part .pagination-btns {
         margin-right: 8px;
     }
+
     #page-content .pagination-part .paginate_button {
         width: 30px !important;
         height: 30px !important;
@@ -1895,23 +2129,27 @@ font-size: 14px;
     }
 
     #page-content .top-recordPart h2 {
-        font-size: 16px; 
+        font-size: 16px;
     }
+
     #page-content .top-recordPart p {
         font-size: 12px;
     }
 
-    .top-recordParent h4{
-        font-size: 16px; 
+    .top-recordParent h4 {
+        font-size: 16px;
     }
-    .top-recordParent label{
+
+    .top-recordParent label {
         font-size: 12px;
-       
-      }
-      .top-recordParent select{
+
+    }
+
+    .top-recordParent select {
         font-size: 10px;
-      }
-      #page-content .form-records {
+    }
+
+    #page-content .form-records {
         width: 80%;
         max-width: 98%;
         margin: 30px 25px 20px 25px;
@@ -1926,15 +2164,31 @@ font-size: 14px;
         font-size: 18px;
         margin: 0 0 14px 0;
     }
+
+    .top-recordParent {
+        flex-wrap: wrap !important;
+    }
+   
+    .track-recordParent {
+       
+        margin: 15px 25px 20px 25px;
+    }
+    .track-record {
+        width: 95%;
+        
+    }
+    .result-part {
+        width: 95%;
+    }
 }
 
 @media screen and (max-width:420px) {
-    #header-part{
-            padding: 0 14px;
+    #header-part {
+        padding: 0 14px;
     }
 
-    .token-btn{
-        font-size:10px;
+    .token-btn {
+        font-size: 10px;
         width: 80px;
         padding: 6px 2px;
 
@@ -1960,37 +2214,46 @@ font-size: 14px;
         font-size: 14px;
         width: 50% !important;
     }
+
     .details-sec div.detail-parah h4 {
         font-size: 16px;
-       
+
     }
+
     .part-left h3 {
-        font-size: 18px;    
+        font-size: 18px;
     }
 
     .data-product .line1 p.parah2 {
         font-size: 15px;
     }
+
     #page-content .pagination-part .pagination-info {
         font-size: 10px;
     }
+
     #page-content .form-records {
         width: 86%;
         max-width: 98%;
         margin: 30px 30px 20px 20px;
         padding: 38px 12px;
     }
-    .form-records p.sec-title, .emp-record p.sec-title {
+
+    .form-records p.sec-title,
+    .emp-record p.sec-title {
 
         font-size: 16px;
 
     }
-    .form-records p.sec-title::after, .emp-record p.sec-title::after {
-       
+
+    .form-records p.sec-title::after,
+    .emp-record p.sec-title::after {
+
         width: 50px;
-        
+
     }
-    #header-part .search-box i{
+
+    #header-part .search-box i {
         font-size: 14px;
     }
 
@@ -1998,29 +2261,259 @@ font-size: 14px;
         font-size: 12px;
         color: #3e3e3fe8;
     }
+
     #page-content .top-recordPart {
         padding: 2px 10px;
     }
-    .form-records h4{
+
+    .form-records h4 {
         font-size: 18px;
     }
+
     .detail-part-right h2 {
         font-size: 18px;
     }
+
     .alert-success,
     .alert-warning {
         font-size: 10px !important;
         padding: 10px !important;
     }
+
     .alert-success .close,
     .alert-warning .close {
         font-size: 15px !important;
     }
-    .profile-records h6{
-       margin-bottom: 8px !important;
+
+    .profile-records h6 {
+        margin-bottom: 8px !important;
     }
 
-    .profile-records .status{
+    .profile-records .status {
         margin-top: 10px !important;
+    }
+
+    .track-recordParent {
+        padding: 0;
+        margin: 0;
+    }
+
+    .track-record {
+        width: 92%;
+        padding: 12px 10px;
+        border-radius: 4px;
+        background-color: #fff;
+    }
+
+    .track-record h2 {
+        font-size: 16px;
+        line-height: 10px;
+        padding-top: 16px;
+    }
+
+    .search-record .form-control {
+        height: 44px;
+    }
+
+    .search-record input {
+        font-size: 14px;
+    }
+
+    .search-record input::placeholder {
+        font-size: 12px;
+    }
+
+    .search-record .input-box i {
+        font-size: 14px !important;
+
+    }
+
+    .result-part {
+        width: 92%;
+    }
+
+    .result-part .card-body {
+        padding: 1.25rem .6rem;
+    }
+
+    .result-part .header-title {
+        margin: 8px 0 16px -6px;
+        font-size: 14px;
+    }
+
+    .result-part ul.track-list {
+        margin-left: 14px;
+
+    }
+
+    .Track-subpart .card-header {
+        padding: .75rem;
+        gap: 4px !important;
+
+    }
+
+    .result-part .result-name {
+        font-size: 12px !important;
+
+    }
+
+    .result-part .result-name2 {
+        font-size: 10px !important;
+
+    }
+
+    .result-part ul.track-list .trackdata {
+        font-size: 12px;
+
+    }
+
+    .result-part ul.track-list .trackdata2 {
+        font-size: 11px;
+
+    }
+
+    .result-part ul.track-list .status-btn {
+        padding: 4px 8px;
+        font-size: 10px;
+        margin-left: 10px;
+        margin-top: 8px;
+        margin-bottom: 8px;
+    }
+
+    .trackfile-btn {
+        margin-left: 60px;
+        margin-top: 12px;
+        font-size: 12px;
+    }
+    .single-recordBorder {
+        padding: 6px 0 12px 0;
+        flex-wrap: wrap;
+        margin: 6px 2px 16px 2px;
+    }
+    .single-recordParent .single-recordChild {
+        width: 95%;
+        margin: 10px 8px 12px 8px;
+        padding: 32px 20px;
+     
+    }
+    .single-recordParent .single-recordChild .file-header h2 {
+        font-size: 17px;
+        line-height: 30px;
+    }
+    .single-recordParent .single-recordChild .file-header .user-data {
+        margin-right: 12px;
+    }
+    .single-recordParent .single-recordChild .file-header .user-data p {
+        font-size: 12px;
+       
+    }
+    .single-recordParent .single-recordChild .file-content {
+        padding: 26px 22px 80px 22px;
+    }
+    .single-recordParent .single-recordChild .file-content .title-part h3 {
+        font-size: 18px;
+        
+    }
+    .single-recordParent .single-recordChild .file-content .title-part p {
+        font-size: 14px;
+    }
+    .single-recordParent .single-recordChild .file-content .text-part h1, .single-recordParent .single-recordChild .file-content .text-part h2, .single-recordParent .single-recordChild .file-content .text-part h3, .single-recordParent .single-recordChild .file-content .text-part h4, .single-recordParent .single-recordChild .file-content .text-part h5, .single-recordParent .single-recordChild .file-content .text-part h6, .single-recordParent .single-recordChild .file-content .text-part b {
+        font-size: 18px !important;
+        
+    }
+    .single-recordParent .single-recordChild .file-content .title-part {
+        padding: 5px 0 12px 0;
+    }
+    .single-recordParent .single-recordChild .file-content .text-part p {
+        font-size: 12px;
+      
+    }
+    .single-recordParent .file-footer p {
+        font-size: 10px;
+    }
+    .single-recordChild2 {
+        width: 95%;
+        margin: 10px 8px 10px 8px;
+    }
+}
+
+@media screen and (max-width:340px) {
+    .track-record .row {
+        margin: 25px 0px 8px 0px !important;
+    }
+
+    .track-record h2 {
+        font-size: 14px;
+
+    }
+
+    .result-part .card-body {
+        padding: 1.25rem .2rem;
+    }
+
+    .result-part .activity-wid .activity-list .activity-icon {
+
+        left: -26px;
+
+    }
+
+    .result-part .activity-border:before {
+        left: -8px;
+    }
+
+    .result-part ul.track-list .activity-list {
+        padding: 0 0 12px 20px;
+    }
+
+    .Track-subpart .card-header {
+        padding: .75rem .3rem;
+    }
+
+    .search-record input {
+        font-size: 12px;
+    }
+
+    .search-record input::placeholder {
+        font-size: 10px;
+    }
+
+    .search-record .input-box i {
+        font-size: 12px !important;
+
+    }
+    .single-recordParent .single-recordChild {
+        width: 96%;
+        margin: 10px 4px 12px 4px;
+        padding: 32px 14px;
+    }
+    .single-recordChild2 {
+        width: 96%;
+        margin: 10px 4px 10px 4px;
+    }
+    .single-recordParent .single-recordChild .file-header h2 {
+        font-size: 14px;
+        line-height: 26px;
+    }
+    .single-recordParent .single-recordChild .file-header .user-data {
+        margin-right: 6px;
+    }
+    .single-recordParent .single-recordChild .file-header .user-data p {
+        font-size: 10px;
+       
+    }
+    .single-recordParent .single-recordChild .file-header {
+
+        gap: 10px;
+    }
+    .single-recordParent .single-recordChild .file-content {
+        padding: 25px 20px 80px 20px;
+    }
+    .single-recordParent .single-recordChild .file-content .title-part h3 {
+        font-size: 16px;
+        
+    }
+    .single-recordParent .single-recordChild .file-content .title-part p {
+        font-size: 13px;
+        color: #000;
     }
 }

@@ -28,6 +28,10 @@ if (!isset($_SESSION['id']) && empty($_SESSION['id'])) {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
     <link rel="stylesheet"
         href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css">
+    <!-- Make sure Bootstrap CSS and JS are included -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
         $(document).ready(function () {
@@ -36,13 +40,13 @@ if (!isset($_SESSION['id']) && empty($_SESSION['id'])) {
             }, 2000)
         })
     </script>
-<style>
-    td{
-        padding-top:18px !important;
-        padding-bottom:18px !important;
+    <style>
+        td {
+            padding-top: 18px !important;
+            padding-bottom: 18px !important;
 
-    }
-</style>
+        }
+    </style>
 </head>
 
 <body>
@@ -88,10 +92,10 @@ if (!isset($_SESSION['id']) && empty($_SESSION['id'])) {
                                 <h2 class="mb-1">Table Data</h2>
                                 <p class="mb-0">Manage your records efficiently</p>
                             </div>
-       
+
                         </div>
                         <div class="mr-5">
-                        <a href="TrackRecord.php" class="btn btn-info">Track File</a>
+                            <a href="TrackRecord.php" class="btn btn-info trackfile-btn">Track File</a>
                         </div>
 
                     </div>
@@ -135,19 +139,20 @@ if (!isset($_SESSION['id']) && empty($_SESSION['id'])) {
                     <table width="100%">
                         <thead width="100%">
                             <tr>
-                                <th style="width:80px">S-N</th>
-                                <th style="width:180px"><span class="las la-sort"></span>Filename</th>
-                                <th style="width:320px"><span class="las la-sort"></span>Title</th>
-                                <th style="width:150px"><span class="las la-sort"></span>Barcode</th>
-                                <th style="width:200px; padding-left:40px"><span class="las la-sort"></span>Date</th> 
-                                <th ><span class="las la-sort"></span>Action</th>
+                                <th style="width:90px">S-N</th>
+                                <th style="width:190px"><span class="las la-sort"></span>Filename</th>
+                                <th style="width:260px"><span class="las la-sort"></span>Title</th>
+                                <th style="width:210px; padding-left:40px"><span class="las la-sort"></span>Date</th>
+                                <th style="width:160px"><span class="las la-sort"></span>Operations</th>
+                                <th><span class="las la-sort"></span>Action</th>
+                            </tr>
                         </thead>
 
                         <?php
                         include('../connection.php');
                         $page = isset($_GET['page']) ? (int) $_GET['page'] : 1;
                         $offset = ($page - 1) * $limit;
-                        $CountNumber=1;
+                        $CountNumber = 1;
                         $query = "select * from documents ORDER BY id LIMIT {$offset},{$limit}";
                         $stmt = mysqli_prepare($con, $query);
                         mysqli_stmt_execute($stmt);
@@ -165,33 +170,65 @@ if (!isset($_SESSION['id']) && empty($_SESSION['id'])) {
                                 <td class="des">
                                     <?php echo $row['fileTitle']; ?>
                                 </td>
-                                <td style="text-transform:none">
-                                    <?php echo $row['barcode']; ?>
-                                </td>
+
+
 
                                 <td style="padding-left:40px">
                                     <?php echo $row['created_at']; ?>
-                                </td >
-                                    
-                                <td class="action">
-                                    <a href="update-document.php?id=<?php echo $row['id']; ?>"><i
-                                            class="fa-solid fa-pen-to-square"></i></a>
-                                    <a href="javascript:void(0);" onclick="confirmDelete(<?php echo $row['id']; ?>)"><i
-                                            class="fa-solid fa-trash"></i></a>
-
-                                    <a href="single-document.php?id=<?php echo $row['id']; ?>"><i class="fa-solid fa-eye"></i></a>
-
-                                    
                                 </td>
-                            </tr>
+                                <td class="dots-btn" style="padding-left:60px">
+                                    <!-- Dropdown Container -->
+                                        <div class="dropdown">
+                                            <!-- Dots Icon (Dropdown Toggle) -->
+                                            <a href="#" class="dropdown-toggle no-btn" id="dotsDropdown"
+                                                data-bs-toggle="dropdown" aria-expanded="false">
+                                                <i class="fas fa-ellipsis-h dots"></i>
+                                            </a>
 
-                        </tbody>
+                                            <!-- Dropdown Menu -->
+                                            <ul class="dropdown-menu" aria-labelledby="dotsDropdown">
+                                                <li>
+                                                    <a class="dropdown-item" href="#">
+                                                        <i class="fas fa-qrcode"></i> Barcode
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a class="dropdown-item" href="#">
+                                                        <i class="fas fa-pen"></i> Remark
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <hr class="dropdown-divider">
+                                                </li>
+                                                <li>
+                                                    <a class="dropdown-item" href="TrackRecord.php">
+                                                        <i class="far fa-folder"></i> Track File
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </td>
 
-                </div>
+                                    <td class="action">
+                                        <a href="update-document.php?id=<?php echo $row['id']; ?>"><i
+                                                class="fa-solid fa-pen-to-square"></i></a>
+                                        <a href="javascript:void(0);" onclick="confirmDelete(<?php echo $row['id']; ?>)"><i
+                                                class="fa-solid fa-trash"></i></a>
 
-                <?php $CountNumber++; 
-                
-            }
+                                        <a href="single-document.php?id=<?php echo $row['id']; ?>"><i
+                                                class="fa-solid fa-eye"></i></a>
+
+
+                                    </td>
+                                </tr>
+
+                            </tbody>
+
+                    </div>
+
+                    <?php $CountNumber++;
+
+                        }
                         // Close the statement
                         mysqli_stmt_close($stmt);
                         ?>
