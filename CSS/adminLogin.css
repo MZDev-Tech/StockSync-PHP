@@ -42,7 +42,7 @@ body {
 .login-parent {
     background-color: #fff;
     color: #000;
-    width: 470px;
+    width: 480px;
     max-width: 92%;
     box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.1);
     border-radius: 2px;
@@ -124,9 +124,32 @@ h4.sub-heading {
     color: #293b79ee;
 }
 
+
 .field-group input[type="text"],
 input[type="password"] {
     text-transform: none !important;
+}
+
+.btn {
+    height: 44px;
+    padding-left: 30px;
+    padding-right: 30px;
+    border-radius:20px;
+    margin-top: 14px !important;
+    margin-bottom: 0;
+}
+div.user-login p{
+    margin-top: -6px;
+    margin-bottom: 22px;
+    margin-left: 5px;
+    font-size: 16px;
+    font-weight: 400;
+    color: #5c5a5a;
+    text-transform: none;
+}
+div.user-login p a{
+    text-decoration: none;
+    
 }
 
 .admin-top {
@@ -135,7 +158,7 @@ input[type="password"] {
     align-items: center;
     gap: 10px;
     margin-bottom: 6px;
-    padding-left: 32px;
+    padding-left: 6px;
 }
 
 .admin-top img {

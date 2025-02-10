@@ -14,26 +14,22 @@ if (!isset($_SESSION['id']) && empty($_SESSION['id'])) {
 
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>View Documents</title>
+    <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-
-    <!-- External CSS File Link -->
-    <link rel="stylesheet" href="../CSS/style.css">
-    <link rel="stylesheet" href="sweetalert2.min.css">
-    <!-- Font Icons Link -->
+    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
-    <link rel="stylesheet"
-        href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css">
-    <!-- Make sure Bootstrap CSS and JS are included -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <link rel="stylesheet" href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css">
+  <link rel="stylesheet" href="sweetalert2.min.css">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-    <script>
+
+</head>
+<body>
+      <script>
         $(document).ready(function () {
             setTimeout(function () {
                 $('#alertMessage').fadeOut('slow')
@@ -167,7 +163,7 @@ if (!isset($_SESSION['id']) && empty($_SESSION['id'])) {
                                 <td>
                                     <?php echo $row['filename']; ?>
                                 </td>
-                                <td class="des">
+                                <td class="des filedes">
                                     <?php echo $row['fileTitle']; ?>
                                 </td>
 
@@ -188,7 +184,9 @@ if (!isset($_SESSION['id']) && empty($_SESSION['id'])) {
                                             <!-- Dropdown Menu -->
                                             <ul class="dropdown-menu" aria-labelledby="dotsDropdown">
                                                 <li>
-                                                    <a class="dropdown-item" href="#">
+                                                    <a class="dropdown-item" href="#barcodeModal<?php echo $row['id'] ?>"
+                                                        data-toggle="modal"
+                                                        data-target="#barcodeModal<?php echo $row['id'] ?>">
                                                         <i class="fas fa-qrcode"></i> Barcode
                                                     </a>
                                                 </li>
@@ -226,6 +224,43 @@ if (!isset($_SESSION['id']) && empty($_SESSION['id'])) {
 
                     </div>
 
+                    <!----------------Barcode selection Model For File-------------------->
+
+                    <div class="container">
+                        <!-- Modal -->
+                        <div class="modal fade" id="barcodeModal<?php echo $row['id']; ?>" role="dialog">
+                            <div class="modal-dialog modal-dialog-centered modal-md">
+
+                                <!-- Modal content-->
+                                <div class="modal-content barcode-modal">
+                                    <div class="modal-header">
+                                        <h4 class="modal-title" id="barcodeText<?php echo $row['id'] ?>">
+                                            <?php echo $row['barcode'] ?>
+                                        </h4>
+                                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p>Please click select button if you want to copy the document barcode.
+
+                                        </p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                        <button type="button" class="btn btn-info"
+                                            onclick="copyBarcode('barcodeText<?php echo $row['id']; ?>')">Select</button>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    
+
+                  
+
                     <?php $CountNumber++;
 
                         }
@@ -233,6 +268,8 @@ if (!isset($_SESSION['id']) && empty($_SESSION['id'])) {
                         mysqli_stmt_close($stmt);
                         ?>
                 </table>
+
+
 
                 <?php
                 $query = "select COUNT(*) as total from documents";
@@ -279,6 +316,16 @@ if (!isset($_SESSION['id']) && empty($_SESSION['id'])) {
         </main>
 
     </section>
+
+    <!-- jQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <!-- Bootstrap JS -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="script.js"></script>
+
+
     <script>
         function confirmDelete(productId) {
             Swal.fire({
@@ -313,12 +360,46 @@ if (!isset($_SESSION['id']) && empty($_SESSION['id'])) {
             });
         }
 
+        // Function to copy barcode to clipboard and show Bootstrap alert
+ function copyBarcode(barcodeId, rowId) {
+    var barcodeText = document.getElementById(barcodeId).innerText;
+
+    // Copy the barcode text to the clipboard
+    navigator.clipboard.writeText(barcodeText).then(function() {
+       // Hide the modal using Bootstrap's native API
+       var modal = new bootstrap.Modal(document.getElementById('barcodeModal' + rowId));
+        modal.hide();
+        console.log('modal id:', rowId);
+
+        // Display SweetAlert2 notification
+        Swal.fire({
+            icon: 'success',
+            title: 'Barcode Copied to clipboard!',
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+           timer:3000,
+            customClass: {
+        title: 'swal2-title',
+    }
+        });
+    }, function(err) {
+        console.error('Failed to copy barcode: ', err);
+
+        Swal.fire({
+            icon: 'error',
+            title: 'Error!',
+            text: 'Failed to copy barcode!',
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000
+        });
+    });
+}
     </script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="script.js"></script>
+
+   
 </body>
 
 </html>

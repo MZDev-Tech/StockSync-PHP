@@ -191,7 +191,7 @@ li {
     padding-left: 0;
 }
 
-.sidebar-part .side-menu li.list-item {
+.sidebar-part .side-menu li a.list-item{
     padding: 6px 10px 6px 26px;
     margin-top: 8px;
     cursor: pointer;
@@ -201,32 +201,72 @@ li {
 
 }
 
-.sidebar-part .side-menu li.list-item i {
+.sidebar-part .side-menu li i.list-icon {
     color: var(--black);
     font-size: 14px;
     padding: 8px;
     border-radius: 4px;
     background-color: #e9eeef;
     box-shadow: 1px 2px 2px rgba(0, 0, 0, 0.1);
-    margin-right: 4px;
+    margin-right: 14px;
 }
 
-.sidebar-part .side-menu li.list-item.active,
-.sidebar-part .side-menu li.list-item:hover {
+.sidebar-part .side-menu li a.list-item.active,
+.sidebar-part .side-menu li a.list-item:hover {
     background: rgb(203, 228, 233);
     border-left: 3px solid rgb(43, 144, 151);
     border-top-right-radius: 20px;
     border-bottom-right-radius: 20px;
 }
 
-
-.sidebar-part .side-menu li.list-item a {
+.sidebar-part .side-menu li a.list-item i.arrow-right{
+    margin-left: 14px;
+    font-size: 14px;
+}
+.sidebar-part .side-menu li a {
     font-size: 14px;
     font-weight: 500;
-    padding-left: 8px;
     color: #1a1919d3;
 }
 
+.sidebar-part .side-menu li .sub-listItems {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 8px !important;
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: all 0.5s ease-in-out;
+}
+
+.sidebar-part .side-menu li .sub-listItems.active {
+    max-height: 500px; 
+    opacity: 1;
+    margin-top: 12px !important;
+    margin-bottom: 12px !important;
+}
+
+.sidebar-part .side-menu li .sub-listItems a {
+    padding: 8px 8px 8px 52px;
+    color: #7d7a7ae8;
+    border-bottom: 1px solid #f1eeee;
+    transition: all 0.3s ease !important;
+    cursor: pointer;
+}
+
+.sidebar-part .side-menu li .sub-listItems a i{
+    font-size:14px;
+    color:rgb(66, 66, 66);
+    margin-right: 10px;
+}
+.sidebar-part .side-menu li .sub-listItems a:hover i{
+    color: var(--blue);
+}
+
+.sidebar-part .side-menu li .sub-listItems a:hover{
+    color:rgb(63, 63, 63);
+   
+}
 
 
 /* header & main page part start here */
@@ -281,6 +321,10 @@ li {
     border: none;
     width: 50%;
 }
+#header-part .search-box input:focus{
+    background: transparent;
+    border: none;
+}
 
 #header-part .search-box input::placeholder {
     font-size: 14px;
@@ -302,7 +346,7 @@ li {
 #header-part .header-icons {
     display: flex;
     align-items: center;
-    gap: 22px;
+    gap: 18px;
     margin-right: 20px;
 }
 
@@ -381,7 +425,9 @@ li {
     background-color: #c6f0be;
     color: rgb(64, 100, 57);
     border-radius: 4px;
+    font-size: 12px;
     display: none;
+    padding: 6px 6px;
 }
 
 /* Dashboard Page Start here */
@@ -808,6 +854,9 @@ li {
 
 }
 
+#page-content .table-section tbody td.filedes{
+    transition: all .8s ease !important;
+}
 #page-content .table-section tbody tr:hover td.des {
 
     text-wrap: wrap;
@@ -1876,63 +1925,118 @@ ul.data-product {
 }
 
 /* Dropdown style in view documents page for operations */
-.dots-btn .no-btn {
-    text-decoration: none; /* Remove underline */
-    background: none;
+.dots-btn {
+    position: relative;
+}
+.dots-btn .dropdown-toggle::after {
+    display: none;
+}
+/* Dropdown menu styling */
+.dots-btn .dropdown-menu {
+    min-width: 180px;
+    border-radius: 8px;
     border: none;
-    padding: 0;
-    color: inherit;
+    padding: 8px 0;
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.15);
+    transform: scale(0.1); 
+    opacity: 0;
+    visibility: hidden;
+    transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+    right: auto !important; 
+    left: -170px !important; 
+    top: -10px !important; 
+    z-index: 800 !important;
 }
 
-.dots-btn .no-btn:focus,
-.dots-btn .no-btn:active {
-    outline: none;
-    box-shadow: none;
+/* Show dropdown smoothly */
+.dots-btn .dropdown-menu.show {
+    transform: scale(1); 
+    opacity: 1;
+    visibility: visible;
 }
-.dots-btn .dropdown-toggle::after{
-    display:none;
-}
+
 .dots-btn .dropdown-item {
-
     font-size: 15px;
-    
-}
-.dots-btn i.dots{
+    padding: 8px 15px;
     color: #353535 !important;
-    transition: .3s all ease !important;
-
+    transition: background 0.2s ease, color 0.2s ease;
 }
-.dots-btn .dropdown-item i{
-    
+
+/* Prevent text color change on click */
+.dots-btn .dropdown-item:active,
+.dots-btn .dropdown-item:focus {
+    background-color: transparent !important;
+    color: var(--blue) !important;
+}
+
+/* Dropdown item icons */
+.dots-btn .dropdown-item i {
     color: #353535 !important;
     margin-right: 8px !important;
-    transition: .3s all ease !important;
-}
-.dots-btn i.dots:hover,
-.dots-btn .dropdown-item:hover i{
-    color:var(--blue) !important;
-}
-/* .dots-btn {
-    position: relative; 
+    transition: color 0.2s ease;
 }
 
-.dots-btn .dropdown-menu {
-    position: absolute; 
-    top: 100%;           
-    left: 0;             
-    display: block;
-    visibility: hidden;
-    opacity: 0;
-    transform: translateY(10px);
-    transition: 0.3s ease-in-out;
-    z-index: 1000;       }
+/* Hover effect */
+.dots-btn .dropdown-item:hover i {
+    color: var(--blue) !important;
+}
 
-.dots-btn .dropdown-menu.show {
-    visibility: visible;
-    opacity: 1;
-    transform: translateY(0);
-} */
 
+
+/* barcode Modal design in view document */
+.barcode-modal .modal-header { 
+     border-bottom: none;  
+}
+.barcode-modal .modal-title {
+    margin-left: 130px;
+    margin-top: 10px;
+    font-size: 22px;
+}
+.barcode-modal .modal-header .close:focus{
+border: none !important;
+outline: none !important;
+}
+.barcode-modal .modal-body {
+       padding: 0 1rem;
+}
+.barcode-modal .modal-body p {
+    margin-top: 0;
+    margin-bottom: 1rem;
+    font-size: 15px;
+    padding: 2px 20px;
+    text-align-last: center;
+    text-align: center !important;
+    text-transform: none;
+}
+.barcode-modal .modal-footer {
+    
+    justify-content: center;
+    padding: 6px .75rem .85rem .75rem;
+    border-top: none;
+}
+.barcode-modal .modal-footer button,
+.barcode-modal .modal-footer a{
+    font-size: 15px;
+}
+
+
+/* text editor default btn style */
+.btn-primary.disabled, .btn-primary:disabled {
+    color: #fff;
+    background-color: #007bff;
+    border-color: #007bff;
+    padding: 8px 12px !important;
+}
+
+/* style for sweet alert in view document when copy barcode */
+
+
+.swal2-title {
+    font-size: 14px !important;
+    margin-bottom: 0 !important;
+    font-weight: 400;
+    margin-top: 10px !important;
+}
 
 
 /* media queries for smal screen for single product page*/

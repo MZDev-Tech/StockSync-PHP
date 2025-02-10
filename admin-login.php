@@ -160,13 +160,15 @@ if (isset($_COOKIE['email']) && isset($_COOKIE['password'])) {
                         <span style="font-size:15px; color:#595959">Remember Me</span>
                     </div>
 
-                    <br>
+                    
                     <div class="form-group mb-4">
-                        <input type="submit" name="submit" class="btn btn-info w-25" value="Login">
-                        <input type="reset" name="reset" class="btn btn-secondary w-25" value="Reset">
+                        <input type="submit" name="submit" class="btn text-white btn-block btn-info" value="Login">
                     </div>
 
+                    <div class=" user-login">
+                        <p>Need to access a <a href="user-login.php">User account?</a></p>
 
+                    </div>
 
                 </form>
             </div>

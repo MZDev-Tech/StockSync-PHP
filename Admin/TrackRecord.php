@@ -112,7 +112,7 @@
                     <div class="card Track-subpart">
                         <div class="card-header" style="display:flex; gap:12px;background:rgba(164, 197, 184, 0.07); ">
                             <h5 class="result-name">Ali Ahmand</h5>
-                            <p class="result-name2">- Received the document</p>
+                            <p class="result-name2">- Released the document</p>
                         </div>
 
                         <div class="card-body">

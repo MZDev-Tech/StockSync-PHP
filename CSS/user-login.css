@@ -139,7 +139,7 @@ color: #4b4a4a;
     height: 44px;
     padding-left: 30px;
     padding-right: 30px;
-    border-radius:20px;
+    border-radius:20px !important;
 }
 
 @media (max-width: 1199.98px) {

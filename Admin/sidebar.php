@@ -14,12 +14,12 @@ if (!isset($_SESSION['id']) && empty($_SESSION['id'])) {
 
 
 //get the current file name
- $current_page = basename($_SERVER['PHP_SELF']);
- $is_category_page = ($current_page == 'View-category.php' || $current_page == 'AddCategory.php' || $current_page == 'update-category.php');
- $is_product_page = ($current_page == 'View-products.php' || $current_page == 'AddProducts.php' || $current_page == 'update-product.php' || ($current_page == 'single-product.php'));
- $is_Admin_page = ($current_page == 'Admin-Profile.php' || $current_page == 'update-profile.php');
- $is_user_page = ($current_page == 'View-user.php' ||$current_page == 'single-user.php'|| $current_page == 'AddUser.php' || $current_page == 'update-user.php');
- $is_document_page = ($current_page == 'view-document.php' ||$current_page == 'TrackRecord.php' ||$current_page == 'single-document.php'|| $current_page == 'AddDocument.php' || $current_page == 'update-document.php');
+$current_page = basename($_SERVER['PHP_SELF']);
+$is_category_page = ($current_page == 'View-category.php' || $current_page == 'AddCategory.php' || $current_page == 'update-category.php');
+$is_product_page = ($current_page == 'View-products.php' || $current_page == 'AddProducts.php' || $current_page == 'update-product.php' || ($current_page == 'single-product.php'));
+$is_Admin_page = ($current_page == 'Admin-Profile.php' || $current_page == 'update-profile.php');
+$is_user_page = ($current_page == 'View-user.php' || $current_page == 'single-user.php' || $current_page == 'AddUser.php' || $current_page == 'update-user.php');
+$is_document_page = ($current_page == 'view-document.php' || $current_page == 'TrackRecord.php' || $current_page == 'single-document.php' || $current_page == 'AddDocument.php' || $current_page == 'update-document.php');
 
 
 
@@ -75,40 +75,59 @@ if (!isset($_SESSION['id']) && empty($_SESSION['id'])) {
 
         </div>
         <ul class="side-menu">
-            <li class="list-item <?php echo ($current_page == 'Dashboard.php') ? 'active' : '' ?>" >
-                <i class="fa-brands fa-windows"></i>
-                <a href="Dashboard.php">Dashboard</a>
+            <li>
+                <a href="Dashboard.php"
+                    class="list-item <?php echo ($current_page == 'Dashboard.php') ? 'active' : '' ?>"><i
+                        class="fa-brands fa-windows list-icon"></i> Dashboard</a>
             </li>
 
-            
-            <li class="list-item <?php echo  $is_category_page ? 'active' : '' ?>" >
-                <i class="far fa-plus"></i>
-                <a href="View-category.php"> Categories</a>
+
+            <li>
+                <a href="View-category.php" class="list-item <?php echo $is_category_page ? 'active' : '' ?>"> <i
+                        class="far fa-plus list-icon"></i>Categories</a>
             </li>
 
-            <li class="list-item <?php echo  $is_product_page ? 'active' : '' ?>" >
-                <i class="fas fa-list"></i>
-                <a href="View-products.php"> View Products</a>
+            <li>
+
+                <a href="View-products.php" class="list-item <?php echo $is_product_page ? 'active' : '' ?>"><i
+                        class="fas fa-list list-icon"></i> View Products</a>
             </li>
 
-            <li class="list-item <?php echo ($is_user_page == 'View-user.php') ? 'active' : '' ?>" >
-                <i class="fas fa-users"></i>
-                <a href="View-user.php"> User Record</a>
+            <li>
+
+                <a href="View-user.php"
+                    class="list-item <?php echo ($is_user_page == 'View-user.php') ? 'active' : '' ?>"><i
+                        class="fas fa-users list-icon"></i> User Record</a>
             </li>
 
-            <li class="list-item <?php echo ($is_document_page == 'view-document.php') ? 'active' : '' ?>" >
-                <i class="far fa-folder"></i>
-                <a href="view-document.php"> Files Record</a>
+            <li class="list-dropdown">
+
+                <a href="view-document.php"
+                    class="list-item <?php echo ($is_document_page == 'view-document.php') ? 'active' : '' ?>"><i
+                        class="far fa-folder list-icon"></i> Files Record <span>
+                        <i class="fas fa-caret-right arrow-right" id="arrowIcon"></i></span></a>
+
+                <div class="sub-listItems">
+                    <a href="#"><i class="fa fa-inbox"></i> Incoming</a>
+                    <a href="#"><i class="fa fa-download"></i> Received</a>
+                    <a href="#"><i class="far fa-paper-plane"></i> Outgoing</a>
+                    <a href="#"><i class="far fa-pause-circle"></i> Onhold</a>
+                    <a href="#"><i class="far fa-check-circle"></i> Complete</a>
+                </div>
+
+
             </li>
 
-            <li class="list-item <?php echo  $is_Admin_page ? 'active' : '' ?>" >
-                <i class="far fa-user"></i>
-                <a href="Admin-Profile.php"> Manage Profile</a>
+            <li>
+
+                <a href="Admin-Profile.php" class="list-item <?php echo $is_Admin_page ? 'active' : '' ?>"><i
+                        class="far fa-user list-icon"></i> Manage Profile</a>
             </li>
 
-            <li class="list-item" <?php echo ($current_page == 'logout.php') ? 'active' : '' ?>>
-                <i class="far fa-arrow-alt-circle-right"></i>
-                <a href="logout.php">Logout</a>
+            <li>
+
+                <a href="logout.php" class="list-item <?php echo ($current_page == 'logout.php') ? 'active' : '' ?>"><i
+                        class="far fa-arrow-alt-circle-right list-icon"></i> Logout</a>
             </li>
         </ul>
     </section>
@@ -119,6 +138,22 @@ if (!isset($_SESSION['id']) && empty($_SESSION['id'])) {
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="script.js"></script>
+    <script>
+
+        let dropdownMenu = document.querySelector('.sub-listItems');
+        let arrowIcon=document.getElementById('arrowIcon');
+        document.querySelector('.arrow-right').onclick = (e) => {
+            e.preventDefault();
+            dropdownMenu.classList.toggle('active');
+            if (dropdownMenu.classList.contains("active")) {
+                arrowIcon.classList.remove("fa-caret-right");
+                arrowIcon.classList.add("fa-caret-down");
+            } else {
+                arrowIcon.classList.remove("fa-caret-down");
+                arrowIcon.classList.add("fa-caret-right");
+            }
+        };
+    </script>
 </body>
 
 </html>

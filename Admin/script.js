@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const profile_items = document.querySelectorAll('.profile-sidebar-item');
 
     profile_items.forEach(item => {
-        item.addEventListener('click', function () { // Use a regular function to maintain `this` context
+        item.addEventListener('click', function () { 
             console.log('item clicked');
 
             // Remove active class from all sidebar items
