@@ -1,11 +1,8 @@
 <!-- code to not allow admin to directly access admin panel until they are login -->
 <?php
 session_start();
-if (!isset($_SESSION['id']) && empty($_SESSION['id'])) {
-    header('Location:../user-login.php');
-    exit();
-}
-
+// file to not allow admin to directly access admin panel until they are login
+include('Check_token.php');
 ?>
 
 
@@ -77,7 +74,7 @@ if (!isset($_SESSION['id']) && empty($_SESSION['id'])) {
                         <div class="d-flex align-items-center top-recordPart">
                             <i class="fa-solid fa-tablet-screen-button"></i>
                             <div>
-                                <h2 class="mb-1">Table Data</h2>
+                                <h2 class="mb-1">User Data</h2>
                                 <p class="mb-0">Manage your records efficiently</p>
                             </div>
                         </div>
@@ -89,10 +86,11 @@ if (!isset($_SESSION['id']) && empty($_SESSION['id'])) {
             <?php
             include('../connection.php');
             $id = $_GET['id'];
-            $query = "select * from user where id=?";
+            $role='user';
+            $query = "select * from user where id=? && role=?";
             $stmt = mysqli_prepare($con, $query);
             //bind parameters
-            mysqli_stmt_bind_param($stmt, 'i', $id);
+            mysqli_stmt_bind_param($stmt, 'is', $id,$user);
             //excute query
             mysqli_stmt_execute($stmt);
             //get result
@@ -157,10 +155,10 @@ if (!isset($_SESSION['id']) && empty($_SESSION['id'])) {
                                 <div class="row">
                                     <div class="col-sm-3">
                                     
-                                        <h6 class="mb-0"><span class="las la-sort"> </span>  Role</h6>
+                                        <h6 class="mb-0"><span class="las la-sort"> </span>  Designation</h6>
                                     </div>
                                     <div class="col-sm-9 text-secondary text-data">
-                                        <?php echo htmlspecialchars($row['role']); ?>
+                                        <?php echo htmlspecialchars($row['designation']); ?>
                                     </div>
                                 </div>
                                 <hr>
@@ -170,7 +168,7 @@ if (!isset($_SESSION['id']) && empty($_SESSION['id'])) {
                                         <h6 class="mb-0"><span class="las la-sort"> </span>  Address </h6>
                                     </div>
                                     <div class="col-sm-9 text-secondary text-data">
-                                        <?php echo htmlspecialchars($row['name']); ?>
+                                        <?php echo htmlspecialchars($row['address']); ?>
                                     </div>
                                 </div>
                                 <hr>

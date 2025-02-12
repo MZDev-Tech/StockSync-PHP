@@ -114,9 +114,8 @@ include('Check_token.php');
                 $limit = isset($_GET['select-record']) ? (int) $_GET['select-record'] : 3;
                 $page = isset($_GET['page']) ? (int) $_GET['page'] : 1;
                 $offset = ($page - 1) * $limit;
-                $userId=$_SESSION['id'];
 
-                $query = "select * from documents where created_by= '$userId' ORDER BY id LIMIT {$offset}, {$limit}";
+                $query = "select * from documents ORDER BY id LIMIT {$offset}, {$limit}";
                 $result = mysqli_query($con, $query);
 
                 ?>
@@ -152,8 +151,8 @@ include('Check_token.php');
                         $page = isset($_GET['page']) ? (int) $_GET['page'] : 1;
                         $offset = ($page - 1) * $limit;
                         $CountNumber = 1;
-                        $userId=$_SESSION['id'];
-                        $query = "select * from documents where created_by ='$userId' ORDER BY id LIMIT {$offset},{$limit}";
+                      
+                        $query = "select * from documents ORDER BY id LIMIT {$offset},{$limit}";
                         $stmt = mysqli_prepare($con, $query);
                         mysqli_stmt_execute($stmt);
                         $result = mysqli_stmt_get_result($stmt);
@@ -357,7 +356,7 @@ mysqli_stmt_close($stmt);
 
                 <?php
                 $id=$_SESSION['id'];
-                $query = "select COUNT(*) as total from documents Where created_by = '$id'";
+                $query = "select COUNT(*) as total from documents ";
                 $result = mysqli_query($con, $query);
                 $row = mysqli_fetch_assoc($result);
                 $total_records = $row['total'];

@@ -2,11 +2,10 @@
 session_start();
 include('../connection.php');
 
-// Check if admin is logged in
-if (!isset($_SESSION['id']) && empty($_SESSION['id'])) {
-    header('Location:../admin-login.php');
-    exit();
-}
+// file to not allow admin to directly access admin panel until they are login
+include('Check_token.php');
+
+
 
 // Check if admin has submitted the data
 if (isset($_POST['submit'])) {
@@ -14,6 +13,9 @@ if (isset($_POST['submit'])) {
     $id = mysqli_real_escape_string($con, $_POST['id']);
     $name = mysqli_real_escape_string($con, $_POST['name']);
     $email = mysqli_real_escape_string($con, $_POST['email']);
+    $phone = mysqli_real_escape_string($con, $_POST['phone']);
+    $designation = mysqli_real_escape_string($con, $_POST['designation']);
+    $address = mysqli_real_escape_string($con, $_POST['address']);
     $password = $_POST['password'];
     $image = $_FILES['image']['name'];
 
@@ -25,7 +27,7 @@ if (isset($_POST['submit'])) {
     }
 
     // Retrieve the current password from the database
-    $query = "SELECT password FROM admin WHERE id='$id'";
+    $query = "SELECT password FROM user WHERE id='$id' && role ='admin'";
     $result = mysqli_query($con, $query);
     $row = mysqli_fetch_assoc($result);
     $currentPassword = $row['password'];
@@ -38,11 +40,11 @@ if (isset($_POST['submit'])) {
     }
 
     // Update admin record
-    $query = "UPDATE admin SET name=?, email=?, password=?, image=? WHERE id=?";
+    $query = "UPDATE user SET name=?, email=?,phone=?, designation=?, address=?,  password=?, image=? WHERE id=?";
     $stmt = mysqli_prepare($con, $query);
 
     // Bind the statement
-    mysqli_stmt_bind_param($stmt, 'ssssi', $name, $email, $newPassword, $imagePath, $id);
+    mysqli_stmt_bind_param($stmt, 'ssissssi', $name, $email,$phone,$designation,$address, $newPassword, $imagePath, $id);
     $result = mysqli_stmt_execute($stmt);
 
     if ($result) {
@@ -90,9 +92,10 @@ if (isset($_POST['submit'])) {
             <?php
             include('../connection.php');
             $id = $_SESSION['id'];
-            $query = "SELECT * FROM admin WHERE id=?";
+            $role='admin';
+            $query = "SELECT * FROM user WHERE id=? && role=?";
             $stmt = mysqli_prepare($con, $query);
-            mysqli_stmt_bind_param($stmt, 'i', $id);
+            mysqli_stmt_bind_param($stmt, 'is', $id,$role);
             mysqli_stmt_execute($stmt);
             $result = mysqli_stmt_get_result($stmt);
             while ($row = mysqli_fetch_array($result)) {
@@ -106,14 +109,40 @@ if (isset($_POST['submit'])) {
                     </div>
 
                     <div class="form-group">
+                    <label>Full Name</label>
+
                         <input type="text" name="name" class="form-control" value="<?php echo $row['name']; ?>" required>
                     </div>
 
                     <div class="form-group">
+                    <label>Email ID</label>
+
                         <input type="text" name="email" class="form-control" value="<?php echo $row['email']; ?>" required>
                     </div>
 
                     <div class="form-group">
+                    <label>Contact</label>
+
+                        <input type="text" name="phone" class="form-control" value="<?php echo $row['phone']; ?>" required>
+                    </div>
+
+                    <div class="form-group">
+                    <label>Designation</label>
+
+                        <input type="text" name="designation" class="form-control" value="<?php echo $row['designation']; ?>" required>
+                    </div>
+
+                    <div class="form-group">
+                    <label>Address</label>
+
+                        <input type="text" name="address" class="form-control" value="<?php echo $row['address']; ?>" required>
+                    </div>
+
+                    
+
+                    <div class="form-group">
+                    <label>Password</label>
+
                         <input type="text" name="password" class="form-control" placeholder="Enter new password (leave blank to keep current password)">
                     </div>
 

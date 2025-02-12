@@ -104,7 +104,7 @@ if (isset($_COOKIE['access_token'])) {
                         <div class="d-flex align-items-center top-recordPart">
                             <i class="fa-solid fa-tablet-screen-button"></i>
                             <div>
-                                <h2 class="mb-1">Table Data</h2>
+                                <h2 class="mb-1">User Data</h2>
                                 <p class="mb-0">Manage your records efficiently</p>
                             </div>
                         </div>
@@ -116,7 +116,8 @@ if (isset($_COOKIE['access_token'])) {
             <?php
             include('../connection.php');
             $id = $_SESSION['id'];
-            $query = "select * from user where id=?";
+            $role='user';
+            $query = "select * from user where id=? && role='$role'";
             $stmt = mysqli_prepare($con, $query);
             //bind parameters
             mysqli_stmt_bind_param($stmt, 'i', $id);
@@ -183,10 +184,10 @@ if (isset($_COOKIE['access_token'])) {
                                 <div class="row">
                                     <div class="col-sm-3">
                                     
-                                        <h6 class="mb-0"><span class="las la-sort"> </span>  Role</h6>
+                                        <h6 class="mb-0"><span class="las la-sort"> </span>  Designation</h6>
                                     </div>
                                     <div class="col-sm-9 text-secondary text-data">
-                                        <?php echo htmlspecialchars($row['role']); ?>
+                                        <?php echo htmlspecialchars($row['designation']); ?>
                                     </div>
                                 </div>
                                 <hr>

@@ -5,12 +5,8 @@ if (session_status() === PHP_SESSION_NONE) {
 
 include('../connection.php');
 
-// code to not allow admin to directly access admin panel until they are login
-
-if (!isset($_SESSION['id']) && empty($_SESSION['id'])) {
-    header('Location:../admin-login.php');
-    exit();
-}
+// file to not allow admin to directly access admin panel until they are login
+include('Check_token.php');
 
 
 //get the current file name
@@ -19,7 +15,7 @@ $is_category_page = ($current_page == 'View-category.php' || $current_page == 'A
 $is_product_page = ($current_page == 'View-products.php' || $current_page == 'AddProducts.php' || $current_page == 'update-product.php' || ($current_page == 'single-product.php'));
 $is_Admin_page = ($current_page == 'Admin-Profile.php' || $current_page == 'update-profile.php');
 $is_user_page = ($current_page == 'View-user.php' || $current_page == 'single-user.php' || $current_page == 'AddUser.php' || $current_page == 'update-user.php');
-$is_document_page = ($current_page == 'view-document.php' || $current_page == 'TrackRecord.php' || $current_page == 'single-document.php' || $current_page == 'AddDocument.php' || $current_page == 'update-document.php');
+$is_document_page = ($current_page == 'view-document.php'  || $current_page == 'AllFiles.php'  ||  $current_page == 'TrackRecord.php' || $current_page == 'single-document.php' || $current_page == 'AddDocument.php' || $current_page == 'view-document.php'  || $current_page == 'OutgoingFile.php'  || $current_page == 'OnholdFile.php'  || $current_page == 'ReceivedFile.php'  || $current_page == 'CancelFile.php'   || $current_page == 'IncomingFile.php'  || $current_page == 'CompleteFile.php'  ||$current_page == 'update-document.php' );
 
 
 
@@ -36,6 +32,7 @@ $is_document_page = ($current_page == 'view-document.php' || $current_page == 'T
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <!-- External CSS File Link -->
     <link rel="stylesheet" href="../CSS/style.css">
+    <link rel="stylesheet" href="sweetalert2.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
     <link rel="stylesheet" href="../CSS/print.css" media="print">
@@ -108,11 +105,13 @@ $is_document_page = ($current_page == 'view-document.php' || $current_page == 'T
                         <i class="fas fa-caret-right arrow-right" id="arrowIcon"></i></span></a>
 
                 <div class="sub-listItems">
-                    <a href="#"><i class="fa fa-inbox"></i> Incoming</a>
-                    <a href="#"><i class="fa fa-download"></i> Received</a>
-                    <a href="#"><i class="far fa-paper-plane"></i> Outgoing</a>
-                    <a href="#"><i class="far fa-pause-circle"></i> Onhold</a>
-                    <a href="#"><i class="far fa-check-circle"></i> Complete</a>
+                    <a href="IncomingFile.php"><i class="fa fa-inbox"></i> Incoming</a>
+                    <a href="ReceivedFile.php"><i class="fa fa-download"></i> Received</a>
+                    <a href="OutgoingFile.php"><i class="far fa-paper-plane"></i> Outgoing</a>
+                    <a href="OnholdFile.php"><i class="far fa-pause-circle"></i> Onhold</a>
+                    <a href="CompleteFile.php"><i class="far fa-check-circle"></i> Complete</a>
+                    <a href="CancelFile.php"><i class=" far fa-times-circle"></i> Cancelled</a>
+                    <a href="AllFiles.php"><i class="far fa-file-alt"></i> All Files</a>
                 </div>
 
 
@@ -126,7 +125,7 @@ $is_document_page = ($current_page == 'view-document.php' || $current_page == 'T
 
             <li>
 
-                <a href="logout.php" class="list-item <?php echo ($current_page == 'logout.php') ? 'active' : '' ?>"><i
+                <a href="#" onclick="confirmLogout(event)" class="list-item <?php echo ($current_page == 'logout.php') ? 'active' : '' ?>"><i
                         class="far fa-arrow-alt-circle-right list-icon"></i> Logout</a>
             </li>
         </ul>
@@ -141,7 +140,7 @@ $is_document_page = ($current_page == 'view-document.php' || $current_page == 'T
     <script>
 
         let dropdownMenu = document.querySelector('.sub-listItems');
-        let arrowIcon=document.getElementById('arrowIcon');
+        let arrowIcon = document.getElementById('arrowIcon');
         document.querySelector('.arrow-right').onclick = (e) => {
             e.preventDefault();
             dropdownMenu.classList.toggle('active');
@@ -153,6 +152,28 @@ $is_document_page = ($current_page == 'view-document.php' || $current_page == 'T
                 arrowIcon.classList.add("fa-caret-right");
             }
         };
+
+        //sweet alert for logout
+
+        function confirmLogout(event) {
+            event.preventDefault();
+            Swal.fire({
+                title: "Are you sure?",
+                text: "You will be logged out!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                cancelButtonText: "Cancel",
+                confirmButtonText: "Yes, Logout!",      
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = "logout.php";
+                }
+            });
+        }
+
+
     </script>
 </body>
 

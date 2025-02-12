@@ -2,9 +2,10 @@
 session_start();
 include '../connection.php';
 
-// file to not allow admin to directly access admin panel until they are login
-include('Check_token.php');
-
+if (!isset($_SESSION['id']) && empty($_SESSION['id'])) {
+    header('Location:../admin-login.php');
+    exit();
+}
 
 
 
@@ -16,7 +17,7 @@ include('Check_token.php');
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>View Documents</title>
+    <title>Cancelled Files</title>
 
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
   <!-- External CSS File Link -->
@@ -31,13 +32,6 @@ include('Check_token.php');
 
 </head>
 <body>
-      <script>
-        $(document).ready(function () {
-            setTimeout(function () {
-                $('#alertMessage').fadeOut('slow')
-            }, 2000)
-        })
-    </script>
     <style>
         td {
             padding-top: 18px !important;
@@ -67,17 +61,7 @@ include('Check_token.php');
                 <h2>Documents </h2>
                 <h5>Home / Files Data</h5>
             </div>
-            <!-----------alert message------------->
-            <?php if (isset($_SESSION['message'])) { ?>
-            <div class="alert alert-warning data-dismissible fade show" id="alertMessage" style="margin:10px 25px">
-                <strong>Document! </strong>
-                <?php echo $_SESSION['message'] ?>
-                <button type="button" data-dismiss="alert" class="close" aria-label="close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <?php unset($_SESSION['message']);
-            } ?>
+          
 
             <!--------------- Record Table ------------------------->
 
@@ -92,9 +76,7 @@ include('Check_token.php');
                             </div>
 
                         </div>
-                        <div class="mr-5">
-                            <a href="TrackRecord.php" class="btn btn-info trackfile-btn">Track File</a>
-                        </div>
+                       
 
                     </div>
                 </div>
@@ -103,10 +85,9 @@ include('Check_token.php');
             <div class="records">
                 <div class="record-header">
                     <div>
-                        <h4>Files Record</h4>
+                        <h4>Cancelled Files</h4>
                     </div>
 
-                    <a href="AddDocument.php" class="add-topbtn"> + Create File</a>
                 </div>
 
                 <?php
@@ -115,8 +96,24 @@ include('Check_token.php');
                 $page = isset($_GET['page']) ? (int) $_GET['page'] : 1;
                 $offset = ($page - 1) * $limit;
                 $userId=$_SESSION['id'];
+             
+                $$query = "SELECT 
+                documents.*,
+                sender.name AS sender_name,  
+                receiver.name AS receiver_name,
+                document_tracking.date,
+                document_tracking.remark,
+                document_tracking.status
+              FROM document_tracking
+              JOIN documents ON document_tracking.document_id = documents.id
+              JOIN user AS sender ON document_tracking.from_user = sender.id  
+              JOIN user AS receiver ON document_tracking.to_user = receiver.id 
+              WHERE document_tracking.status = 'cancel' 
+              AND document_tracking.from_user = '$userId'
+              ORDER BY document_tracking.document_id 
+              LIMIT {$offset}, {$limit}";
+    
 
-                $query = "select * from documents where created_by= '$userId' ORDER BY id LIMIT {$offset}, {$limit}";
                 $result = mysqli_query($con, $query);
 
                 ?>
@@ -139,11 +136,11 @@ include('Check_token.php');
                         <thead width="100%">
                             <tr>
                                 <th style="width:90px">S-N</th>
-                                <th style="width:190px"><span class="las la-sort"></span>Filename</th>
-                                <th style="width:260px"><span class="las la-sort"></span>Title</th>
-                                <th style="width:210px; padding-left:40px"><span class="las la-sort"></span>Date</th>
-                                <th style="width:160px"><span class="las la-sort"></span>Operations</th>
-                                <th><span class="las la-sort"></span>Action</th>
+                                <th style="width:180px"><span class="las la-sort"></span>FileName</th>
+                                <th style="width:260px"><span class="las la-sort"></span>Remark</th>
+                                <th style="width:140px"><span class="las la-sort"></span>Send To</th>
+                                <th style="width:210px"><span class="las la-sort"></span>cancelled Date</th>
+                                <th ><span class="las la-sort"></span>Manage</th>
                             </tr>
                         </thead>
 
@@ -153,8 +150,23 @@ include('Check_token.php');
                         $offset = ($page - 1) * $limit;
                         $CountNumber = 1;
                         $userId=$_SESSION['id'];
-                        $query = "select * from documents where created_by ='$userId' ORDER BY id LIMIT {$offset},{$limit}";
-                        $stmt = mysqli_prepare($con, $query);
+                        $query = "SELECT 
+                        documents.*,
+                        sender.name AS sender_name,  
+                        receiver.name AS receiver_name,
+                        document_tracking.date,
+                        document_tracking.remark,
+                        document_tracking.status
+                      FROM document_tracking
+                      JOIN documents ON document_tracking.document_id = documents.id
+                      JOIN user AS sender ON document_tracking.from_user = sender.id  
+                      JOIN user AS receiver ON document_tracking.to_user = receiver.id 
+                      WHERE document_tracking.status = 'cancel' 
+                      AND document_tracking.from_user = '$userId'
+                      ORDER BY document_tracking.document_id 
+                      LIMIT {$offset}, {$limit}";
+            
+                                $stmt = mysqli_prepare($con, $query);
                         mysqli_stmt_execute($stmt);
                         $result = mysqli_stmt_get_result($stmt);
                         while ($row = mysqli_fetch_array($result)) {
@@ -164,19 +176,23 @@ include('Check_token.php');
                                 <td>#
                                     <?php echo $CountNumber ?>.
                                 </td>
-                                <td>
+                                <td class="des filedes">
                                     <?php echo $row['filename']; ?>
                                 </td>
+                        
+
                                 <td class="des filedes">
-                                    <?php echo $row['fileTitle']; ?>
+                                    <?php echo $row['remark']; ?>
                                 </td>
-
-
+                                <td class="des">
+                                    <?php echo $row['receiver_name']; ?>
+                                </td>
 
                                 <td style="padding-left:40px">
-                                    <?php echo $row['created_at']; ?>
+                                    <?php
+                                     echo $row['created_at']; ?>
                                 </td>
-                                <td class="dots-btn" style="padding-left:60px">
+                                <td class="dots-btn" style="padding-left:50px">
                                     <!-- Dropdown Container -->
                                         <div class="dropdown">
                                             <!-- Dots Icon (Dropdown Toggle) -->
@@ -197,8 +213,16 @@ include('Check_token.php');
                                                 <li>
                                                     <a class="dropdown-item" href="#sendfileModal<?php echo $row['id']?>"
                                                      data-toggle="modal" data-target="#sendfileModal<?php echo $row['id']?>">
-                                                        <i class="far fa-paper-plane"></i> Send File
+                                                        <i class="fa fa-pencil"></i> Action
                                                     </a>
+                                                </li>
+                                                <li>
+                                                <a class="dropdown-item" href="single-document.php?id=<?php echo $row['id']; ?>"><i
+                                                class="fa-solid fa-eye"></i> View File</a>
+                                                </li>
+                                                <li>
+                                                <a class="dropdown-item" href="javascript:void(0);" onclick="confirmDelete(<?php echo $row['id']; ?>)"><i
+                                                class="fa-solid fa-trash"></i> Delete </a>
                                                 </li>
                                                 <li>
                                                     <hr class="dropdown-divider">
@@ -212,17 +236,7 @@ include('Check_token.php');
                                         </div>
                                     </td>
 
-                                    <td class="action">
-                                        <a href="update-document.php?id=<?php echo $row['id']; ?>"><i
-                                                class="fa-solid fa-pen-to-square"></i></a>
-                                        <a href="javascript:void(0);" onclick="confirmDelete(<?php echo $row['id']; ?>)"><i
-                                                class="fa-solid fa-trash"></i></a>
-
-                                        <a href="single-document.php?id=<?php echo $row['id']; ?>"><i
-                                                class="fa-solid fa-eye"></i></a>
-
-
-                                    </td>
+                                    
                                 </tr>
                                 </tbody>
 
@@ -260,7 +274,7 @@ include('Check_token.php');
 
                     </div>
 
-                   <!----------------send file Model For document-------------------->
+                   <!----------------Action Model For document-------------------->
 
                    <div class="container">
                                 <div class="modal fade" id="sendfileModal<?php echo $row['id']; ?>" role="dialog">
@@ -269,16 +283,16 @@ include('Check_token.php');
 
                                         <div class="modal-content sendfile-modal" >
                                             <div class="modal-header">
-                                                <h4 class="modal-title"><i class="fas fa-cog file-icon"></i> Send File</h4>
+                                                <h4 class="modal-title"><i class="fas fa-cog file-icon"></i> Operations</h4>
                                                 <button type="button" data-dismiss="modal" class="close">&times; </button>
                                             </div>
                                             <div class="modal-body">
-                                                <form method="" id="sendFileForm<?php echo $row['id']?>" enctype="multipart/form-data"
-                                                    action="sendFile.php">
+                                                <form method="" id="updateFileForm<?php echo $row['id']?>" enctype="multipart/form-data"
+                                                    action="Update-fileStatus.php">
 
 
                                                     <div class="form-group">
-                                                        <input type="hidden" name="document_id" class="form-control"
+                                                        <input type="hidden" name="id" class="form-control"
                                                             value="<?php echo $row['id']; ?>">
                                                     </div>
 
@@ -292,9 +306,9 @@ include('Check_token.php');
                                                     <label for="actionType">Action: <span>*</span></label>
                                                     <select id="actionType" name="action_type" class="form-control" required>
                                                     <option value="">...</option>
-                                                    <option value="release">Release</option>
-                                                      <option value="complete">Complete</option>
-                                                    <option value="hold">Hold</option>
+                                                    <option value="cancel">Cancel</option>  
+                                                    <option value="hold">Hold</option>         
+       
                                                     </select>
                                                     </div>
                                                     <div class="form-group">
@@ -303,27 +317,10 @@ include('Check_token.php');
                                                             value="<?php echo $row['fileTitle']; ?>" readonly>
                                                     </div>
 
-                                                    <div class="form-group">
-                                                    <label for="receiver">Receiver: <span>*</span></label>
-
-                                                    <select id="receiver" name="receiver" class="form-control" required>
-                <!-- Populate with registered users -->
-                <option value="">...</option>
-
-                <?php
-                $query1 = "SELECT * FROM user WHERE role='user'";
-                $result1 = mysqli_query($con, $query1);
-                while ($row1 = mysqli_fetch_assoc($result1)) {
-                    echo "<option value='{$row1['id']}'>{$row1['name']}</option>";
-                }
-                ?>
-            </select>
-                                                    </div>
-
                                                     
                                                     <div class="form-group">
                                                         <label>Remark: <span>*</span></label>
-                                                        <textarea type="text" name="remarks" row="4" placeholder="Type Message .." class="form-control" required></textarea>
+                                                        <textarea type="text" name="remark" row="4" placeholder="Type Message .." class="form-control" required></textarea>
                                                     </div>
 
                                             
@@ -333,7 +330,7 @@ include('Check_token.php');
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-secondary"
                                                     data-dismiss="modal">Cancel</button>
-                                                <button type="button" class="btn btn-info sendFileBtn" data-id="<?php echo $row['id']?>" >Send</button>
+                                                <button type="button" class="btn btn-info updateFileBtn" data-id="<?php echo $row['id']?>" >Submit</button>
 
                                             </div>
 
@@ -357,10 +354,11 @@ mysqli_stmt_close($stmt);
 
                 <?php
                 $id=$_SESSION['id'];
-                $query = "select COUNT(*) as total from documents Where created_by = '$id'";
+                $query = "SELECT COUNT(*) as total_received FROM document_tracking WHERE status = 'cancel'";
+
                 $result = mysqli_query($con, $query);
                 $row = mysqli_fetch_assoc($result);
-                $total_records = $row['total'];
+                $total_records = $row['total_received'];
                 $total_pages = ceil($total_records / $limit);
                 ?>
                 <div class="pagination-part">
@@ -425,7 +423,7 @@ echo '</div>';
             }).then((result) => {
                 if (result.isConfirmed) {
                     $.ajax({
-                        url: 'delete-document.php',
+                        url: 'delete-fileTracking.php',
                         type: 'GET',
                         data: { id: productId },
                         success: function (response) {
@@ -464,7 +462,7 @@ echo '</div>';
             toast: true,
             position: 'top-end',
             showConfirmButton: false,
-           timer:3000,
+            timer:3000,
             customClass: {
         title: 'swal2-title',
     }
@@ -487,14 +485,14 @@ echo '</div>';
 //ajax code to send file
 
 $(document).ready(function() {
-    $(".sendFileBtn").click(function() {
+    $(".updateFileBtn").click(function() {
         var documentId = $(this).data("id");
 
-        var form = $("#sendFileForm" + documentId)[0];
+        var form = $("#updateFileForm" + documentId)[0];
         var formData = new FormData(form); // Automatically collects form data
 
         $.ajax({
-            url: "sendFile.php",
+            url: "Update-fileStatus.php",
             type: "POST",
             data: formData,
             contentType: false,
@@ -506,8 +504,8 @@ $(document).ready(function() {
                     if (result.success) {
                         Swal.fire({
                             icon: "success",
-                            title: "File Sent!",
-                            text: "The file has been successfully sent.",
+                            title: "Status Update!",
+                            text: "The file status has been successfully updated.",
                             timer: 2000,
                             showConfirmButton: false
                         }).then(() => {
@@ -533,8 +531,7 @@ $(document).ready(function() {
     });
 });
 
-    </script>
-
+</script>
    
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>

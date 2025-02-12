@@ -1,20 +1,17 @@
 <?php
 session_start();
 include('../connection.php');
-// code to not allow admin to directly access admin panel until they are login
+// file to not allow admin to directly access admin panel until they are login
+include('Check_token.php');
 
-if (!isset($_SESSION['id']) && empty($_SESSION['id'])) {
-    header('Location:../admin-login.php');
-    exit();
 
-}
 
 // code to check if admin has submit data
 if (isset($_POST['submit'])) {
     $id = mysqli_real_escape_string($con, $_POST['id']);
     $name = mysqli_real_escape_string($con, $_POST['name']);
     $email = mysqli_real_escape_string($con, $_POST['email']);
-    $role = mysqli_real_escape_string($con, $_POST['role']);
+    $designation = mysqli_real_escape_string($con, $_POST['designation']);
     $phone = mysqli_real_escape_string($con, $_POST['phone']);
     $address = mysqli_real_escape_string($con, $_POST['address']);
     $password = mysqli_real_escape_string($con, $_POST['password']);
@@ -27,9 +24,9 @@ if (isset($_POST['submit'])) {
         $imagePath = $_POST['img'];
     }
 
-    $query = "update user set name=?, email=?, role=?, phone=?,address=?, password=?,image=? where id=?";
+    $query = "update user set name=?, email=?, designation=?, phone=?,address=?, password=?,image=? where id=?";
     $stmt=mysqli_prepare($con,$query);
-    mysqli_stmt_bind_param($stmt,'sssisssi',$name,$email,$role,$phone,$address,$password,$imagePath,$id);
+    mysqli_stmt_bind_param($stmt,'sssisssi',$name,$email,$designation,$phone,$address,$password,$imagePath,$id);
     $result = mysqli_stmt_execute($stmt);
     if ($result) {
 
@@ -84,7 +81,8 @@ if (isset($_POST['submit'])) {
 
             include('../connection.php');
             $id = $_GET['id'];
-            $query = "select * from user where id='$id'";
+            $role='user';
+            $query = "select * from user where id='$id' && role='$role'";
             $result = mysqli_query($con, $query);
             while ($row = mysqli_fetch_array($result)) {
                 ?>
@@ -109,8 +107,8 @@ if (isset($_POST['submit'])) {
                         </div>
 
                         <div class="form-group">
-                            <label style="color:black">Company Role</label>
-                            <input type="text" name="role" placeholder="Enter role" class="form-control" value="<?php echo $row['role']; ?>"
+                            <label style="color:black">Company Designation</label>
+                            <input type="text" name="designation" placeholder="Enter designation" class="form-control" value="<?php echo $row['role']; ?>"
                                 required>
                         </div>
 

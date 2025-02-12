@@ -11,11 +11,8 @@ include('../connection.php');
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 
-// Code to not allow admin to directly access admin panel until they are logged in
-if (!isset($_SESSION['id']) && empty($_SESSION['id'])) {
-    header('Location:../admin-login.php');
-    exit();
-}
+// file to not allow admin to directly access admin panel until they are login
+include('Check_token.php');
 
 // Code to verify JWT token generated after admin login
 $secret_key = "Zarnat12$&10";
@@ -34,6 +31,18 @@ if (isset($_COOKIE["access_token"])) {
         // Check if the token is about to expire (within 10 minutes)
         if ($expiration_time - time() <= 600) {
             $show_refreshToken = true;
+        }
+        if ($expiration_time < time()) {
+            $id = $_SESSION['id'];
+            $role = 'admin';
+            $query = "UPDATE user SET status='inactive' where id='$id' && role='$role'";
+            mysqli_query($con, $query);
+            session_destroy();
+            setcookie('access_token', time() - 3600, "/");
+
+            $_SESSION['message'] = 'Session expired. Please log in again.';
+            header('Location:../admin-login.php');
+            exit();
         }
     } catch (Exception $e) {
         // Token is invalid or expired
@@ -79,7 +88,7 @@ ob_end_flush();
         </div>
 
         <div class="header-icons">
-        <button id="refreshTokenBtn" class="btn token-btn btn-sm">Refresh Token</button>
+            <button id="refreshTokenBtn" class="btn token-btn btn-sm">Refresh Token</button>
             <div class="icon1">
                 <i class="fas fa-bars" id="menuIcon"></i>
             </div>
@@ -104,17 +113,17 @@ ob_end_flush();
             $result = mysqli_query($con, $query);
             while ($row = mysqli_fetch_array($result)) {
                 ?>
-                <div class="admin">
-                    <a href="admin-profile.php">
-                        <img src="../Images/<?php echo $row['image']; ?>" alt="Profile Img">
-                        <div class="bg-wrapper1">
-                            <span></span>
-                        </div>
-                    </a>
-                </div>
+            <div class="admin">
+                <a href="admin-profile.php">
+                    <img src="../Images/<?php echo $row['image']; ?>" alt="Profile Img">
+                    <div class="bg-wrapper1">
+                        <span></span>
+                    </div>
+                </a>
+            </div>
             <?php } ?>
 
-           
+
         </div>
     </header>
 

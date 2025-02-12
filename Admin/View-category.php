@@ -1,11 +1,9 @@
 <?php
 session_start();
 include '../connection.php';
+// file to not allow admin to directly access admin panel until they are login
+include('Check_token.php');
 
-if (!isset($_SESSION['id']) && empty($_SESSION['id'])) {
-    header('Location:../admin-login.php');
-    exit();
-}
 
 
 
@@ -20,7 +18,7 @@ if (!isset($_SESSION['id']) && empty($_SESSION['id'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>View Category</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
- 
+
     <!-- External CSS File Link -->
     <link rel="stylesheet" href="../CSS/style.css">
     <link rel="stylesheet" href="sweetalert2.min.css">
@@ -83,7 +81,7 @@ if (!isset($_SESSION['id']) && empty($_SESSION['id'])) {
                                 <p class="mb-0">Manage your records efficiently</p>
                             </div>
                         </div>
-                        
+
                     </div>
                 </div>
             </div>
@@ -138,7 +136,7 @@ if (!isset($_SESSION['id']) && empty($_SESSION['id'])) {
                         include('../connection.php');
                         $page = isset($_GET['page']) ? (int) $_GET['page'] : 1;
                         $offset = ($page - 1) * $limit;
-                        $CountNumber=1;
+                        $CountNumber = 1;
                         $query = "select * from category ORDER BY id LIMIT {$offset},{$limit}";
                         $stmt = mysqli_prepare($con, $query);
                         mysqli_stmt_execute($stmt);
@@ -179,7 +177,7 @@ if (!isset($_SESSION['id']) && empty($_SESSION['id'])) {
                 </div>
 
                 <?php $CountNumber++;
-                }
+                        }
                         // Close the statement
                         mysqli_stmt_close($stmt);
                         ?>
@@ -200,14 +198,18 @@ if (!isset($_SESSION['id']) && empty($_SESSION['id'])) {
                     </div>
 
                     <?php
-
-
                     echo '<div class="pagination-btns">';
-                    if ($page > 1) {
-                        echo ' <a class="paginate_button previous " href="View-category.php?page=' . ($page - 1) . '"><i class="fas fa-chevron-left"></i></a>';
-                    }
-                    for ($i = 1; $i <= $total_pages; $i++) {
 
+                    // Previous Button
+                    if ($page > 1) {
+                        echo '<a class="paginate_button previous" href="View-category.php?page=' . ($page - 1) . '"><i class="fas fa-chevron-left"></i></a>';
+                    } else {
+                        // Disable Previous button if on the first page or only 1 page exists
+                        echo '<a class="paginate_button previous disabled" href="javascript:void(0)"><i class="fas fa-chevron-left"></i></a>';
+                    }
+
+                    // Page Number Buttons
+                    for ($i = 1; $i <= $total_pages; $i++) {
                         if ($i == $page) {
                             $active = 'current';
                         } else {
@@ -215,11 +217,16 @@ if (!isset($_SESSION['id']) && empty($_SESSION['id'])) {
                         }
                         echo '<a class="paginate_button ' . $active . '" href="View-category.php?page=' . $i . '">' . $i . '</a>';
                     }
+
+                    // Next Button
                     if ($total_pages > $page) {
                         echo '<a class="paginate_button next" href="View-category.php?page=' . ($page + 1) . '"><i class="fas fa-chevron-right"></i></a>';
+                    } else {
+                        // Disable Next button if on the last page or only 1 page exists
+                        echo '<a class="paginate_button next disabled" href="javascript:void(0)"><i class="fas fa-chevron-right"></i></a>';
                     }
-                    echo '</div>';
 
+                    echo '</div>';
                     ?>
 
 

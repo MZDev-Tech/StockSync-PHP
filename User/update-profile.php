@@ -89,7 +89,8 @@ if (isset($_POST['submit'])) {
             <?php
             include('../connection.php');
             $id = $_SESSION['id'];
-            $query = "SELECT * FROM user WHERE id=?";
+            $role='user';
+            $query = "SELECT * FROM user WHERE id=? && role='$role'";
             $stmt = mysqli_prepare($con, $query);
             mysqli_stmt_bind_param($stmt, 'i', $id);
             mysqli_stmt_execute($stmt);
@@ -117,8 +118,8 @@ if (isset($_POST['submit'])) {
                         </div>
 
                         <div class="form-group">
-                            <label style="color:black">Company Role</label>
-                            <input type="text" name="role" placeholder="Enter role" class="form-control" value="<?php echo $row['role']; ?>"
+                            <label style="color:black">Company Designation</label>
+                            <input type="text" name="designation" placeholder="Enter designation" class="form-control" value="<?php echo $row['role']; ?>"
                                 required>
                         </div>
 

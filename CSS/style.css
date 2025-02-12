@@ -319,7 +319,7 @@ li {
 #header-part .search-box input {
     background: transparent;
     border: none;
-    width: 50%;
+    width: 70%;
 }
 #header-part .search-box input:focus{
     background: transparent;
@@ -667,13 +667,13 @@ li {
 }
 
 #page-content .records span.bg-active {
-    background: rgba(136, 243, 154, 0.911);
+    background: rgba(136, 243, 154, 0.774);
     color: #08550c;
 }
 
 #page-content .records span.bg-inactive {
-    background: rgba(241, 133, 151, 0.911);
-    color: #850b0b;
+    background: rgb(241 133 151 / 34%);
+    color: #b32d2d;
 }
 
 .profile-records h6 {
@@ -932,6 +932,11 @@ li {
     color: #3a3a3a;
     font-size: 14px;
     text-transform: none !important;
+}
+.pagination-btns .disabled {
+    pointer-events: none; /* Prevent clicking */
+    opacity: 0.8; /* Dim the button */
+    cursor: default;
 }
 
 #page-content .pagination-part .pagination-btns {
@@ -1360,7 +1365,7 @@ ul.data-product {
 .admin-card .admin-card-cover {
     position: relative;
     width: 100%;
-    height: 100px;
+    height: 140px !important;
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
@@ -1381,7 +1386,8 @@ ul.data-product {
     position: absolute;
     top: 12px;
     right: 12px;
-    padding: 0 10px;
+    padding: 2px 12px !important;
+    text-transform: capitalize;
 }
 
 .admin-card .admin-card-profile {
@@ -1942,10 +1948,10 @@ ul.data-product {
     opacity: 0;
     visibility: hidden;
     transition: transform 0.3s ease-out, opacity 0.3s ease-out;
-    right: auto !important; 
-    left: -170px !important; 
-    top: -10px !important; 
-    z-index: 800 !important;
+    position: absolute; /* Ensure it's positioned absolutely */
+    right:0 !important; 
+    top: 100%;
+    z-index: 1000 !important;
 }
 
 /* Show dropdown smoothly */
@@ -2038,7 +2044,44 @@ outline: none !important;
     margin-top: 10px !important;
 }
 
+/* send file modal code */
 
+.sendfile-modal .modal-title {
+    margin-bottom: 0;
+    text-transform: uppercase;
+    line-height: 1.5;
+    font-size: 26px;
+    font-weight: 500;
+}
+ .modal-header .close,
+ .modal-header .close:focus,
+ .modal-header .close:hover {
+    border: none !important;
+    outline: none !important;
+}
+.sendfile-modal .modal-header i.file-icon{
+color:#716f6f !important;
+}
+
+.sendfile-modal .modal-body label{
+    display: inline-block;
+    font-weight: 500;
+    margin-bottom: .5rem;
+    color: #3f3d3d;
+    padding-left: 4px;
+}
+.sendfile-modal .modal-body label span{
+    font-size: 18px;
+    color:rgba(172, 15, 15, 0.589) !important;
+}
+.sendfile-modal .form-control:disabled, .form-control[readonly] {
+    background-color: #e0ebf5;
+    opacity: 1;
+    font-size: 14px;
+}
+.sendfile-modal .form-control{
+    font-size: 14px;
+}
 /* media queries for smal screen for single product page*/
 @media screen and (max-width:1100px) {
 
@@ -2134,6 +2177,9 @@ outline: none !important;
     .single-recordChild2 {
         width: 90%;
         margin: 10px 8px 10px 28px;
+    }
+    #header-part .search-box input {
+        width: 60%;
     }
 }
 
@@ -2232,6 +2278,11 @@ outline: none !important;
         font-size: 12px;
     }
 
+     .pagination-btns .disabled {
+        pointer-events: none !important; 
+        opacity: 0.5; 
+        cursor: default;
+    }
     #page-content .top-recordPart h2 {
         font-size: 16px;
     }
@@ -2283,6 +2334,9 @@ outline: none !important;
     }
     .result-part {
         width: 95%;
+    }
+    #header-part .search-box input {
+        width: 50%;
     }
 }
 

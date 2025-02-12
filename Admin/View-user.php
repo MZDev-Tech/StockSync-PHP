@@ -2,11 +2,8 @@
 session_start();
 include '../connection.php';
 
-if (!isset($_SESSION['id']) && empty($_SESSION['id'])) {
-    header('Location:../admin-login.php');
-    exit();
-}
-
+// file to not allow admin to directly access admin panel until they are login
+include('Check_token.php');
 
 
 ?>
@@ -102,8 +99,8 @@ if (!isset($_SESSION['id']) && empty($_SESSION['id'])) {
                 $limit = isset($_GET['select-record']) ? (int) $_GET['select-record'] : 3;
                 $page = isset($_GET['page']) ? (int) $_GET['page'] : 1;
                 $offset = ($page - 1) * $limit;
-
-                $query = "select * from user ORDER BY id LIMIT {$offset}, {$limit}";
+                $role = 'user';
+                $query = "select * from user WHERE role='$role' ORDER BY id LIMIT {$offset}, {$limit}";
                 $result = mysqli_query($con, $query);
 
                 ?>
@@ -138,7 +135,8 @@ if (!isset($_SESSION['id']) && empty($_SESSION['id'])) {
                         include('../connection.php');
                         $page = isset($_GET['page']) ? (int) $_GET['page'] : 1;
                         $offset = ($page - 1) * $limit;
-                        $query = "select * from user ORDER BY id LIMIT {$offset},{$limit}";
+                        $role = 'user';
+                        $query = "select * from user WHERE role='$role' ORDER BY id LIMIT {$offset},{$limit}";
                         $stmt = mysqli_prepare($con, $query);
                         mysqli_stmt_execute($stmt);
                         $result = mysqli_stmt_get_result($stmt);
@@ -162,12 +160,12 @@ if (!isset($_SESSION['id']) && empty($_SESSION['id'])) {
                                     <?php echo $row['password']; ?>
                                 </td style="padding-left:40px">
                                 <td>
-                                    
-                                    <?php 
-                                    $status=$row['status'];
-                                    $bgcolor= ($status=='active')? 'bg-active' : 'bg-inactive';
+
+                                    <?php
+                                    $status = $row['status'];
+                                    $bgcolor = ($status == 'active') ? 'bg-active' : 'bg-inactive';
                                     echo "<span class='status $bgcolor'>$status</span>";
-                                    
+
                                     ?>
                                 </td>
                                 <td class="single-img">
@@ -188,9 +186,10 @@ if (!isset($_SESSION['id']) && empty($_SESSION['id'])) {
                                     <a href="javascript:void(0);" onclick="confirmDelete(<?php echo $row['id']; ?>)"><i
                                             class="fa-solid fa-trash"></i></a>
 
-                                    <a href="single-user.php?id=<?php echo $row['id']; ?>"><i class="fa-solid fa-eye"></i></a>
+                                    <a href="single-user.php?id=<?php echo $row['id']; ?>"><i
+                                            class="fa-solid fa-eye"></i></a>
 
-                                    
+
                                 </td>
                             </tr>
 
@@ -219,14 +218,18 @@ if (!isset($_SESSION['id']) && empty($_SESSION['id'])) {
                     </div>
 
                     <?php
-
-
                     echo '<div class="pagination-btns">';
-                    if ($page > 1) {
-                        echo ' <a class="paginate_button previous " href="View-category.php?page=' . ($page - 1) . '"><i class="fas fa-chevron-left"></i></a>';
-                    }
-                    for ($i = 1; $i <= $total_pages; $i++) {
 
+                    // Previous Button
+                    if ($page > 1) {
+                        echo '<a class="paginate_button previous" href="View-user.php?page=' . ($page - 1) . '"><i class="fas fa-chevron-left"></i></a>';
+                    } else {
+                        // Disable Previous button if on the first page or only 1 page exists
+                        echo '<a class="paginate_button previous disabled" href="javascript:void(0)"><i class="fas fa-chevron-left"></i></a>';
+                    }
+
+                    // Page Number Buttons
+                    for ($i = 1; $i <= $total_pages; $i++) {
                         if ($i == $page) {
                             $active = 'current';
                         } else {
@@ -234,11 +237,16 @@ if (!isset($_SESSION['id']) && empty($_SESSION['id'])) {
                         }
                         echo '<a class="paginate_button ' . $active . '" href="View-user.php?page=' . $i . '">' . $i . '</a>';
                     }
+
+                    // Next Button
                     if ($total_pages > $page) {
                         echo '<a class="paginate_button next" href="View-user.php?page=' . ($page + 1) . '"><i class="fas fa-chevron-right"></i></a>';
+                    } else {
+                        // Disable Next button if on the last page or only 1 page exists
+                        echo '<a class="paginate_button next disabled" href="javascript:void(0)"><i class="fas fa-chevron-right"></i></a>';
                     }
-                    echo '</div>';
 
+                    echo '</div>';
                     ?>
 
 

@@ -1,3 +1,8 @@
+<?php 
+
+// file to not allow admin to directly access admin panel until they are login
+include('Check_token.php');
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -49,7 +54,16 @@
                                     <p><?php echo $row['fileTitle'] ?></p>
                                 </div>
                                 <div class="text-part">
-                                    <?php echo $row['description'] ?>
+
+                                <div class="text-part">
+    <?php 
+        $description = $row['description'];
+        // Decode HTML entities to ensure proper display of content
+        $description = html_entity_decode($description, ENT_QUOTES, 'UTF-8');
+        echo $description;
+    ?>
+</div>
+
                                 </div>
                             </div>
                             <div class="file-footer">

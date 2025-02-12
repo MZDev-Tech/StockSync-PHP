@@ -1,3 +1,7 @@
+<?php 
+// file to not allow admin to directly access admin panel until they are login
+include('Check_token.php');
+?>
 <!DOCTYPE html>
 <html lang="en">
 

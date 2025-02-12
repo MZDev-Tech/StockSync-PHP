@@ -26,6 +26,18 @@ if (isset($_COOKIE["access_token"])) {
         if ($expiration_time - time() <= 600) {
             $show_refreshToken = true;
         }
+        if ($expiration_time < time()) {
+            $id = $_SESSION['id'];
+            $role = 'user';
+            $query = "UPDATE user SET status='inactive' where id='$id' && role='$role'";
+            mysqli_query($con, $query);
+            session_destroy();
+            setcookie('access_token', time() - 3600, "/");
+
+            $_SESSION['message'] = 'Session expired. Please log in again.';
+            header('Location:../admin-login.php');
+            exit();
+        }
     } catch (Exception $e) {
         // Token is invalid or expired
         $_SESSION['message'] = 'Session expired. Please log in again.';

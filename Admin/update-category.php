@@ -1,13 +1,10 @@
 <?php
 session_start();
 include('../connection.php');
-// code to not allow admin to directly access admin panel until they are login
+// file to not allow admin to directly access admin panel until they are login
+include('Check_token.php');
 
-if (!isset($_SESSION['id']) && empty($_SESSION['id'])) {
-    header('Location:../admin-login.php');
-    exit();
 
-}
 
 // code to check if admin has submit data
 if (isset($_POST['submit'])) {

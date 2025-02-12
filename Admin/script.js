@@ -34,11 +34,11 @@ document.addEventListener('DOMContentLoaded', () => {
         item.addEventListener('click', function () { 
             console.log('item clicked');
 
-            // Remove active class from all sidebar items
-            profile_items.forEach(val => val.classList.remove('active'));
+            // // Remove active class from all sidebar items
+            // profile_items.forEach(val => val.classList.remove('active'));
 
             // Add active class to the clicked item
-            this.classList.add('active');
+            this.classList.toggle('active');
 
             // Hide all profile sections
             document.querySelectorAll(".profile-section").forEach(section => {

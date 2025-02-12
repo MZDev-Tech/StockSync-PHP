@@ -2,11 +2,8 @@
 session_start();
 include('../connection.php');
 
-// Prevent unauthorized access
-if (!isset($_SESSION['id']) || empty($_SESSION['id'])) {
-    header('Location:../admin-login.php');
-    exit();
-}
+// file to not allow admin to directly access admin panel until they are login
+include('Check_token.php');
 
 function validateInput($data) {
     return htmlentities(trim(stripslashes($data)));
@@ -67,7 +64,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (empty($error)) {
         $name = mysqli_real_escape_string($con, $_POST['name']);
         $email = mysqli_real_escape_string($con, $_POST['email']);
-        $role = mysqli_real_escape_string($con, $_POST['role']);
+        $designation = mysqli_real_escape_string($con, $_POST['designation']);
         $phone = mysqli_real_escape_string($con, $_POST['phone']);
         $address = mysqli_real_escape_string($con, $_POST['address']);
         $password = mysqli_real_escape_string($con, $_POST['password']);
@@ -76,9 +73,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $imagePath = "../Images/" . basename($_FILES['image']['name']);
         move_uploaded_file($_FILES['image']['tmp_name'], $imagePath);
 
-        $query = "INSERT INTO user(`name`, `email`,`role`, `phone`,`address`, `password`, `image`,`status`) VALUES (?, ?, ?, ?, ?)";
+        $query = "INSERT INTO user(`name`, `email`,`designation`, `phone`,`address`, `password`, `image`,`status`) VALUES (?, ?, ?, ?, ?)";
         $stmt = mysqli_prepare($con, $query);
-        mysqli_stmt_bind_param($stmt, 'sssissss', $name, $email,$role, $phone,$address, $password, $imagePath,$status);
+        mysqli_stmt_bind_param($stmt, 'sssissss', $name, $email,$designation, $phone,$address, $password, $imagePath,$status);
         
         if (mysqli_stmt_execute($stmt)) {
             $_SESSION['message'] = 'User added successfully.';
@@ -143,7 +140,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                     </div>
                     <div class="form-group">
-                        <input type="text" name="role" placeholder="Company role"  class="form-control" required>
+                        <input type="text" name="designation" placeholder="Company designation"  class="form-control" required>
 
                     </div>
 

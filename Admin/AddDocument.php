@@ -2,11 +2,8 @@
 session_start();
 include('../connection.php');
 
-// Code to not allow admin to directly access admin panel until they are logged in
-if (!isset($_SESSION['id']) && empty($_SESSION['id'])) {
-    header('Location:../admin-login.php');
-    exit();
-}
+// file to not allow admin to directly access admin panel until they are login
+include('Check_token.php');
 
 // Code to check if admin has submitted the form
 if (isset($_POST['submit'])) {
@@ -139,26 +136,48 @@ if (isset($_POST['submit'])) {
 
     <!-- Initialize Summernote -->
     <script type="text/javascript">
-        $(document).ready(function () {
-            $('#summernote').summernote({
-                placeholder: 'Enter Description',
-                height: 200,
-                tabsize: 2,
-                toolbar: [
-                    ['style', ['style']],
-                    ['font', ['bold', 'italic', 'underline']],
-                    ['fontsize', ['fontsize']],  // Font size
-                    ['fontname', ['fontname']],  // Font family
-                    ['color', ['color']],  // Text color
-                    ['para', ['ul', 'ol', 'paragraph']],  // Lists & Paragraph format
-                    ['height', ['height']],  // Line height
-                    ['table', ['table']],  // Table
-                    ['insert', ['link', 'picture', 'video']],  // Insert options
-                    ['view', ['help']]  // View options
-                ]
-            });
-        });
-    </script>
+       $(document).ready(function () {
+    $('#summernote').summernote({
+        placeholder: 'Enter Description',
+        height: 200,
+        tabsize: 2,
+        toolbar: [
+            ['style', ['style']],
+            ['font', ['bold', 'italic', 'underline']],
+            ['fontsize', ['fontsize']],
+            ['fontname', ['fontname']],
+            ['color', ['color']],
+            ['para', ['ul', 'ol', 'paragraph']],
+            ['height', ['height']],
+            ['table', ['table']],
+            ['insert', ['link', 'picture', 'video']],
+            ['view', ['help']]
+        ],
+        callbacks: {
+            onImageUpload: function (files) {
+                // Handle image upload
+                var data = new FormData();
+                data.append("file", files[0]); // Append the file to FormData
+
+                $.ajax({
+                    url: 'handleFileMedia.php', // Server-side upload script
+                    type: 'POST',
+                    data: data,
+                    contentType: false,
+                    processData: false,
+                    success: function (response) {
+                        // Insert the uploaded image into the editor
+                        $('#summernote').summernote('insertImage', response);
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("Error uploading file: " + error);
+                    }
+                });
+            }
+        }
+    });
+});
+</script>
 </body>
 
 </html>

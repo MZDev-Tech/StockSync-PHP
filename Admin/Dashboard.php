@@ -4,43 +4,9 @@ include '../vendor/autoload.php';
 include('../connection.php');
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
+// file to not allow admin to directly access admin panel until they are login
+include('Check_token.php');
 
-// code to not allow admin to directly access admin panel until they are login
-
-if (!isset($_SESSION['id']) && empty($_SESSION['id'])) {
-  header('Location:../admin-login.php');
-  exit();
-
-}
-
-//code to verify Jwt token generated after admin login
-$secret_key = "Zarnat12$&10";
-
-
-if (isset($_COOKIE["access_token"])) {
-  $token = $_COOKIE['access_token'];
-
-  try {
-    //decode & verify the token
-    $decoded_token = JWT::decode($token, new Key($secret_key, 'HS256'));
-    //access admin data
-    $user_id = $decoded_token->data->id;
-    $user_name = $decoded_token->data->name;
-
-
-  } catch (Exception $e) {
-
-    $_SESSION['message'] = 'Session expired. Please log in again.';
-    header('Location:../admin-login.php');
-    exit();
-  }
-
-} else {
-
-  $_SESSION['message'] = "Unauthorized access. Please log in first.";
-  header('Location:../admin-login.php');
-  exit();
-}
 
 ?>
 <!DOCTYPE html>
@@ -118,7 +84,7 @@ if (isset($_COOKIE["access_token"])) {
               <div class="col-sm-7">
                 <div class="card-body">
                   <h5 class="card-title mb-3 admin-welcome">Welcome
-                    <?php echo isset($user_name) ? $user_name : 'Admin' ?>
+                    <?php echo isset($_SESSION['name']) ? $_SESSION['name'] : 'Admin' ?>
                     !
                   </h5>
                   <p class="mb-6">We're glad to have you here. Explore your profile to see updates and personalized

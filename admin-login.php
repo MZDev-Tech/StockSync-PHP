@@ -16,60 +16,75 @@ $expiration_time = $issued_at + 3600;
 if (isset($_POST['submit'])) {
     $email = $_POST['email'];
     $password = $_POST['password'];
-    $query = "select * from admin where email='$email'";
+    $query = "select * from user where email='$email'";
     $result = mysqli_query($con, $query);
     if (mysqli_num_rows($result) > 0) {
         $row = mysqli_fetch_array($result);
-        $hashed_password = $row['password'];
-        if (password_verify($password, $hashed_password)) {
-            $_SESSION['id'] = $row['id'];
-            $_SESSION['name'] = $row['name'];
-            $_SESSION['email'] = $row['email'];
+         // Check if the user is an admin
+         if ($row['role'] === 'admin') {
+            $hashed_password = $row['password'];
 
+            // Verify the password
+            if (password_verify($password, $hashed_password)) {
+                $_SESSION['id'] = $row['id'];
+                $_SESSION['name'] = $row['name'];
+                $_SESSION['email'] = $row['email'];
+                $_SESSION['role'] = $row['role'];
 
-            //generate JWT
-            $payload = [
-                "iss" => $issuer,
-                "aud" => $audience,
-                "iat" => $issued_at,
-                "exp" => $expiration_time,
-                "data" => [
-                    "id" => $row['id'],
-                    "name" => $row['name'],
-                    'email' => $row['email'],
-                ]
-            ];
+                //update admin status to active when login
+                $id=$row['id'];
+                $query1="update user set status='active' where id ='$id'";
+                mysqli_query($con, $query1);
+                // Generate JWT
+                $payload = [
+                    "iss" => $issuer,
+                    "aud" => $audience,
+                    "iat" => $issued_at,
+                    "exp" => $expiration_time,
+                    "data" => [
+                        "id" => $row['id'],
+                        "name" => $row['name'],
+                        'email' => $row['email'],
+                        'role' => $row['role']
+                    ]
+                ];
 
-            //encode JWT
-            $jwt = JWT::encode($payload, $secret_key, 'HS256');
-            //set JWT in cookies only
-            setcookie("access_token", $jwt, time() + 3600, "/", "", false, true);
+                // Encode JWT
+                $jwt = JWT::encode($payload, $secret_key, 'HS256');
 
-            // Code to store admin data in cookies
-            if (isset($_POST['remember_me'])) {
-                setcookie('email', $_POST['email'], time() + 60 * 60 * 24);
-                setcookie('password', $_POST['password'], time() + 60 * 60 * 24);
+                // Set JWT in cookies
+                setcookie("access_token", $jwt, time() + 3600, "/", "", false, true);
+
+                // Store admin data in cookies if "Remember Me" is checked
+                if (isset($_POST['remember_me'])) {
+                    setcookie('email', $_POST['email'], time() + 60 * 60 * 24);
+                    setcookie('password', $_POST['password'], time() + 60 * 60 * 24);
+                } else {
+                    setcookie('email', '', time() - 3600);
+                    setcookie('password', '', time() - 3600);
+                }
+
+                $_SESSION['message'] = 'Admin login successfully..';
+                header('Location:Admin/Dashboard.php');
+                exit();
             } else {
-                setcookie('email', '', time() - 3600);
-                setcookie('password', '', time() - 3600);
+                $_SESSION['message'] = 'Invalid Password..';
+                header('Location:admin-login.php');
+                exit();
             }
-
-            $_SESSION['message'] = 'Admin login successfully..';
-            header('Location:Admin/Dashboard.php');
-            exit();
         } else {
-            $_SESSION['message'] = 'Invalid Password..';
+            $_SESSION['message'] = 'Access denied. You are not an admin.';
             header('Location:admin-login.php');
             exit();
         }
     } else {
-        $_SESSION['message'] = 'Something went wrong..';
+        $_SESSION['message'] = 'User not found..';
         header('Location:admin-login.php');
         exit();
     }
 }
 
-// Code to check if cookies data is stored or not
+// Check if cookies data is stored
 if (isset($_COOKIE['email']) && isset($_COOKIE['password'])) {
     $cookie_email = $_COOKIE['email'];
     $cookie_password = $_COOKIE['password'];
@@ -78,7 +93,6 @@ if (isset($_COOKIE['email']) && isset($_COOKIE['password'])) {
     $cookie_password = "";
 }
 ?>
-
 
 
 <!DOCTYPE html>
@@ -120,7 +134,7 @@ if (isset($_COOKIE['email']) && isset($_COOKIE['password'])) {
 
                 <!-----------alert message------------->
                 <?php if (isset($_SESSION['message'])) { ?>
-                <div class="alert alert-warning data-dismissible fade show" id="alertMessage" style="margin-bottom:0">
+                <div class="alert alert-warning data-dismissible fade show" id="alertMessage" style="margin:0 -10px 12px -10px">
                     <strong>Warning! </strong>
                     <?php echo $_SESSION['message'] ?>
                     <button type="button" data-dismiss="alert" class="close" aria-label="close">

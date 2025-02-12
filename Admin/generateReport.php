@@ -1,13 +1,9 @@
 <?php
 session_start();
-// Code to not allow admin to directly access admin panel until they are logged in
-if (!isset($_SESSION['id']) || empty($_SESSION['id'])) {
-    header('Location:../admin-login.php');
-    exit();
-}
-
 require('../FPDF/fpdf.php');
 require '../connection.php';
+// file to not allow admin to directly access admin panel until they are login
+include('Check_token.php');
 
 // Get the selected category and processor from the form submission
 $category = isset($_GET['category']) ? $_GET['category'] : '';
