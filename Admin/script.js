@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const profile_items = document.querySelectorAll('.profile-sidebar-item');
 
     profile_items.forEach(item => {
-        item.addEventListener('click', function () { 
+        item.addEventListener('click', function () {
             console.log('item clicked');
 
             // // Remove active class from all sidebar items
@@ -54,6 +54,29 @@ document.addEventListener('DOMContentLoaded', () => {
                 } else {
                     console.warn(`Element with ID "${target}" not found.`);
                 }
+            }
+        });
+    });
+
+
+    document.querySelectorAll(".dropdown-toggle").forEach((toggle) => {
+        toggle.addEventListener("click", function () {
+            // this refers to the clicked dot button & nextElementSibling finds the next element, which is the dropdown menu
+            let dropdownMenu = this.nextElementSibling;
+            //.getBoundingClientRect() returns the exact position & size of the dropdown menu relative to the viewport.
+            let rect = dropdownMenu.getBoundingClientRect();
+            // window.innerHeight gives the total visible height of the browser window (viewport).
+
+            let windowHeight = window.innerHeight;
+            //rect.bottom calculates the Y-coordinate (vertical position) of the dropdown’s bottom edge.
+            //  (screen) height = 900px
+            // The dropdown starts at 750px
+            // The dropdown height = 200px
+            // So the bottom of the dropdown = 750px + 200px = 950px
+            if (rect.bottom > windowHeight) {
+                dropdownMenu.classList.add("dropdown-menu-end");
+            } else {
+                dropdownMenu.classList.remove("dropdown-menu-end");
             }
         });
     });

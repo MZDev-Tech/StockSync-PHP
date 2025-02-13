@@ -768,10 +768,11 @@ li {
 
 #page-content .table-section {
     max-width: fit-content;
-    max-height: 600px;
+    /* max-height: 600px; */
     overflow-y: auto;
 
 }
+
 
 #page-content .table-section table {
     table-layout: fixed;
@@ -803,10 +804,37 @@ li {
     background: #fff;
 }
 
-#page-content .table-section tbody tr .product-data {
+#page-content .table-section table td.user-designation {
     display: flex;
     align-items: center;
-    gap: 16px;
+    justify-content: start;
+
+}
+
+
+#page-content .table-section table td.user-designation img {
+    width: 45px;
+    height: 45px;
+    object-fit: cover;
+    border-radius: 15px;
+    margin-right: 8px;
+    border: 2px solid #d5d7da;
+    box-shadow: inset  8px 8px 8px #ecf0f3,
+    inset -8px -8px 8px #fff;
+
+
+}
+#page-content .table-section table td.user-designation h5 {
+    font-size: 14px;
+    font-weight: 500;
+    margin: 0;
+}
+
+#page-content .table-section table td.user-designation p {
+    font-size: 12px;
+    font-weight: 300;
+    color: rgb(83, 83, 83);
+    margin: 0;
 }
 
 #page-content .table-section tbody td {
@@ -845,18 +873,16 @@ li {
 }
 
 #page-content .table-section tbody td.des {
-
+ 
     font-size: 13px;
     text-overflow: ellipsis;
     overflow: hidden;
     white-space: nowrap;
-    transition: all .3s ease !important;
+    transition: all 1s ease !important;
 
 }
 
-#page-content .table-section tbody td.filedes{
-    transition: all .8s ease !important;
-}
+
 #page-content .table-section tbody tr:hover td.des {
 
     text-wrap: wrap;
@@ -866,7 +892,16 @@ li {
 
 }
 
-
+#page-content .table-section tbody td.action span.file-action{
+    padding: 5px 8px;
+    border: 1px inset rgb(236 245 245 / 26%);
+    background-color: rgb(237 241 241 / 61%);
+    text-align: center;
+    margin-left: 6px;
+}
+#page-content .table-section tbody td.action span.file-action i{
+    margin-left: 0 !important;
+}
 #page-content .table-section tbody td a i {
     cursor: pointer;
     transition: all .5s ease;
@@ -1948,18 +1983,20 @@ ul.data-product {
     opacity: 0;
     visibility: hidden;
     transition: transform 0.3s ease-out, opacity 0.3s ease-out;
-    position: absolute; /* Ensure it's positioned absolutely */
-    right:0 !important; 
-    top: 100%;
+    position: absolute; 
+    left:-20px !important;
     z-index: 1000 !important;
 }
 
-/* Show dropdown smoothly */
 .dots-btn .dropdown-menu.show {
     transform: scale(1); 
     opacity: 1;
     visibility: visible;
 }
+/* .dots-btn .dropdown-menu.dropdown-menu-end {
+    top: auto !important;
+    bottom: 100% !important; 
+} */
 
 .dots-btn .dropdown-item {
     font-size: 15px;
@@ -2025,6 +2062,58 @@ outline: none !important;
     font-size: 15px;
 }
 
+/* remark modal design */
+
+.remark-modal .modal-header { 
+    border-bottom: none;  
+    display:inline-block !important;
+    padding-bottom:0;
+}
+.remark-modal .remark-gif {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.remark-modal .remark-gif img{
+    width:320px; 
+    height:300px; 
+    margin-top: -30px;
+}
+.remark-modal .modal-title p{
+   margin-left: 50px;
+   margin-top: -50px;
+   font-size: 20px;
+   text-transform:lowercase;
+}
+.remark-modal .modal-title p::first-letter{
+    text-transform: capitalize;
+}
+.remark-modal .modal-header .close:focus{
+border: none !important;
+outline: none !important;
+}
+.remark-modal .modal-body {
+      padding: 0 1rem;
+}
+.remark-modal .modal-body p {
+    margin-top: -4px;
+    margin-bottom: 1rem;
+    font-size: 15px;
+    padding: 0 25px 14px 25px;
+    text-align-last: center;
+    text-align: center !important;
+    text-transform: none;
+}
+.remark-modal .modal-footer {
+   
+   justify-content: center;
+   padding: 0 .75rem 1.8rem .75rem;
+   border-top: none;
+}
+.remark-modal .modal-footer button,
+.remark-modal .modal-footer a{
+   font-size: 15px;
+}
 
 /* text editor default btn style */
 .btn-primary.disabled, .btn-primary:disabled {

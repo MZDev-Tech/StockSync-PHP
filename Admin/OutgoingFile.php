@@ -1,13 +1,8 @@
 <?php
 session_start();
 include '../connection.php';
-
-if (!isset($_SESSION['id']) && empty($_SESSION['id'])) {
-    header('Location:../admin-login.php');
-    exit();
-}
-
-
+//file to check if token expire then redirect us to login 
+include('Check_token.php');
 
 ?>
 
@@ -71,7 +66,7 @@ if (!isset($_SESSION['id']) && empty($_SESSION['id'])) {
                         <div class="d-flex align-items-center top-recordPart">
                             <i class="fa-solid fa-tablet-screen-button"></i>
                             <div>
-                                <h2 class="mb-1">Table Data</h2>
+                                <h2 class="mb-1">Outgoing Record</h2>
                                 <p class="mb-0">Manage your records efficiently</p>
                             </div>
 
@@ -97,27 +92,11 @@ if (!isset($_SESSION['id']) && empty($_SESSION['id'])) {
                 $offset = ($page - 1) * $limit;
                 $userId=$_SESSION['id'];
              
-                $$query = "SELECT 
-                documents.*,
-                sender.name AS sender_name,  
-                receiver.name AS receiver_name,
-                document_tracking.date,
-                document_tracking.remark,
-                document_tracking.status
-              FROM document_tracking
-              JOIN documents ON document_tracking.document_id = documents.id
-              JOIN user AS sender ON document_tracking.from_user = sender.id  
-              JOIN user AS receiver ON document_tracking.to_user = receiver.id 
-              WHERE document_tracking.status = 'release' 
-              AND document_tracking.from_user = '$userId'
-              ORDER BY document_tracking.document_id 
-              LIMIT {$offset}, {$limit}";
-    
-
+                $query = "SELECT * FROM document_tracking WHERE status = 'release' AND from_user = '$userId' ORDER BY document_id LIMIT {$offset}, {$limit}";
                 $result = mysqli_query($con, $query);
 
                 ?>
-                <form method="GET" action="view-document.php">
+                <form method="GET" action="OutgoingFile.php.php">
                     <div class="select-box">
                         <label>Show
                             <select name="select-record" class="select-btn" onchange="this.form.submit()">
@@ -136,11 +115,13 @@ if (!isset($_SESSION['id']) && empty($_SESSION['id'])) {
                         <thead width="100%">
                             <tr>
                                 <th style="width:90px">S-N</th>
-                                <th style="width:180px"><span class="las la-sort"></span>FileName</th>
-                                <th style="width:260px"><span class="las la-sort"></span>Remark</th>
-                                <th style="width:140px"><span class="las la-sort"></span>Send To</th>
+                                <th style="width:190px"><span class="las la-sort"></span>FileName</th>
+                                <th style="width:230px"><span class="las la-sort"></span>Send To</th>
+                                <th style="width:150px"><span class="las la-sort"></span>Options</th>
                                 <th style="width:210px"><span class="las la-sort"></span>Released Date</th>
-                                <th ><span class="las la-sort"></span>Manage</th>
+                                <th><span class="las la-sort"></span>Manage</th>
+
+                               
                             </tr>
                         </thead>
 
@@ -150,21 +131,35 @@ if (!isset($_SESSION['id']) && empty($_SESSION['id'])) {
                         $offset = ($page - 1) * $limit;
                         $CountNumber = 1;
                         $userId=$_SESSION['id'];
-                        $query = "SELECT 
-                        documents.*,
-                        sender.name AS sender_name,  
-                        receiver.name AS receiver_name,
-                        document_tracking.date,
-                        document_tracking.remark,
-                        document_tracking.status
-                      FROM document_tracking
-                      JOIN documents ON document_tracking.document_id = documents.id
-                      JOIN user AS sender ON document_tracking.from_user = sender.id  
-                      JOIN user AS receiver ON document_tracking.to_user = receiver.id 
-                      WHERE document_tracking.status = 'release' 
-                      AND document_tracking.from_user = '$userId'
-                      ORDER BY document_tracking.document_id 
-                      LIMIT {$offset}, {$limit}";
+                        $query = "
+                        SELECT 
+                            documents.*,
+                            sender.name AS sender_name,  
+                            receiver.name AS receiver_name,
+                            userPost.designation AS user_designation,
+                            userImg.image AS user_image,
+                            document_tracking.date,
+                            document_tracking.remark,
+                            document_tracking.status,
+                            document_tracking.to_user
+                        FROM document_tracking
+                        JOIN documents ON document_tracking.document_id = documents.id
+                        JOIN user AS sender ON document_tracking.from_user = sender.id  
+                        JOIN user AS receiver ON document_tracking.to_user = receiver.id
+                        JOIN user AS userPost ON document_tracking.to_user = userPost.id 
+                        JOIN user AS userImg ON document_tracking.to_user = userImg.id 
+                        WHERE document_tracking.status = 'release' 
+                        AND document_tracking.from_user = '$userId'
+                        AND document_tracking.date = (
+                            SELECT MAX(date) 
+                            FROM document_tracking 
+                            WHERE document_id = document_tracking.document_id 
+                            AND status = 'release'
+                        )
+                        ORDER BY document_tracking.document_id 
+                        LIMIT {$offset}, {$limit}
+                    ";
+                    
             
                                 $stmt = mysqli_prepare($con, $query);
                         mysqli_stmt_execute($stmt);
@@ -181,17 +176,17 @@ if (!isset($_SESSION['id']) && empty($_SESSION['id'])) {
                                 </td>
                         
 
-                                <td class="des filedes">
-                                    <?php echo $row['remark']; ?>
-                                </td>
-                                <td class="des">
-                                    <?php echo $row['receiver_name']; ?>
-                                </td>
+                                <td class="user-designation">
+                                <img src="<?php echo file_exists("../Image/".$row['user_image']) && !empty($row['user_image']) ? "../Image/".$row['user_image'] : '../Images/ImgIcon.png'; ?>" 
+                                 onerror="this.onerror=null; this.src='../Images/ImgIcon.png';">
+                                <div class="fileUser-data">
+                                            <h5><?php echo $row['receiver_name']; ?></h5>
+                                            <p><?php echo $row['user_designation']; ?></p>
+                                        </div>
 
-                                <td style="padding-left:40px">
-                                    <?php
-                                     echo $row['created_at']; ?>
-                                </td>
+                                    </td>
+
+                            
                                 <td class="dots-btn" style="padding-left:50px">
                                     <!-- Dropdown Container -->
                                         <div class="dropdown">
@@ -211,22 +206,23 @@ if (!isset($_SESSION['id']) && empty($_SESSION['id'])) {
                                                     </a>
                                                 </li>
                                                 <li>
-                                                    <a class="dropdown-item" href="#sendfileModal<?php echo $row['id']?>"
-                                                     data-toggle="modal" data-target="#sendfileModal<?php echo $row['id']?>">
-                                                        <i class="fa fa-pencil"></i> Action
+                                                    <a class="dropdown-item" href="#fileStatusModal<?php echo $row['id']?>"
+                                                     data-toggle="modal" data-target="#fileStatusModal<?php echo $row['id']?>">
+                                                     <i class="fas fa-wrench"></i> Action
                                                     </a>
                                                 </li>
+
                                                 <li>
-                                                <a class="dropdown-item" href="single-document.php?id=<?php echo $row['id']; ?>"><i
-                                                class="fa-solid fa-eye"></i> View File</a>
+                                                    <a class="dropdown-item" href="#viewRemarkModal<?php echo $row['id']?>"
+                                                     data-toggle="modal" data-target="#viewRemarkModal<?php echo $row['id']?>">
+                                                        <i class="fa fa-pencil"></i> Remark
+                                                    </a>
                                                 </li>
-                                                <li>
-                                                <a class="dropdown-item" href="javascript:void(0);" onclick="confirmDelete(<?php echo $row['id']; ?>)"><i
-                                                class="fa-solid fa-trash"></i> Delete </a>
-                                                </li>
+                                                
                                                 <li>
                                                     <hr class="dropdown-divider">
                                                 </li>
+
                                                 <li>
                                                     <a class="dropdown-item" href="TrackRecord.php">
                                                         <i class="far fa-folder"></i> Track File
@@ -236,9 +232,24 @@ if (!isset($_SESSION['id']) && empty($_SESSION['id'])) {
                                         </div>
                                     </td>
 
+
                                     
+                                <td style="padding-left:40px;">
+                                    <?php
+                                     echo $row['created_at']; ?>
+                                </td>
+                                <td class="action" >
+                                 <a href="single-document.php?id=<?php echo $row['id']; ?>">
+                                    <span class="file-action"><i class="fa-solid fa-eye"></i></span></a>
+                                       
+                                <a href="javascript:void(0);" onclick="confirmDelete(<?php echo $row['id']; ?>)">
+                                <span class="file-action"><i class="fa-solid fa-trash"></i></span></a>
+
+                                   </td>
                                 </tr>
                                 </tbody>
+
+                               
 
 </div>
  
@@ -274,74 +285,87 @@ if (!isset($_SESSION['id']) && empty($_SESSION['id'])) {
 
                     </div>
 
+                     <!----------------View Remark Model For File-------------------->
+
+                     <div class="container">
+                        <div class="modal fade" id="viewRemarkModal<?php echo $row['id']; ?>" role="dialog">
+                            <div class="modal-dialog">
+
+                                <!-- Modal content-->
+                                <div class="modal-content remark-modal">
+                                    <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+
+                                        <div class="remark-gif">
+                                            <img src="../Images/remark1.gif" alt="" >
+                                        
+                                        <h4 class="modal-title">
+                                            <p> Review and insights on this file</p>
+                                        </h4>
+                                        </div>
+                                        
+                                    </div>
+                                    <div class="modal-body">
+                                        <p><?php echo $row['remark']?></p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                      <a href="single-document.php?id=<?php echo $row['id']?>" class="btn btn-info text-white"> Check Document</a>
+                                    </div>
+                                </div>
+                                </div>
+
+</div>
+
+                     </div>
+
                    <!----------------Action Model For document-------------------->
 
-                   <div class="container">
-                                <div class="modal fade" id="sendfileModal<?php echo $row['id']; ?>" role="dialog">
-                                    <div class="modal-dialog">
+<div class="container">
+    <div class="modal fade" id="fileStatusModal<?php echo $row['id']; ?>" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content sendfile-modal">
+                <div class="modal-header">
+                    <h4 class="modal-title"><i class="fas fa-cog file-icon"></i> Operations</h4>
+                    <button type="button" data-dismiss="modal" class="close">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <form id="updateFileForm<?php echo $row['id']; ?>" enctype="multipart/form-data">
+                        <input type="hidden" name="document_id" value="<?php echo $row['id']; ?>">
+                        <input type="hidden" name="from_user" value="<?php echo $_SESSION['id']; ?>">
+                        <input type="hidden" name="to_user" value="<?php echo $row['to_user']; ?>">
 
+                        <div class="form-group">
+                            <label for="actionType">Action: <span>*</span></label>
+                            <select id="actionType" name="action_type" class="form-control" required>
+                                <option value="">...</option>
+                                <option value="cancel">Cancel</option>
+                                <option value="onhold">OnHold</option>
+                            </select>
+                        </div>
 
-                                        <div class="modal-content sendfile-modal" >
-                                            <div class="modal-header">
-                                                <h4 class="modal-title"><i class="fas fa-cog file-icon"></i> Operations</h4>
-                                                <button type="button" data-dismiss="modal" class="close">&times; </button>
-                                            </div>
-                                            <div class="modal-body">
-                                                <form method="" id="updateFileForm<?php echo $row['id']?>" enctype="multipart/form-data"
-                                                    action="Update-fileStatus.php">
+                        <div class="form-group">
+                            <label>File Title: <span>*</span></label>
+                            <input type="text" name="filename" class="form-control"
+                                   value="<?php echo $row['fileTitle']; ?>" readonly>
+                        </div>
 
+                        <div class="form-group">
+                            <label>Remark: <span>*</span></label>
+                            <textarea name="remark" rows="4" placeholder="Type Message .." class="form-control" required></textarea>
+                        </div>
+                    </form>
+                </div>
+                <!------Modal Footer---->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-info updateFileBtn" data-id="<?php echo $row['id']; ?>">Submit</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
-                                                    <div class="form-group">
-                                                        <input type="hidden" name="id" class="form-control"
-                                                            value="<?php echo $row['id']; ?>">
-                                                    </div>
-
-                                                    <div class="form-group">
-                                                        <input type="hidden" name="sender" class="form-control"
-                                                            value="<?php echo $_SESSION['id']; ?>">
-                                                    </div>
-
-
-                                                    <div class="form-group">
-                                                    <label for="actionType">Action: <span>*</span></label>
-                                                    <select id="actionType" name="action_type" class="form-control" required>
-                                                    <option value="">...</option>
-                                                    <option value="cancel">Cancel</option>  
-                                                    <option value="onhold">OnHold</option>         
-       
-                                                    </select>
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label>File Title: <span>*</span></label>
-                                                        <input type="text" name="filename" class="form-control"
-                                                            value="<?php echo $row['fileTitle']; ?>" readonly>
-                                                    </div>
-
-                                                    
-                                                    <div class="form-group">
-                                                        <label>Remark: <span>*</span></label>
-                                                        <textarea type="text" name="remark" row="4" placeholder="Type Message .." class="form-control" required></textarea>
-                                                    </div>
-
-                                            
-
-                                            </div>
-                                            <!------Modal Footer---->
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary"
-                                                    data-dismiss="modal">Cancel</button>
-                                                <button type="button" class="btn btn-info updateFileBtn" data-id="<?php echo $row['id']?>" >Submit</button>
-
-                                            </div>
-
-                                            </form>
-
-
-                                        </div>
-                                    </div>
-
-                                </div>
-                            </div>
                            
                     
                             <?php $CountNumber++;}
@@ -350,7 +374,6 @@ mysqli_stmt_close($stmt);
     ?>
                         
                     </table>
-
 
                 <?php
                 $id=$_SESSION['id'];
@@ -373,7 +396,7 @@ echo '<div class="pagination-btns">';
 
 // Previous Button
 if ($page > 1) {
-    echo '<a class="paginate_button previous" href="View-document.php?page=' . ($page - 1) . '"><i class="fas fa-chevron-left"></i></a>';
+    echo '<a class="paginate_button previous" href="OutgoingFile.php?page=' . ($page - 1) . '"><i class="fas fa-chevron-left"></i></a>';
 } else {
     // Disable Previous button if on the first page or only 1 page exists
     echo '<a class="paginate_button previous disabled" href="javascript:void(0)"><i class="fas fa-chevron-left"></i></a>';
@@ -386,12 +409,12 @@ for ($i = 1; $i <= $total_pages; $i++) {
     } else {
         $active = '';
     }
-    echo '<a class="paginate_button ' . $active . '" href="View-document.php?page=' . $i . '">' . $i . '</a>';
+    echo '<a class="paginate_button ' . $active . '" href="OutgoingFile.php?page=' . $i . '">' . $i . '</a>';
 }
 
 // Next Button
 if ($total_pages > $page) {
-    echo '<a class="paginate_button next" href="View-document.php?page=' . ($page + 1) . '"><i class="fas fa-chevron-right"></i></a>';
+    echo '<a class="paginate_button next" href="OutgoingFile.php?page=' . ($page + 1) . '"><i class="fas fa-chevron-right"></i></a>';
 } else {
     // Disable Next button if on the last page or only 1 page exists
     echo '<a class="paginate_button next disabled" href="javascript:void(0)"><i class="fas fa-chevron-right"></i></a>';
@@ -489,7 +512,7 @@ $(document).ready(function() {
         var documentId = $(this).data("id");
 
         var form = $("#updateFileForm" + documentId)[0];
-        var formData = new FormData(form); // Automatically collects form data
+        var formData = new FormData(form); // Collects form data
 
         $.ajax({
             url: "Update-fileStatus.php",
@@ -504,8 +527,8 @@ $(document).ready(function() {
                     if (result.success) {
                         Swal.fire({
                             icon: "success",
-                            title: "Status Update!",
-                            text: "The file status has been successfully updated.",
+                            title: "Status Updated!",
+                            text: "A new record has been added to document tracking.",
                             timer: 2000,
                             showConfirmButton: false
                         }).then(() => {

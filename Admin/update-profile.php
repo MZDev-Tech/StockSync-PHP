@@ -12,7 +12,7 @@ if (isset($_POST['submit'])) {
 
     $id = mysqli_real_escape_string($con, $_POST['id']);
     $name = mysqli_real_escape_string($con, $_POST['name']);
-    $email = mysqli_real_escape_string($con, $_POST['email']);
+    $email = mysqli_real_escape_stripng($con, $_POST['email']);
     $phone = mysqli_real_escape_string($con, $_POST['phone']);
     $designation = mysqli_real_escape_string($con, $_POST['designation']);
     $address = mysqli_real_escape_string($con, $_POST['address']);

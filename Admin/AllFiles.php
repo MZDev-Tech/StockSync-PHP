@@ -103,7 +103,7 @@ include('Check_token.php');
             <div class="records">
                 <div class="record-header">
                     <div>
-                        <h4>Files Record</h4>
+                        <h4> All Files Record</h4>
                     </div>
 
                     <a href="AddDocument.php" class="add-topbtn"> + Create File</a>
@@ -119,7 +119,7 @@ include('Check_token.php');
                 $result = mysqli_query($con, $query);
 
                 ?>
-                <form method="GET" action="view-document.php">
+                <form method="GET" action="AllFiles.php">
                     <div class="select-box">
                         <label>Show
                             <select name="select-record" class="select-btn" onchange="this.form.submit()">
