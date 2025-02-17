@@ -1,4 +1,5 @@
 <?php
+session_name("ADMIN_SESSION");
 session_start();
 require 'vendor/autoload.php';
 include('connection.php');
@@ -20,8 +21,8 @@ if (isset($_POST['submit'])) {
     $result = mysqli_query($con, $query);
     if (mysqli_num_rows($result) > 0) {
         $row = mysqli_fetch_array($result);
-         // Check if the user is an admin
-         if ($row['role'] === 'admin') {
+        // Check if the user is an admin
+        if ($row['role'] === 'admin') {
             $hashed_password = $row['password'];
 
             // Verify the password
@@ -32,8 +33,8 @@ if (isset($_POST['submit'])) {
                 $_SESSION['role'] = $row['role'];
 
                 //update admin status to active when login
-                $id=$row['id'];
-                $query1="update user set status='active' where id ='$id'";
+                $id = $row['id'];
+                $query1 = "update user set status='active' where id ='$id'";
                 mysqli_query($con, $query1);
                 // Generate JWT
                 $payload = [
@@ -109,8 +110,8 @@ if (isset($_COOKIE['email']) && isset($_COOKIE['password'])) {
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
     <script>
-        $(document).ready(function () {
-            setTimeout(function () {
+        $(document).ready(function() {
+            setTimeout(function() {
                 $('#alertMessage').fadeOut('slow')
             }, 2000)
         })
@@ -134,14 +135,14 @@ if (isset($_COOKIE['email']) && isset($_COOKIE['password'])) {
 
                 <!-----------alert message------------->
                 <?php if (isset($_SESSION['message'])) { ?>
-                <div class="alert alert-warning data-dismissible fade show" id="alertMessage" style="margin:0 -10px 12px -10px">
-                    <strong>Warning! </strong>
-                    <?php echo $_SESSION['message'] ?>
-                    <button type="button" data-dismiss="alert" class="close" aria-label="close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
+                    <div class="alert alert-warning data-dismissible fade show" id="alertMessage" style="margin:0 -10px 12px -10px">
+                        <strong>Warning! </strong>
+                        <?php echo $_SESSION['message'] ?>
+                        <button type="button" data-dismiss="alert" class="close" aria-label="close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
 
-                </div>
+                    </div>
                 <?php unset($_SESSION['message']);
                 } ?>
 
@@ -174,7 +175,7 @@ if (isset($_COOKIE['email']) && isset($_COOKIE['password'])) {
                         <span style="font-size:15px; color:#595959">Remember Me</span>
                     </div>
 
-                    
+
                     <div class="form-group mb-4">
                         <input type="submit" name="submit" class="btn text-white btn-block btn-info" value="Login">
                     </div>
@@ -203,9 +204,7 @@ if (isset($_COOKIE['email']) && isset($_COOKIE['password'])) {
                 password.type = "text";
                 EyeIcon.classList.remove('fa-eye-slash');
                 EyeIcon.classList.add('fa-eye');
-            }
-
-            else {
+            } else {
                 password.type = "password";
                 EyeIcon.classList.remove('fa-eye');
                 EyeIcon.classList.add('fa-eye-slash');

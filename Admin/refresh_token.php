@@ -1,7 +1,9 @@
 <?php
+session_name("ADMIN_SESSION");
 session_start();
 require '../connection.php';
 require '../vendor/autoload.php';
+
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 
@@ -36,11 +38,9 @@ if (isset($_COOKIE['access_token'])) {
         setcookie('access_token', $new_token, time() + 3600, '/', "", false, true);
         //return success response
         echo json_encode(['success' => true]);
-
-    } catch (Expection $e) {
+    } catch (Exception $e) {
         echo json_encode(['success' => false, 'error' => $e->getMessage()]);
     }
 } else {
     echo json_encode(['success' => false, 'error' => 'Token not found in cookie']);
 }
-?>

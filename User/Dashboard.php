@@ -1,47 +1,11 @@
 <?php
+session_name("USER_SESSION");
 session_start();
 include '../vendor/autoload.php';
 include('../connection.php');
-use Firebase\JWT\JWT;
-use Firebase\JWT\Key;
 
-// code to not allow admin to directly access admin panel until they are login
-
-if (!isset($_SESSION['id']) && empty($_SESSION['id'])) {
-  header('Location:../user-login.php');
-  exit();
-
-}
-
-//code to verify Jwt token generated after admin login
-// $secret_key = "Zarnat12$&10";
-
-
-// if (isset($_COOKIE["access_token"])) {
-//   $token = $_COOKIE['access_token'];
-
-//   try {
-//     //decode & verify the token
-//     $decoded_token = JWT::decode($token, new Key($secret_key, 'HS256'));
-//     //access admin data
-//     $user_id = $decoded_token->data->id;
-//     $user_name = $decoded_token->data->name;
-
-
-//   } catch (Exception $e) {
-
-//     $_SESSION['message'] = 'Session expired. Please log in again.';
-//     header('Location:../admin-login.php');
-//     exit();
-//   }
-
-// } else {
-
-//   $_SESSION['message'] = "Unauthorized access. Please log in first.";
-//   header('Location:../admin-login.php');
-//   exit();
-// }
-
+// file to not allow user to directly access user panel until they are login
+include('Check_token.php');
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -51,16 +15,16 @@ if (!isset($_SESSION['id']) && empty($_SESSION['id'])) {
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dashboard</title>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-  
-<!-- External CSS File Link -->
+
+  <!-- External CSS File Link -->
   <link rel="stylesheet" href="../CSS/style.css">
   <!-- Font Icons Link -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
   <link rel="stylesheet" href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css">
 
   <script>
-    $(document).ready(function () {
-      setTimeout(function () {
+    $(document).ready(function() {
+      setTimeout(function() {
         $('#alertMessage').fadeOut('slow')
       }, 3000)
     })
@@ -97,15 +61,15 @@ if (!isset($_SESSION['id']) && empty($_SESSION['id'])) {
 
         <!-----------alert message------------->
         <?php if (isset($_SESSION['message'])) { ?>
-        <div class="alert alert-success data-dismissible fade show" id="alertMessage"
-          style="width: 100%; margin: 10px 40px 16px 40px; padding:16px; font-size:14px">
-          <strong>Success! </strong>
-          <?php echo $_SESSION['message'] ?>
-          <button type="button" data-dismiss="alert" class="close" aria-label="close">
-            <span aria-hidden="true">&times;</span>
-          </button>
+          <div class="alert alert-success data-dismissible fade show" id="alertMessage"
+            style="width: 100%; margin: 10px 40px 16px 40px; padding:16px; font-size:14px">
+            <strong>Success! </strong>
+            <?php echo $_SESSION['message'] ?>
+            <button type="button" data-dismiss="alert" class="close" aria-label="close">
+              <span aria-hidden="true">&times;</span>
+            </button>
 
-        </div>
+          </div>
         <?php unset($_SESSION['message']);
         } ?>
 
@@ -252,81 +216,81 @@ if (!isset($_SESSION['id']) && empty($_SESSION['id'])) {
             $query = "select * from laptops ORDER BY id LIMIT {$offset},{$limit}";
             $result = mysqli_query($con, $query);
             while ($row = mysqli_fetch_array($result)) {
-              ?>
-            <tbody>
-              <tr>
-                <td>#
-                  <?php echo $row['id']; ?>.
-                </td>
+            ?>
+              <tbody>
+                <tr>
+                  <td>#
+                    <?php echo $row['id']; ?>.
+                  </td>
 
-                <td class="product-data">
-                  <img src="../Images/<?php echo $row['image']; ?>">
-                  <?php echo $row['brand']; ?>
-                </td>
+                  <td class="product-data">
+                    <img src="../Images/<?php echo $row['image']; ?>">
+                    <?php echo $row['brand']; ?>
+                  </td>
 
-                <td>
-                  <?php echo $row['model']; ?>
-                </td>
+                  <td>
+                    <?php echo $row['model']; ?>
+                  </td>
 
-                <td>
-                  <?php echo $row['RAM']; ?>
-                </td>
+                  <td>
+                    <?php echo $row['RAM']; ?>
+                  </td>
 
 
 
-              </tr>
+                </tr>
 
-            </tbody>
+              </tbody>
 
 
 
 
         </div>
 
-        <?php } ?>
-        </table>
+      <?php } ?>
+      </table>
 
+      <?php
+
+      $query = "select COUNT(*) as total from laptops";
+      $result = mysqli_query($con, $query);
+      $row = mysqli_fetch_assoc($result);
+      $total_records = $row['total'];
+      $total_pages = ceil($total_records / $limit);
+      ?>
+      <div class="pagination-part">
+        <div class="pagination-info">Showing <?php echo ($offset + 1) ?> to <?php echo min($offset + $limit, $total_records) ?> of <?php echo $total_records ?> entries</div>
         <?php
+        echo '<div class="pagination-btns">';
+        if ($page > 1) {
+          echo ' <a class="paginate_button previous " href="Dashboard.php?page=' . ($page - 1) . '"><i class="fas fa-chevron-left"></i></a>';
+        }
+        for ($i = 1; $i <= $total_pages; $i++) {
 
-        $query = "select COUNT(*) as total from laptops";
-        $result = mysqli_query($con, $query);
-        $row = mysqli_fetch_assoc($result);
-        $total_records = $row['total'];
-        $total_pages = ceil($total_records / $limit);
+          if ($i == $page) {
+            $active = 'current';
+          } else {
+            $active = '';
+          }
+          echo '<a class="paginate_button ' . $active . '" href="Dashboard.php?page=' . $i . '">' . $i . '</a>';
+        }
+        if ($total_pages > $page) {
+          echo '<a class="paginate_button next" href="Dashboard.php?page=' . ($page + 1) . '"><i class="fas fa-chevron-right"></i></a>';
+        }
+        echo '</div>';
+
         ?>
-        <div class="pagination-part">
-          <div class="pagination-info">Showing <?php echo ($offset+1) ?> to <?php echo min($offset + $limit,$total_records)?> of <?php echo $total_records?> entries</div>
-          <?php
-          echo '<div class="pagination-btns">';
-          if ($page > 1) {
-            echo ' <a class="paginate_button previous " href="Dashboard.php?page=' . ($page - 1) . '"><i class="fas fa-chevron-left"></i></a>';
-          }
-          for ($i = 1; $i <= $total_pages; $i++) {
-
-            if ($i == $page) {
-              $active = 'current';
-            } else {
-              $active = '';
-            }
-            echo '<a class="paginate_button ' . $active . '" href="Dashboard.php?page=' . $i . '">' . $i . '</a>';
-          }
-          if ($total_pages > $page) {
-            echo '<a class="paginate_button next" href="Dashboard.php?page=' . ($page + 1) . '"><i class="fas fa-chevron-right"></i></a>';
-          }
-          echo '</div>';
-
-          ?>
-        </div>
+      </div>
       </div>
     </main>
 
   </section>
 
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="script.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="script.js"></script>
 </body>
 
 </html>

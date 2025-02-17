@@ -1,5 +1,5 @@
-<!-- code to not allow admin to directly access admin panel until they are login -->
 <?php
+session_name("ADMIN_SESSION");
 session_start();
 // file to not allow admin to directly access admin panel until they are login
 include('Check_token.php');

@@ -1,9 +1,13 @@
 <?php
+session_name("USER_SESSION");
 session_start();
 require '../connection.php';
 require '../vendor/autoload.php';
+
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
+// file to not allow user to directly access admin panel until they are login
+include('Check_token.php');
 
 $secret_key = "Zaviyan88$&90";
 $issuer = "http://localhost";
@@ -11,12 +15,12 @@ $audience = "http://localhost";
 $issued_at = time();
 
 // Check if the access token is available
-if (isset($_COOKIE['access_token'])) {
-    $token = $_COOKIE['access_token'];
+if (isset($_COOKIE['user_access_token'])) {
+    $token = $_COOKIE['user_access_token'];
     try {
         //decode the token
         $decoded_token = JWT::decode($token, new Key($secret_key, 'HS256'));
-        //update user status to active when token refresh
+        //update admin status to active when token refresh
         $user_id = $decoded_token->data->id;
         $query = "UPDATE user SET status='active' WHERE id='$user_id'";
         mysqli_query($con, $query);
@@ -33,15 +37,12 @@ if (isset($_COOKIE['access_token'])) {
 
         //encode the new jwt token
         $new_token = JWT::encode($payload, $secret_key, 'HS256');
-        setcookie('access_token', $new_token, time() + 3600, '/', "", false, true);
-
+        setcookie('user_access_token', $new_token, time() + 3600, '/', "", false, true);
         //return success response
         echo json_encode(['success' => true]);
-
-    } catch (Expection $e) {
+    } catch (Exception $e) {
         echo json_encode(['success' => false, 'error' => $e->getMessage()]);
     }
 } else {
     echo json_encode(['success' => false, 'error' => 'Token not found in cookie']);
 }
-?>

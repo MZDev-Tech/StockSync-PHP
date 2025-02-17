@@ -3,16 +3,15 @@
 ob_start();
 
 if (session_status() === PHP_SESSION_NONE) {
+    session_name("ADMIN_SESSION");
     session_start();
 }
 
 include '../vendor/autoload.php';
 include('../connection.php');
+
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
-
-// file to not allow admin to directly access admin panel until they are login
-include('Check_token.php');
 
 // Code to verify JWT token generated after admin login
 $secret_key = "Zarnat12$&10";
@@ -112,15 +111,15 @@ ob_end_flush();
             $query = "SELECT * FROM admin WHERE id='1'";
             $result = mysqli_query($con, $query);
             while ($row = mysqli_fetch_array($result)) {
-                ?>
-            <div class="admin">
-                <a href="admin-profile.php">
-                    <img src="../Images/<?php echo $row['image']; ?>" alt="Profile Img">
-                    <div class="bg-wrapper1">
-                        <span></span>
-                    </div>
-                </a>
-            </div>
+            ?>
+                <div class="admin">
+                    <a href="admin-profile.php">
+                        <img src="../Images/<?php echo $row['image']; ?>" alt="Profile Img">
+                        <div class="bg-wrapper1">
+                            <span></span>
+                        </div>
+                    </a>
+                </div>
             <?php } ?>
 
 
@@ -224,7 +223,7 @@ ob_end_flush();
                 $.ajax({
                     type: 'POST',
                     url: 'refresh_token.php',
-                    success: function (response) {
+                    success: function(response) {
                         console.log("Response from server:", response); // Log the response
                         let res = JSON.parse(response);
                         if (res.success) {
@@ -245,7 +244,7 @@ ob_end_flush();
                             });
                         }
                     },
-                    error: function () {
+                    error: function() {
                         Swal.fire({
                             icon: "error",
                             title: "Oops...",

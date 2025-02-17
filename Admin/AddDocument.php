@@ -1,4 +1,5 @@
 <?php
+session_name("ADMIN_SESSION");
 session_start();
 include('../connection.php');
 
@@ -136,48 +137,48 @@ if (isset($_POST['submit'])) {
 
     <!-- Initialize Summernote -->
     <script type="text/javascript">
-       $(document).ready(function () {
-    $('#summernote').summernote({
-        placeholder: 'Enter Description',
-        height: 200,
-        tabsize: 2,
-        toolbar: [
-            ['style', ['style']],
-            ['font', ['bold', 'italic', 'underline']],
-            ['fontsize', ['fontsize']],
-            ['fontname', ['fontname']],
-            ['color', ['color']],
-            ['para', ['ul', 'ol', 'paragraph']],
-            ['height', ['height']],
-            ['table', ['table']],
-            ['insert', ['link', 'picture', 'video']],
-            ['view', ['help']]
-        ],
-        callbacks: {
-            onImageUpload: function (files) {
-                // Handle image upload
-                var data = new FormData();
-                data.append("file", files[0]); // Append the file to FormData
+        $(document).ready(function() {
+            $('#summernote').summernote({
+                placeholder: 'Enter Description',
+                height: 200,
+                tabsize: 2,
+                toolbar: [
+                    ['style', ['style']],
+                    ['font', ['bold', 'italic', 'underline']],
+                    ['fontsize', ['fontsize']],
+                    ['fontname', ['fontname']],
+                    ['color', ['color']],
+                    ['para', ['ul', 'ol', 'paragraph']],
+                    ['height', ['height']],
+                    ['table', ['table']],
+                    ['insert', ['link', 'picture', 'video']],
+                    ['view', ['help']]
+                ],
+                callbacks: {
+                    onImageUpload: function(files) {
+                        // Handle image upload
+                        var data = new FormData();
+                        data.append("file", files[0]); // Append the file to FormData
 
-                $.ajax({
-                    url: 'handleFileMedia.php', // Server-side upload script
-                    type: 'POST',
-                    data: data,
-                    contentType: false,
-                    processData: false,
-                    success: function (response) {
-                        // Insert the uploaded image into the editor
-                        $('#summernote').summernote('insertImage', response);
-                    },
-                    error: function (xhr, status, error) {
-                        console.error("Error uploading file: " + error);
+                        $.ajax({
+                            url: 'handleFileMedia.php', // Server-side upload script
+                            type: 'POST',
+                            data: data,
+                            contentType: false,
+                            processData: false,
+                            success: function(response) {
+                                // Insert the uploaded image into the editor
+                                $('#summernote').summernote('insertImage', response);
+                            },
+                            error: function(xhr, status, error) {
+                                console.error("Error uploading file: " + error);
+                            }
+                        });
                     }
-                });
-            }
-        }
-    });
-});
-</script>
+                }
+            });
+        });
+    </script>
 </body>
 
 </html>

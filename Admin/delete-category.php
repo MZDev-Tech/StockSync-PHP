@@ -1,15 +1,12 @@
-<?php 
+<?php
+session_name("ADMIN_SESSION");
 session_start();
 include "../connection.php";
-$Id=$_GET['id'];
-$query="delete from category where id='$Id'";
-$msg= mysqli_query($con, $query);
-if($msg)
-{
+$Id = $_GET['id'];
+$query = "delete from category where id='$Id'";
+$msg = mysqli_query($con, $query);
+if ($msg) {
 	echo "success";
-}
-else
-{
+} else {
 	echo "error";
 }
-

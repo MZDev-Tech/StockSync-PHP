@@ -1,4 +1,5 @@
 <?php
+session_name("ADMIN_SESSION");
 session_start();
 include('../connection.php');
 
@@ -15,7 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $query = "INSERT INTO document_tracking (document_id,document_name, from_user, to_user, remark,status,date)
               VALUES (?, ?, ?, ?, ?, ?,NOW())";
     $stmt = mysqli_prepare($con, $query);
-    mysqli_stmt_bind_param($stmt, 'isisss', $document_id,$filename, $sender, $receiver, $remarks, $action_type);
+    mysqli_stmt_bind_param($stmt, 'isisss', $document_id, $filename, $sender, $receiver, $remarks, $action_type);
 
     if (mysqli_stmt_execute($stmt)) {
         echo json_encode(['success' => true]);
@@ -27,4 +28,3 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 } else {
     echo json_encode(['success' => false, 'error' => 'Invalid request method']);
 }
-?>

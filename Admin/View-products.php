@@ -1,4 +1,5 @@
 <?php
+session_name("ADMIN_SESSION");
 session_start();
 
 // file to not allow admin to directly access admin panel until they are login
@@ -26,8 +27,8 @@ include('Check_token.php');
   <link rel="stylesheet" href="sweetalert2.min.css">
 
   <script>
-    $(document).ready(function () {
-      setTimeout(function () {
+    $(document).ready(function() {
+      setTimeout(function() {
         $('#alertMessage').fadeOut('slow')
       }, 2000)
     })
@@ -57,13 +58,13 @@ include('Check_token.php');
       </div>
       <!-----------alert message------------->
       <?php if (isset($_SESSION['message'])) { ?>
-      <div class="alert alert-warning data-dismissible fade show" id="alertMessage" style="margin:10px 25px">
-        <strong>Product! </strong>
-        <?php echo $_SESSION['message'] ?>
-        <button type="button" data-dismiss="alert" class="close" aria-label="close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
+        <div class="alert alert-warning data-dismissible fade show" id="alertMessage" style="margin:10px 25px">
+          <strong>Product! </strong>
+          <?php echo $_SESSION['message'] ?>
+          <button type="button" data-dismiss="alert" class="close" aria-label="close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
       <?php unset($_SESSION['message']);
       } ?>
 
@@ -202,94 +203,94 @@ include('Check_token.php');
             mysqli_stmt_execute($stmt);
             $result = mysqli_stmt_get_result($stmt);
             while ($row = mysqli_fetch_array($result)) {
-              ?>
-            <tbody>
-              <tr>
-                <td>#
-                  <?php echo $Sr ?>
-                </td>
-                <td>
+            ?>
+              <tbody>
+                <tr>
+                  <td>#
+                    <?php echo $Sr ?>
+                  </td>
+                  <td>
 
-                  <?php echo $row['brand']; ?>
-                </td>
-                <td>
-                  <?php echo $row['category']; ?>
-                </td>
-                <td>
-                  <?php echo $row['serialNumber']; ?>
-                </td>
+                    <?php echo $row['brand']; ?>
+                  </td>
+                  <td>
+                    <?php echo $row['category']; ?>
+                  </td>
+                  <td>
+                    <?php echo $row['serialNumber']; ?>
+                  </td>
 
-                <td> <img src="../Images/<?php echo $row['image']; ?>"></td>
+                  <td> <img src="../Images/<?php echo $row['image']; ?>"></td>
 
-                <td class="action">
+                  <td class="action">
 
-                  <a href="update-product.php?id=<?php echo $row['id']; ?>"><i
-                      class="fa-solid fa-pen-to-square"></i></a>
-                  <a href="javascript:void(0);" onclick="confirmDelete(<?php echo $row['id']; ?>)"><i
-                      class="fa-solid fa-trash"></i></a>
-                  <a href="single-product.php?id=<?php echo $row['id']; ?>"><i class="fa-solid fa-eye"></i></a>
+                    <a href="update-product.php?id=<?php echo $row['id']; ?>"><i
+                        class="fa-solid fa-pen-to-square"></i></a>
+                    <a href="javascript:void(0);" onclick="confirmDelete(<?php echo $row['id']; ?>)"><i
+                        class="fa-solid fa-trash"></i></a>
+                    <a href="single-product.php?id=<?php echo $row['id']; ?>"><i class="fa-solid fa-eye"></i></a>
 
-                </td>
-              </tr>
+                  </td>
+                </tr>
 
-            </tbody>
+              </tbody>
 
 
 
 
         </div>
 
-        <?php $Sr++;
+      <?php $Sr++;
             }
             mysqli_stmt_close($stmt);
-            ?>
-        </table>
-        <?php
-        $query = "select COUNT(*) as total from laptops";
-        $result = mysqli_query($con, $query);
-        $row = mysqli_fetch_assoc($result);
-        $total_records = $row['total'];
-        $total_pages = ceil($total_records / $limit);
-        ?>
-        <div class="pagination-part">
-          <div class="pagination-info">Showing
-            <?php echo ($offset + 1) ?> to
-            <?php echo min($offset + $limit, $total_records) ?> of
-            <?php echo $total_records ?> entries
-          </div>
-          <?php
-          echo '<div class="pagination-btns">';
-
-          // Previous Button
-          if ($page > 1) {
-            echo '<a class="paginate_button previous" href="View-products.php?page=' . ($page - 1) . '"><i class="fas fa-chevron-left"></i></a>';
-          } else {
-            // Disable Previous button if on the first page or only 1 page exists
-            echo '<a class="paginate_button previous disabled" href="javascript:void(0)"><i class="fas fa-chevron-left"></i></a>';
-          }
-
-          // Page Number Buttons
-          for ($i = 1; $i <= $total_pages; $i++) {
-            if ($i == $page) {
-              $active = 'current';
-            } else {
-              $active = '';
-            }
-            echo '<a class="paginate_button ' . $active . '" href="View-products.php?page=' . $i . '">' . $i . '</a>';
-          }
-
-          // Next Button
-          if ($total_pages > $page) {
-            echo '<a class="paginate_button next" href="View-products.php?page=' . ($page + 1) . '"><i class="fas fa-chevron-right"></i></a>';
-          } else {
-            // Disable Next button if on the last page or only 1 page exists
-            echo '<a class="paginate_button next disabled" href="javascript:void(0)"><i class="fas fa-chevron-right"></i></a>';
-          }
-
-          echo '</div>';
-          ?>
-
+      ?>
+      </table>
+      <?php
+      $query = "select COUNT(*) as total from laptops";
+      $result = mysqli_query($con, $query);
+      $row = mysqli_fetch_assoc($result);
+      $total_records = $row['total'];
+      $total_pages = ceil($total_records / $limit);
+      ?>
+      <div class="pagination-part">
+        <div class="pagination-info">Showing
+          <?php echo ($offset + 1) ?> to
+          <?php echo min($offset + $limit, $total_records) ?> of
+          <?php echo $total_records ?> entries
         </div>
+        <?php
+        echo '<div class="pagination-btns">';
+
+        // Previous Button
+        if ($page > 1) {
+          echo '<a class="paginate_button previous" href="View-products.php?page=' . ($page - 1) . '"><i class="fas fa-chevron-left"></i></a>';
+        } else {
+          // Disable Previous button if on the first page or only 1 page exists
+          echo '<a class="paginate_button previous disabled" href="javascript:void(0)"><i class="fas fa-chevron-left"></i></a>';
+        }
+
+        // Page Number Buttons
+        for ($i = 1; $i <= $total_pages; $i++) {
+          if ($i == $page) {
+            $active = 'current';
+          } else {
+            $active = '';
+          }
+          echo '<a class="paginate_button ' . $active . '" href="View-products.php?page=' . $i . '">' . $i . '</a>';
+        }
+
+        // Next Button
+        if ($total_pages > $page) {
+          echo '<a class="paginate_button next" href="View-products.php?page=' . ($page + 1) . '"><i class="fas fa-chevron-right"></i></a>';
+        } else {
+          // Disable Next button if on the last page or only 1 page exists
+          echo '<a class="paginate_button next disabled" href="javascript:void(0)"><i class="fas fa-chevron-right"></i></a>';
+        }
+
+        echo '</div>';
+        ?>
+
+      </div>
       </div>
 
 
@@ -314,8 +315,10 @@ include('Check_token.php');
           $.ajax({
             url: 'delete-product.php',
             type: 'GET',
-            data: { id: productId },
-            success: function (response) {
+            data: {
+              id: productId
+            },
+            success: function(response) {
               console.log("Response from server:", response);
               if (response.trim() == 'success') {
                 Swal.fire("Deleted!", "Your file has been deleted.", "success");
@@ -326,7 +329,7 @@ include('Check_token.php');
                 Swal.fire("Error!", "Failed to delete the product.", "error");
               }
             },
-            error: function (xhr, status, error) {
+            error: function(xhr, status, error) {
               console.error("AJAX error:", status, error);
               Swal.fire("Error!", "An unexpected error occurred.", "error");
             }
@@ -334,7 +337,6 @@ include('Check_token.php');
         }
       });
     }
-
   </script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>

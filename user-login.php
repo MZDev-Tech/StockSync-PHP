@@ -1,4 +1,5 @@
 <?php
+session_name("USER_SESSION");
 session_start();
 require 'vendor/autoload.php';
 include('connection.php');
@@ -22,15 +23,15 @@ if (isset($_POST['submit'])) {
     if (mysqli_num_rows($result) > 0) {
         $row = mysqli_fetch_array($result);
 
-        $query1="UPDATE user SET status='active' WHERE id= '" . $row['id'] ."' ";
-        $result1=mysqli_query($con,$query1);
+        $query1 = "UPDATE user SET status='active' WHERE id= '" . $row['id'] . "' ";
+        $result1 = mysqli_query($con, $query1);
 
         $_SESSION['id'] = $row['id'];
         $_SESSION['name'] = $row['name'];
         $_SESSION['email'] = $row['email'];
 
-         //generate JWT
-         $payload = [
+        //generate JWT
+        $payload = [
             "iss" => $issuer,
             "aud" => $audience,
             "iat" => $issued_at,
@@ -45,7 +46,7 @@ if (isset($_POST['submit'])) {
         //encode JWT
         $jwt = JWT::encode($payload, $secret_key, 'HS256');
         //set JWT in cookies only
-        setcookie("access_token", $jwt, time() + 3600, "/", "", false, true);
+        setcookie("user_access_token", $jwt, time() + 3600, "/", "", false, true);
 
 
         // Code to store user data in cookies
@@ -93,8 +94,8 @@ if (isset($_COOKIE['email']) && isset($_COOKIE['password'])) {
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
     <script>
-        $(document).ready(function () {
-            setTimeout(function () {
+        $(document).ready(function() {
+            setTimeout(function() {
                 $('#alertMessage').fadeOut('slow')
             }, 2000)
         })
@@ -126,10 +127,10 @@ if (isset($_COOKIE['email']) && isset($_COOKIE['password'])) {
                                     and manage your preferences seamlessly.</p>
 
                             </div>
-                             <!-----------alert message------------->
-                             <?php if (isset($_SESSION['message'])) { ?>
+                            <!-----------alert message------------->
+                            <?php if (isset($_SESSION['message'])) { ?>
                                 <div class="alert alert-warning data-dismissible fade show" id="alertMessage"
-                                    style="margin:10px 0">
+                                    style="margin:0 -15px 12px -15px">
                                     <strong>Warning! </strong>
                                     <?php echo $_SESSION['message'] ?>
                                     <button type="button" data-dismiss="alert" class="close" aria-label="close">
@@ -137,8 +138,8 @@ if (isset($_COOKIE['email']) && isset($_COOKIE['password'])) {
                                     </button>
 
                                 </div>
-                                <?php unset($_SESSION['message']);
-                                } ?>
+                            <?php unset($_SESSION['message']);
+                            } ?>
 
                             <form action="" method="POST">
                                 <div class="form-group first">

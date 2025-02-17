@@ -1,5 +1,5 @@
 <?php
-session_name("ADMIN_SESSION");
+session_name("USER_SESSION");
 session_start();
 include('../connection.php');
 

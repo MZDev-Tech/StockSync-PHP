@@ -1,4 +1,5 @@
 <?php
+session_name("ADMIN_SESSION");
 session_start();
 include('../connection.php');
 // file to not allow admin to directly access admin panel until they are login
@@ -23,27 +24,27 @@ if (isset($_POST['submit'])) {
     $status = mysqli_real_escape_string($con, $_POST['status']);
     $description = mysqli_real_escape_string($con, $_POST['description']);
 
-     // Calculate total_age
-     $currentDate = new DateTime();
-     $deliveryDateObject = new DateTime($delivery_date);
-     $interval = $currentDate->diff($deliveryDateObject);
- 
-     $totalYears = $interval->y;
-     $totalMonths = $interval->m;
- 
-     // Create total_age in years and months with singular/plural terms
-     $yearLabel = ($totalYears == 1) ? 'year' : 'years';
-     $monthLabel = ($totalMonths == 1) ? 'month' : 'months';
- 
-     if ($totalYears > 0 && $totalMonths > 0) {
-         $total_age = "{$totalYears} {$yearLabel}, {$totalMonths} {$monthLabel}";
-     } elseif ($totalYears > 0) {
-         $total_age = "{$totalYears} {$yearLabel}";
-     } elseif ($totalMonths > 0) {
-         $total_age = "{$totalMonths} {$monthLabel}";
-     } else {
-         $total_age = "Less than 1 month";
-     }
+    // Calculate total_age
+    $currentDate = new DateTime();
+    $deliveryDateObject = new DateTime($delivery_date);
+    $interval = $currentDate->diff($deliveryDateObject);
+
+    $totalYears = $interval->y;
+    $totalMonths = $interval->m;
+
+    // Create total_age in years and months with singular/plural terms
+    $yearLabel = ($totalYears == 1) ? 'year' : 'years';
+    $monthLabel = ($totalMonths == 1) ? 'month' : 'months';
+
+    if ($totalYears > 0 && $totalMonths > 0) {
+        $total_age = "{$totalYears} {$yearLabel}, {$totalMonths} {$monthLabel}";
+    } elseif ($totalYears > 0) {
+        $total_age = "{$totalYears} {$yearLabel}";
+    } elseif ($totalMonths > 0) {
+        $total_age = "{$totalMonths} {$monthLabel}";
+    } else {
+        $total_age = "Less than 1 month";
+    }
 
 
     $image = $_FILES['image']['name'];
@@ -83,7 +84,7 @@ if (isset($_POST['submit'])) {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
     <link rel="stylesheet"
         href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css">
-    </head>
+</head>
 <style>
     label {
         font-size: 16px;
@@ -114,7 +115,7 @@ if (isset($_POST['submit'])) {
             $query = "SELECT * FROM laptops WHERE id='$id'";
             $result = mysqli_query($con, $query);
             while ($row = mysqli_fetch_array($result)) {
-                ?>
+            ?>
 
 
                 <div class="form-parent">
@@ -147,9 +148,9 @@ if (isset($_POST['submit'])) {
                                                 }
                                                 $list = mysqli_query($con, 'SELECT * FROM category');
                                                 while ($category_result = mysqli_fetch_assoc($list)) {
-                                                    ?>
+                                                ?>
                                                     <option value="<?php echo $category_result['name']; ?>" <?php if ($row['category'] == $category_result['name'])
-                                                           echo 'selected'; ?>>
+                                                                                                                echo 'selected'; ?>>
                                                         <?php echo $category_result['name']; ?>
                                                     </option>
                                                 <?php } ?>
@@ -333,7 +334,6 @@ if (isset($_POST['submit'])) {
                 field.classList.add('has-value');
             }
         });
-
     </script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>

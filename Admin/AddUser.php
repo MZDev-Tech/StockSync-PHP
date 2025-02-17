@@ -1,11 +1,13 @@
 <?php
+session_name("ADMIN_SESSION");
 session_start();
 include('../connection.php');
 
 // file to not allow admin to directly access admin panel until they are login
 include('Check_token.php');
 
-function validateInput($data) {
+function validateInput($data)
+{
     return htmlentities(trim(stripslashes($data)));
 }
 
@@ -23,14 +25,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = validateInput($_POST['email']);
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $error['email'] = "Invalid email format";
-    }else {
+    } else {
         // Check if email already exists in the database
         $query = "SELECT id FROM user WHERE email = '$email'";
-        $result=mysqli_query($con,$query);
+        $result = mysqli_query($con, $query);
         if (mysqli_num_rows($result) > 0) {
             $error['email'] = "Email already exists.";
         }
-      
     }
 
     // Validate phone (exactly 10 digits)
@@ -53,7 +54,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (!in_array($imageFileType, $allowedExtensions)) {
             $error['image'] = "Only JPG, JPEG, PNG & GIF files are allowed.";
         }
-        if ($_FILES['image']['size'] > 2 * 1024 * 1024) { 
+        if ($_FILES['image']['size'] > 2 * 1024 * 1024) {
             $error['image'] = "Image size must be less than 2MB.";
         }
     } else {
@@ -68,15 +69,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $phone = mysqli_real_escape_string($con, $_POST['phone']);
         $address = mysqli_real_escape_string($con, $_POST['address']);
         $password = mysqli_real_escape_string($con, $_POST['password']);
-        $status='Inactive';
+        $status = 'Inactive';
 
         $imagePath = "../Images/" . basename($_FILES['image']['name']);
         move_uploaded_file($_FILES['image']['tmp_name'], $imagePath);
 
         $query = "INSERT INTO user(`name`, `email`,`designation`, `phone`,`address`, `password`, `image`,`status`) VALUES (?, ?, ?, ?, ?)";
         $stmt = mysqli_prepare($con, $query);
-        mysqli_stmt_bind_param($stmt, 'sssissss', $name, $email,$designation, $phone,$address, $password, $imagePath,$status);
-        
+        mysqli_stmt_bind_param($stmt, 'sssissss', $name, $email, $designation, $phone, $address, $password, $imagePath, $status);
+
         if (mysqli_stmt_execute($stmt)) {
             $_SESSION['message'] = 'User added successfully.';
             header('Location: View-user.php');
@@ -116,65 +117,66 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     <!----------------Main Header Section--------------------->
     <section id="main-page">
-       <?php include('Header.php')?>
+        <?php include('Header.php') ?>
 
 
         <!----------------Main Page Design--------------------->
         <main id="page-content">
-           
+
 
             <!-- Record Table -->
             <div class="form-parent">
 
-            <div class="form-records">
-                <form method="POST" action="" enctype="multipart/form-data">
-                    <h4>Add New User</h4><br>
-                    <div class="form-group">
-                        <input type="text" name="name" placeholder="Username " value="<?php echo (isset($_POST['name'])? htmlspecialchars($_POST['name']) :'' )?>" class="form-control" required>
-                        <?php if(isset($error['name']))  echo "<p style='font-size:12px; color:red'> {$error['name']} </p>"?>
-                    </div>
-                   
-                    <div class="form-group">
-                        <input type="text" name="email" placeholder="Email ID" value="<?php echo (isset($_POST['email'])? htmlspecialchars($_POST['email']) : '')?>" class="form-control" required>
-                        <?php if (isset($error['email'])) echo "<p style='font-size:12px; color:red;'>{$error['email']}</p>"; ?>
+                <div class="form-records">
+                    <form method="POST" action="" enctype="multipart/form-data">
+                        <h4>Add New User</h4><br>
+                        <div class="form-group">
+                            <input type="text" name="name" placeholder="Username " value="<?php echo (isset($_POST['name']) ? htmlspecialchars($_POST['name']) : '') ?>" class="form-control" required>
+                            <?php if (isset($error['name']))  echo "<p style='font-size:12px; color:red'> {$error['name']} </p>" ?>
+                        </div>
 
-                    </div>
-                    <div class="form-group">
-                        <input type="text" name="designation" placeholder="Company designation"  class="form-control" required>
+                        <div class="form-group">
+                            <input type="text" name="email" placeholder="Email ID" value="<?php echo (isset($_POST['email']) ? htmlspecialchars($_POST['email']) : '') ?>" class="form-control" required>
+                            <?php if (isset($error['email'])) echo "<p style='font-size:12px; color:red;'>{$error['email']}</p>"; ?>
 
-                    </div>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" name="designation" placeholder="Company designation" class="form-control" required>
 
-                    <div class="form-group">
-                        <input type="text" name="phone" placeholder="Phone Number" class="form-control" value="<?php echo (isset($_POST['phone'])? htmlspecialchars($_POST['phone']) : '')?>" required>
-                        <?php if(isset($error['phone']))  echo "<p style='font-size:12px; color:red'> {$error['phone']} </p>"?>
+                        </div>
 
-                    </div>
+                        <div class="form-group">
+                            <input type="text" name="phone" placeholder="Phone Number" class="form-control" value="<?php echo (isset($_POST['phone']) ? htmlspecialchars($_POST['phone']) : '') ?>" required>
+                            <?php if (isset($error['phone']))  echo "<p style='font-size:12px; color:red'> {$error['phone']} </p>" ?>
 
-                    <div class="form-group">
-                        <input type="text" name="address" placeholder="Address"  class="form-control" required>
+                        </div>
 
-                    </div>
+                        <div class="form-group">
+                            <input type="text" name="address" placeholder="Address" class="form-control" required>
 
-                    <div class="form-group">
-                        <input type="text" name="password" placeholder="Password " value="<?php echo (isset($_POST['password'])? htmlspecialchars($_POST['password']) : '')?>" class="form-control" required>
-                        <?php if(isset($error['password']))  echo "<p style='font-size:12px; color:red'> {$error['password']} </p>"?>
+                        </div>
 
-                    </div>
+                        <div class="form-group">
+                            <input type="text" name="password" placeholder="Password " value="<?php echo (isset($_POST['password']) ? htmlspecialchars($_POST['password']) : '') ?>" class="form-control" required>
+                            <?php if (isset($error['password']))  echo "<p style='font-size:12px; color:red'> {$error['password']} </p>" ?>
 
-
-                    <div class="form-group">
-                        <label style="font-weight:500;">Upload Image</label><br>
-                        <input type="file" name="image" class="form-control" required>
-                    </div>
+                        </div>
 
 
-                    <div class="form-group">
-                    <button type="submit" name="submit" class="btn btn-info">Register User
-                    </button>                    </div>
-                </form>
+                        <div class="form-group">
+                            <label style="font-weight:500;">Upload Image</label><br>
+                            <input type="file" name="image" class="form-control" required>
+                        </div>
 
+
+                        <div class="form-group">
+                            <button type="submit" name="submit" class="btn btn-info">Register User
+                            </button>
+                        </div>
+                    </form>
+
+                </div>
             </div>
-</div>
 
 
         </main>

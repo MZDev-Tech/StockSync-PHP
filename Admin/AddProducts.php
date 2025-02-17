@@ -1,4 +1,5 @@
 <?php
+session_name("ADMIN_SESSION");
 session_start();
 include('../connection.php');
 
@@ -69,7 +70,6 @@ if (isset($_POST['submit'])) {
         header('Location:View-products.php');
         exit();
     }
-
 }
 
 ?>
@@ -89,7 +89,7 @@ if (isset($_POST['submit'])) {
     <link rel="stylesheet"
         href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css">
 
-    </head>
+</head>
 
 <body>
 
@@ -133,7 +133,7 @@ if (isset($_POST['submit'])) {
                                             <?php
                                             $list = mysqli_query($con, 'select * from category');
                                             while ($row = mysqli_fetch_assoc($list)) {
-                                                ?>
+                                            ?>
                                                 <option value="<?php echo $row['name'] ?>"><?php echo $row['name'] ?>
                                                 </option>
                                             <?php } ?>
@@ -282,4 +282,5 @@ if (isset($_POST['submit'])) {
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="script.js"></script>
 </body>
+
 </html>

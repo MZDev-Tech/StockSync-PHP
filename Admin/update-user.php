@@ -1,4 +1,5 @@
 <?php
+session_name("ADMIN_SESSION");
 session_start();
 include('../connection.php');
 // file to not allow admin to directly access admin panel until they are login
@@ -18,25 +19,25 @@ if (isset($_POST['submit'])) {
 
     $image = $_FILES['image']['name'];
     if ($image) {
-        $imagePath = "../Images/".basename($image);
-        move_uploaded_file($_FILES['image']['tmp_name'],$imagePath);
+        $imagePath = "../Images/" . basename($image);
+        move_uploaded_file($_FILES['image']['tmp_name'], $imagePath);
     } else {
         $imagePath = $_POST['img'];
     }
 
     $query = "update user set name=?, email=?, designation=?, phone=?,address=?, password=?,image=? where id=?";
-    $stmt=mysqli_prepare($con,$query);
-    mysqli_stmt_bind_param($stmt,'sssisssi',$name,$email,$designation,$phone,$address,$password,$imagePath,$id);
+    $stmt = mysqli_prepare($con, $query);
+    mysqli_stmt_bind_param($stmt, 'sssisssi', $name, $email, $designation, $phone, $address, $password, $imagePath, $id);
     $result = mysqli_stmt_execute($stmt);
     if ($result) {
 
-        $_SESSION['message']='Record Updated successfully..';
+        $_SESSION['message'] = 'Record Updated successfully..';
     } else {
-        $_SESSION['message']='Something went wronh while updating..';
+        $_SESSION['message'] = 'Something went wronh while updating..';
     }
     mysqli_stmt_close($stmt);
     header('Location:View-user.php');
-        exit();
+    exit();
 }
 
 ?>
@@ -81,96 +82,96 @@ if (isset($_POST['submit'])) {
 
             include('../connection.php');
             $id = $_GET['id'];
-            $role='user';
+            $role = 'user';
             $query = "select * from user where id='$id' && role='$role'";
             $result = mysqli_query($con, $query);
             while ($row = mysqli_fetch_array($result)) {
-                ?>
-           <div class="form-parent">
-                <div class="form-records">
-                    <form method="POST" action="" enctype="multipart/form-data">
-                        <h4 style="text-align:center; margin:10px 0 14px 0">Update User</h4>
+            ?>
+                <div class="form-parent">
+                    <div class="form-records">
+                        <form method="POST" action="" enctype="multipart/form-data">
+                            <h4 style="text-align:center; margin:10px 0 14px 0">Update User</h4>
+                            <div class="form-group">
+                                <input type="hidden" name="id" class="form-control" value="<?php echo $row['id']; ?>">
+                            </div>
+
+                            <div class="form-group">
+                                <label style="color:black">Username</label>
+                                <input type="text" name="name" placeholder="Enter user" class="form-control" value="<?php echo $row['name']; ?>"
+                                    required>
+                            </div>
+
+                            <div class="form-group">
+                                <label style="color:black">Email ID</label>
+                                <input type="text" name="email" placeholder="Enter email" class="form-control" value="<?php echo $row['email']; ?>"
+                                    required>
+                            </div>
+
+                            <div class="form-group">
+                                <label style="color:black">Company Designation</label>
+                                <input type="text" name="designation" placeholder="Enter designation" class="form-control" value="<?php echo $row['role']; ?>"
+                                    required>
+                            </div>
+
+                            <div class="form-group">
+                                <label style="color:black">Phone Number</label>
+                                <input type="text" name="phone" placeholder="Enter contact" class="form-control" value="<?php echo $row['phone']; ?>"
+                                    required>
+                            </div>
+                            <div class="form-group">
+                                <label style="color:black">User Address</label>
+                                <input type="text" name="address" placeholder="Enter address" class="form-control" value="<?php echo $row['address']; ?>"
+                                    required>
+                            </div>
+                            <div class="form-group">
+                                <label style="color:black">Password</label>
+                                <input type="text" name="password" placeholder="Enter password" class="form-control" value="<?php echo $row['password']; ?>"
+                                    required>
+                            </div>
+
+                            <div class="form-group">
+                                <img src="../Images/<?php echo $row['image']; ?>"
+                                    style="width:80px; height:80px; border-radius:5px; border: 3px solid #d5d7da; ">
+                                <input type="hidden" name="img" value="<?php echo $row['image']; ?>" style="text-transform:none;">
+                            </div>
+
+
+
+                        <?php } ?>
                         <div class="form-group">
-                            <input type="hidden" name="id" class="form-control" value="<?php echo $row['id']; ?>">
+                            <b>Upload Image</b><br>
+                            <input type="file" name="image" class="form-control">
                         </div>
 
-                        <div class="form-group">
-                            <label style="color:black">Username</label>
-                            <input type="text" name="name" placeholder="Enter user" class="form-control" value="<?php echo $row['name']; ?>"
-                                required>
-                        </div>
 
                         <div class="form-group">
-                            <label style="color:black">Email ID</label>
-                            <input type="text" name="email" placeholder="Enter email" class="form-control" value="<?php echo $row['email']; ?>"
-                                required>
+                            <button type="submit" name="submit" class="btn btn-info">Update Data
+                            </button>
                         </div>
+                        </form>
 
-                        <div class="form-group">
-                            <label style="color:black">Company Designation</label>
-                            <input type="text" name="designation" placeholder="Enter designation" class="form-control" value="<?php echo $row['role']; ?>"
-                                required>
-                        </div>
-
-                        <div class="form-group">
-                            <label style="color:black">Phone Number</label>
-                            <input type="text" name="phone" placeholder="Enter contact" class="form-control" value="<?php echo $row['phone']; ?>"
-                                required>
-                        </div>
-                        <div class="form-group">
-                            <label style="color:black">User Address</label>
-                            <input type="text" name="address" placeholder="Enter address" class="form-control" value="<?php echo $row['address']; ?>"
-                                required>
-                        </div>
-                        <div class="form-group">
-                            <label style="color:black">Password</label>
-                            <input type="text" name="password" placeholder="Enter password" class="form-control" value="<?php echo $row['password']; ?>"
-                                required>
-                        </div>
-
-                        <div class="form-group">
-                            <img src="../Images/<?php echo $row['image']; ?>"
-                                style="width:80px; height:80px; border-radius:5px; border: 3px solid #d5d7da; ">
-                            <input type="hidden" name="img" value="<?php echo $row['image']; ?>" style="text-transform:none;">
-                        </div>
-
-
-
-                    <?php } ?>
-                    <div class="form-group">
-                        <b>Upload Image</b><br>
-                        <input type="file" name="image" class="form-control">
                     </div>
-
-
-                    <div class="form-group">
-                    <button type="submit" name="submit" class="btn btn-info">Update Data
-                    </button>
-                                    </div>
-                </form>
-
-            </div>
-            </div>
+                </div>
 
         </main>
 
     </section>
-<script>
-    document.querySelectorAll('input').forEach(field=>{
-     if(field.value.trim()!==''){
-        field.classList.add('has-value');
-     }
+    <script>
+        document.querySelectorAll('input').forEach(field => {
+            if (field.value.trim() !== '') {
+                field.classList.add('has-value');
+            }
 
-     field.addEventListener('input',()=>{
-        if(field.value.trim()!==''){
-        field.classList.add('has-value');
-     }else{
-        field.classList.remove('has-value');
-     }
-     })
-    });
-</script>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+            field.addEventListener('input', () => {
+                if (field.value.trim() !== '') {
+                    field.classList.add('has-value');
+                } else {
+                    field.classList.remove('has-value');
+                }
+            })
+        });
+    </script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

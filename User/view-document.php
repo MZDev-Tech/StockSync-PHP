@@ -1,5 +1,5 @@
 <?php
-session_name("ADMIN_SESSION");
+session_name("USER_SESSION");
 session_start();
 include '../connection.php';
 
@@ -298,7 +298,7 @@ include('Check_token.php');
                                                 <select id="receiver" name="to_user" class="form-control" required>
                                                     <option value="">...</option>
                                                     <?php
-                                                    $query1 = "SELECT * FROM user WHERE role='user'";
+                                                    $query1 = "SELECT * FROM user";
                                                     $result1 = mysqli_query($con, $query1);
                                                     while ($row1 = mysqli_fetch_assoc($result1)) {
                                                         echo "<option value='{$row1['id']}'>{$row1['name']}</option>";

@@ -1,12 +1,11 @@
 <?php
 // Enable output buffering
 ob_start();
+session_name("USER_SESSION");
 session_start();
 
-if (!isset($_SESSION['id']) && empty($_SESSION['id'])) {
-  header('Location:../user-login.php');
-  exit();
-}
+// file to not allow user to directly access user panel until they are login
+include('Check_token.php');
 // Flush the output buffer
 ob_end_flush();
 ?>
@@ -29,27 +28,27 @@ ob_end_flush();
   <link rel="stylesheet" href="sweetalert2.min.css">
 
   <script>
-    $(document).ready(function () {
-      setTimeout(function () {
+    $(document).ready(function() {
+      setTimeout(function() {
         $('#alertMessage').fadeOut('slow')
       }, 2000)
     })
   </script>
 
-<style>
+  <style>
 
 
-</style>
+  </style>
 </head>
 
 <body>
 
 
   <!-----------SideBar Section------------------->
-<?php include('sidebar.php'); ?>
+  <?php include('sidebar.php'); ?>
   <!----------------Main Header Section--------------------->
   <section id="main-page">
-<?php include('Header.php'); ?>
+    <?php include('Header.php'); ?>
 
 
     <!----------------Main Page Design--------------------->
@@ -60,13 +59,13 @@ ob_end_flush();
       </div>
       <!-----------alert message------------->
       <?php if (isset($_SESSION['message'])) { ?>
-      <div class="alert alert-warning data-dismissible fade show" id="alertMessage" style="margin:10px 25px">
-        <strong>Product! </strong>
-        <?php echo $_SESSION['message'] ?>
-        <button type="button" data-dismiss="alert" class="close" aria-label="close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
+        <div class="alert alert-warning data-dismissible fade show" id="alertMessage" style="margin:10px 25px">
+          <strong>Product! </strong>
+          <?php echo $_SESSION['message'] ?>
+          <button type="button" data-dismiss="alert" class="close" aria-label="close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
       <?php unset($_SESSION['message']);
       } ?>
 
@@ -83,70 +82,70 @@ ob_end_flush();
                 <p class="mb-0">Manage your records efficiently</p>
               </div>
             </div>
-          
+
           </div>
         </div>
       </div>
 
-    <!---------------report generation part ------------------------->
+      <!---------------report generation part ------------------------->
 
       <div class="row" style="margin:12px 25px">
         <div class="col-12 bg-white">
 
           <div class=" py-3 top-recordParent">
             <h4><span class="las la-sort"></span> Generate Inventory Report</h4>
-            <form action="generateReport.php" method="GET" >
-            <div class="row d-flex flex-wrap" style="margin: 0;">
+            <form action="generateReport.php" method="GET">
+              <div class="row d-flex flex-wrap" style="margin: 0;">
 
-            <div class="col-12 col-sm-6 col-md-3" style="padding-right:0">
-               <label>Choose category</label>
-            <select name="category" class="form-control" >
-                
-                <option value="">select</option>
-                <?php
-                $categoryResult = mysqli_query($con, "SELECT DISTINCT category FROM laptops");
-                while ($categoryRow = mysqli_fetch_assoc($categoryResult)) {
-                  echo "<option value='{$categoryRow['category']}'>{$categoryRow['category']}</option>";
-                }
-                ?>
-              </select>
-            </div> 
+                <div class="col-12 col-sm-6 col-md-3" style="padding-right:0">
+                  <label>Choose category</label>
+                  <select name="category" class="form-control">
 
-              <div class="col-12 col-sm-6 col-md-3" style="padding-right:0">
-                <label>Choose Processor</label>
-              <select name="processor" class="form-control" > 
-                <option value="">select</option>
-                <?php
-                $processorQuery = "SELECT DISTINCT processor FROM laptops";
-                $processorResult = mysqli_query($con, $processorQuery);
-                while ($processorRow = mysqli_fetch_assoc($processorResult)) {
-                  echo "<option value='{$processorRow['processor']}'>{$processorRow['processor']}</option>";
-                }
-                ?>
-              </select>
-</div>
-              <div class="col-12 col-sm-6 col-md-3" style="padding-right:0">
-              <label>Choose Person</label>
-              <select name="person_name" class="form-control" > 
-                <option value="">select</option>
-                <?php
-                $Query = "SELECT DISTINCT person_name FROM laptops";
-                $Result = mysqli_query($con, $Query);
-                while ($Row = mysqli_fetch_assoc($Result)) {
-                  echo "<option value='{$Row['person_name']}'>{$Row['person_name']}</option>";
-                }
-                ?>
-              </select>
-              </div>
-              <div class="col-12 col-sm-6 col-md-3" style="padding-right:0">
-              <button type="submit" class="btn btn-info mt-4" style="color:#fff;" title="Download Report">
-                <i class="fas fa-download" style=" font-size:16px"></i>
-              </button>
-              </div>
+                    <option value="">select</option>
+                    <?php
+                    $categoryResult = mysqli_query($con, "SELECT DISTINCT category FROM laptops");
+                    while ($categoryRow = mysqli_fetch_assoc($categoryResult)) {
+                      echo "<option value='{$categoryRow['category']}'>{$categoryRow['category']}</option>";
+                    }
+                    ?>
+                  </select>
+                </div>
+
+                <div class="col-12 col-sm-6 col-md-3" style="padding-right:0">
+                  <label>Choose Processor</label>
+                  <select name="processor" class="form-control">
+                    <option value="">select</option>
+                    <?php
+                    $processorQuery = "SELECT DISTINCT processor FROM laptops";
+                    $processorResult = mysqli_query($con, $processorQuery);
+                    while ($processorRow = mysqli_fetch_assoc($processorResult)) {
+                      echo "<option value='{$processorRow['processor']}'>{$processorRow['processor']}</option>";
+                    }
+                    ?>
+                  </select>
+                </div>
+                <div class="col-12 col-sm-6 col-md-3" style="padding-right:0">
+                  <label>Choose Person</label>
+                  <select name="person_name" class="form-control">
+                    <option value="">select</option>
+                    <?php
+                    $Query = "SELECT DISTINCT person_name FROM laptops";
+                    $Result = mysqli_query($con, $Query);
+                    while ($Row = mysqli_fetch_assoc($Result)) {
+                      echo "<option value='{$Row['person_name']}'>{$Row['person_name']}</option>";
+                    }
+                    ?>
+                  </select>
+                </div>
+                <div class="col-12 col-sm-6 col-md-3" style="padding-right:0">
+                  <button type="submit" class="btn btn-info mt-4" style="color:#fff;" title="Download Report">
+                    <i class="fas fa-download" style=" font-size:16px"></i>
+                  </button>
+                </div>
             </form>
-              </div>
           </div>
         </div>
+      </div>
       </div>
 
       <div class="records">
@@ -197,7 +196,7 @@ ob_end_flush();
 
             <?php
             include('../connection.php');
-            $Sr=1;
+            $Sr = 1;
             $page = isset($_GET['page']) ? (int) $_GET['page'] : 1;
             $offset = ($page - 1) * $limit;
             $query = "select * from laptops ORDER BY id LIMIT {$offset},{$limit}";
@@ -205,85 +204,86 @@ ob_end_flush();
             mysqli_stmt_execute($stmt);
             $result = mysqli_stmt_get_result($stmt);
             while ($row = mysqli_fetch_array($result)) {
-              ?>
-            <tbody>
-              <tr>
-                <td>#
-                 <?php echo $Sr ?> 
-                </td>
-                <td>
-
-                  <?php echo $row['brand']; ?>
-                </td>
-                <td>
-                  <?php echo $row['category']; ?>
-                </td>
-                <td>
-                  <?php echo $row['serialNumber']; ?>
-                </td>
-
-<td>                  <img src="../Images/<?php echo $row['image']; ?>"></td>
-
-                <td class="action">
-
-                  <a href="update-product.php?id=<?php echo $row['id']; ?>"><i
-                      class="fa-solid fa-pen-to-square"></i></a>
-                  <a href="javascript:void(0);" onclick="confirmDelete(<?php echo $row['id']; ?>)"><i
-                      class="fa-solid fa-trash"></i></a>
-                  <a href="single-product.php?id=<?php echo $row['id']; ?>"><i class="fa-solid fa-eye"></i></a>
-
-                </td>
-              </tr>
-
-            </tbody>
-
-
-
-
-        </div>
-         
-        <?php  $Sr++; }
-            mysqli_stmt_close($stmt);
             ?>
-        </table>
-        <?php
-        $query = "select COUNT(*) as total from laptops";
-        $result = mysqli_query($con, $query);
-        $row = mysqli_fetch_assoc($result);
-        $total_records = $row['total'];
-        $total_pages = ceil($total_records / $limit);
-        ?>
-        <div class="pagination-part">
-          <div class="pagination-info">Showing
-            <?php echo ($offset + 1) ?> to
-            <?php echo min($offset + $limit, $total_records) ?> of
-            <?php echo $total_records ?> entries
-          </div>
-          <?php
+              <tbody>
+                <tr>
+                  <td>#
+                    <?php echo $Sr ?>
+                  </td>
+                  <td>
 
-          echo '<div class="pagination-btns">';
-          if ($page > 1) {
-            echo ' <a class="paginate_button previous " href="View-products.php?page=' . ($page - 1) . '"><i class="fas fa-chevron-left"></i></a>';
-          }
-          for ($i = 1; $i <= $total_pages; $i++) {
+                    <?php echo $row['brand']; ?>
+                  </td>
+                  <td>
+                    <?php echo $row['category']; ?>
+                  </td>
+                  <td>
+                    <?php echo $row['serialNumber']; ?>
+                  </td>
 
-            if ($i == $page) {
-              $active = 'current';
-            } else {
-              $active = '';
-            }
-            echo '<a class="paginate_button ' . $active . '" href="View-products.php?page=' . $i . '">' . $i . '</a>';
-          }
-          if ($total_pages > $page) {
-            echo '<a class="paginate_button next" href="View-products.php?page=' . ($page + 1) . '"><i class="fas fa-chevron-right"></i></a>';
-          }
-          echo '</div>';
+                  <td> <img src="../Images/<?php echo $row['image']; ?>"></td>
 
-          ?>
+                  <td class="action">
+
+                    <a href="update-product.php?id=<?php echo $row['id']; ?>"><i
+                        class="fa-solid fa-pen-to-square"></i></a>
+                    <a href="javascript:void(0);" onclick="confirmDelete(<?php echo $row['id']; ?>)"><i
+                        class="fa-solid fa-trash"></i></a>
+                    <a href="single-product.php?id=<?php echo $row['id']; ?>"><i class="fa-solid fa-eye"></i></a>
+
+                  </td>
+                </tr>
+
+              </tbody>
+
 
 
 
         </div>
+
+      <?php $Sr++;
+            }
+            mysqli_stmt_close($stmt);
+      ?>
+      </table>
+      <?php
+      $query = "select COUNT(*) as total from laptops";
+      $result = mysqli_query($con, $query);
+      $row = mysqli_fetch_assoc($result);
+      $total_records = $row['total'];
+      $total_pages = ceil($total_records / $limit);
+      ?>
+      <div class="pagination-part">
+        <div class="pagination-info">Showing
+          <?php echo ($offset + 1) ?> to
+          <?php echo min($offset + $limit, $total_records) ?> of
+          <?php echo $total_records ?> entries
+        </div>
+        <?php
+
+        echo '<div class="pagination-btns">';
+        if ($page > 1) {
+          echo ' <a class="paginate_button previous " href="View-products.php?page=' . ($page - 1) . '"><i class="fas fa-chevron-left"></i></a>';
+        }
+        for ($i = 1; $i <= $total_pages; $i++) {
+
+          if ($i == $page) {
+            $active = 'current';
+          } else {
+            $active = '';
+          }
+          echo '<a class="paginate_button ' . $active . '" href="View-products.php?page=' . $i . '">' . $i . '</a>';
+        }
+        if ($total_pages > $page) {
+          echo '<a class="paginate_button next" href="View-products.php?page=' . ($page + 1) . '"><i class="fas fa-chevron-right"></i></a>';
+        }
+        echo '</div>';
+
+        ?>
+
+
+
+      </div>
       </div>
 
 
@@ -294,8 +294,8 @@ ob_end_flush();
   </section>
   <script>
     function confirmDelete(productId) {
-    console.log("Delete function called with productId:", productId);
-    Swal.fire({
+      console.log("Delete function called with productId:", productId);
+      Swal.fire({
         title: "Are you sure?",
         text: "You won't be able to revert this!",
         icon: "warning",
@@ -303,38 +303,39 @@ ob_end_flush();
         confirmButtonColor: "#d33",
         cancelButtonColor: "#3085d6",
         confirmButtonText: "Yes, delete it!"
-    }).then((result) => {
+      }).then((result) => {
         if (result.isConfirmed) {
-            $.ajax({
-                url: 'delete-product.php',
-                type: 'GET',
-                data: { id: productId },
-                success: function (response) {
-                    console.log("Response from server:", response);
-                    if (response.trim() == 'success') {
-                        Swal.fire("Deleted!", "Your file has been deleted.", "success");
-                        setTimeout(() => {
-                            location.reload();
-                        }, 2000);
-                    } else {
-                        Swal.fire("Error!", "Failed to delete the product.", "error");
-                    }
-                },
-                error: function (xhr, status, error) {
-                    console.error("AJAX error:", status, error);
-                    Swal.fire("Error!", "An unexpected error occurred.", "error");
-                }
-            });
+          $.ajax({
+            url: 'delete-product.php',
+            type: 'GET',
+            data: {
+              id: productId
+            },
+            success: function(response) {
+              console.log("Response from server:", response);
+              if (response.trim() == 'success') {
+                Swal.fire("Deleted!", "Your file has been deleted.", "success");
+                setTimeout(() => {
+                  location.reload();
+                }, 2000);
+              } else {
+                Swal.fire("Error!", "Failed to delete the product.", "error");
+              }
+            },
+            error: function(xhr, status, error) {
+              console.error("AJAX error:", status, error);
+              Swal.fire("Error!", "An unexpected error occurred.", "error");
+            }
+          });
         }
-    });
-}
-
+      });
+    }
   </script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="script.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="script.js"></script>
 </body>
 
 </html>

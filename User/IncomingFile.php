@@ -1,5 +1,5 @@
 <?php
-session_name("ADMIN_SESSION");
+session_name("USER_SESSION");
 session_start();
 include '../connection.php';
 //file to check if token expire then redirect us to login 
@@ -167,10 +167,10 @@ include('Check_token.php');
                         JOIN user AS userDetails ON dt.to_user = userDetails.id 
                         JOIN LatestStatus ls 
                             ON dt.document_id = ls.document_id 
-                            AND dt.to_user = ls.to_user
+                            AND dt.from_user = ls.from_user
                             AND dt.date = ls.latest_date
                         WHERE dt.status = 'release' 
-                        AND dt.from_user = '$userId'
+                        AND dt.to_user = '$userId'
                         ORDER BY dt.document_id, dt.date DESC
                         LIMIT {$offset}, {$limit};
                     ";
@@ -356,6 +356,7 @@ include('Check_token.php');
                                                 <label for="actionType">Action: <span>*</span></label>
                                                 <select id="actionType" name="action_type" class="form-control" required>
                                                     <option value="">...</option>
+                                                    <option value="received">Receive</option>
                                                     <option value="cancel">Cancel</option>
                                                     <option value="onhold">OnHold</option>
                                                 </select>
@@ -385,9 +386,11 @@ include('Check_token.php');
 
 
             <?php $CountNumber++;
+                                    // Close the statement
+                                    mysqli_stmt_close($stmt);
                                 }
                             } else {
-                                echo "<tr><td colspan='6' style='text-align:center; color:#130f40;'>No Outgoing record available at a moment</td></tr>";
+                                echo "<tr><td colspan='6' style='text-align:center; color:#130f40;'>No Incoming record available at a moment</td></tr>";
                             }
 
 
@@ -400,14 +403,14 @@ include('Check_token.php');
 
 
             $query_count = "WITH latestStatus AS(
-                SELECT document_id,to_user,MAX(date) AS latest_date 
-                FROM document_tracking WHERE from_user= '$userId' 
-                GROUP BY document_id, to_user
+                SELECT document_id,from_user,MAX(date) AS latest_date 
+                FROM document_tracking WHERE to_user= '$userId' 
+                GROUP BY document_id, from_user
                 ) 
                 SELECT count(*) AS total_received FROM document_tracking dt
                 JOIN latestStatus ls ON dt.document_id=ls.document_id
-                AND dt.to_user=ls.to_user AND dt.date=ls.latest_date
-                WHERE status='release' AND from_user='$userId'";
+                AND dt.from_user=ls.from_user AND dt.date=ls.latest_date
+                WHERE status='release' AND to_user='$userId'";
 
             $result = mysqli_query($con, $query_count);
             $row = mysqli_fetch_assoc($result);

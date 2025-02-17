@@ -1,5 +1,5 @@
 <?php
-session_name("ADMIN_SESSION");
+session_name("USER_SESSION");
 session_start();
 include '../connection.php';
 //file to check if token expire then redirect us to login 
@@ -385,6 +385,8 @@ include('Check_token.php');
 
 
             <?php $CountNumber++;
+                                    // Close the statement
+                                    mysqli_stmt_close($stmt);
                                 }
                             } else {
                                 echo "<tr><td colspan='6' style='text-align:center; color:#130f40;'>No Outgoing record available at a moment</td></tr>";

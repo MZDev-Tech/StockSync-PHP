@@ -1,6 +1,8 @@
 <?php
+session_name("ADMIN_SESSION");
 session_start();
 include '../vendor/autoload.php';
+
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 
@@ -23,7 +25,6 @@ if (isset($_COOKIE['access_token'])) {
         }
 
         $login_time = $_SESSION['login_time'];
-
     } catch (Exception $e) {
         $_SESSION['message'] = 'Session expired. Please log in again.';
         header('Location:../admin-login.php');
@@ -55,10 +56,10 @@ if (isset($_COOKIE['access_token'])) {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
     <link rel="stylesheet"
         href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css">
-    
+
     <script>
-        $(document).ready(function () {
-            setTimeout(function () {
+        $(document).ready(function() {
+            setTimeout(function() {
                 $('#alertMessage').fadeOut('slow');
             }, 2000);
         });
@@ -122,14 +123,14 @@ if (isset($_COOKIE['access_token'])) {
 
             <!-----------alert message------------->
             <?php if (isset($_SESSION['message'])) { ?>
-            <div class="alert alert-warning data-dismissible fade show" id="alertMessage" style="margin:10px 25px">
-                <strong>Admin! </strong>
-                <?php echo $_SESSION['message'] ?>
-                <button type="button" data-dismiss="alert" class="close" aria-label="close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+                <div class="alert alert-warning data-dismissible fade show" id="alertMessage" style="margin:10px 25px">
+                    <strong>Admin! </strong>
+                    <?php echo $_SESSION['message'] ?>
+                    <button type="button" data-dismiss="alert" class="close" aria-label="close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
 
-            </div>
+                </div>
             <?php unset($_SESSION['message']);
             } ?>
 
@@ -146,13 +147,13 @@ if (isset($_COOKIE['access_token'])) {
             $result = mysqli_stmt_get_result($stmt);
 
             while ($row = mysqli_fetch_array($result)) {
-                ?>
+            ?>
 
-            <div class="adminprofile-part" style="margin-left:20px; margin-right:30px">
-                <div class="container mt-4">
-                    <div class="row">
-                        <div class="col-lg-4 pb-3 adminprofile-part1">
-                            <!-- Admin profile Sidebar-->
+                <div class="adminprofile-part" style="margin-left:20px; margin-right:30px">
+                    <div class="container mt-4">
+                        <div class="row">
+                            <div class="col-lg-4 pb-3 adminprofile-part1">
+                                <!-- Admin profile Sidebar-->
                                 <div class="admin-card pb-3">
                                     <div class="admin-card-cover"
                                         style="background-image: url(https://images.unsplash.com/photo-1731569348001-e49c36947289?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D);">
@@ -180,7 +181,7 @@ if (isset($_COOKIE['access_token'])) {
                                         </div>
 
                                         <div class="list-group-item profile-sidebar-item" data-target="profileLogout">
-                                            <li >Logout</li>
+                                            <li>Logout</li>
                                         </div>
                                     </ul>
                                 </div>
@@ -336,27 +337,27 @@ if (isset($_COOKIE['access_token'])) {
                                         <button type="submit" name="submit" class="btn btn-info">Update Profile
                                         </button>
                                     </div>
-                                </form>
-                            </div>
+                                    </form>
+                                </div>
 
-                            <!-- profile logout section -->
-                            <div id="profileLogout" class="profile-section" style="display: none;">
-                                <div class="card mb-3">
-                                    <div class="card-body">
-                                        <h4>Logout from Admin panel</h4>
-                                        <p>Click below to log out.</p>
-                                        <a href="#" onclick="confirmLogout(event)" class="btn btn-danger">Logout</a>
+                                <!-- profile logout section -->
+                                <div id="profileLogout" class="profile-section" style="display: none;">
+                                    <div class="card mb-3">
+                                        <div class="card-body">
+                                            <h4>Logout from Admin panel</h4>
+                                            <p>Click below to log out.</p>
+                                            <a href="#" onclick="confirmLogout(event)" class="btn btn-danger">Logout</a>
+                                        </div>
                                     </div>
                                 </div>
+
+
                             </div>
 
 
                         </div>
-
-
                     </div>
                 </div>
-            </div>
 
 
         </main>
@@ -384,9 +385,9 @@ if (isset($_COOKIE['access_token'])) {
         });
 
 
-//sweet alert for logout
+        //sweet alert for logout
 
-function confirmLogout(event) {
+        function confirmLogout(event) {
             event.preventDefault();
             Swal.fire({
                 title: "Are you sure?",
@@ -396,7 +397,7 @@ function confirmLogout(event) {
                 confirmButtonColor: "#3085d6",
                 cancelButtonColor: "#d33",
                 cancelButtonText: "Cancel",
-                confirmButtonText: "Yes, Logout!",      
+                confirmButtonText: "Yes, Logout!",
             }).then((result) => {
                 if (result.isConfirmed) {
                     window.location.href = "logout.php";

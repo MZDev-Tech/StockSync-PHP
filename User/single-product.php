@@ -1,3 +1,7 @@
+<?php
+// file to not allow user to directly access user panel until they are login
+include('Check_token.php');
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -40,7 +44,7 @@
       $query = "select * from laptops where id='$id'";
       $result = mysqli_query($con, $query);
       while ($row = mysqli_fetch_array($result)) {
-        ?>
+      ?>
 
         <div class="detail-part">
           <div class="details-sec">
@@ -50,19 +54,19 @@
                 <ul class="left-downpart">
                   <h3> System Overview</h3>
                   <div class="part2">
-                  <li class="line1">
-                    <p class="parah1"> <span><i class="fas fa-check"></i></span> Designation:</p>
-                    <p class="parah2"><?php echo $row['designation'] ?></p>
-                  </li>
-                  <li class="line1">
-                    <p class="parah1"> <span><i class="fas fa-check"></i></span> Person:</p>
-                    <p class="parah2"> <?php echo $row['person_name'] ?></p>
-                  </li>
+                    <li class="line1">
+                      <p class="parah1"> <span><i class="fas fa-check"></i></span> Designation:</p>
+                      <p class="parah2"><?php echo $row['designation'] ?></p>
+                    </li>
+                    <li class="line1">
+                      <p class="parah1"> <span><i class="fas fa-check"></i></span> Person:</p>
+                      <p class="parah2"> <?php echo $row['person_name'] ?></p>
+                    </li>
 
-                  <li class="line1">
-                    <p class="parah1"><span><i class="fas fa-check"></i></span> Status:</p>
-                    <p class="parah2"> <?php echo $row['status'] ?></p>
-                  </li>
+                    <li class="line1">
+                      <p class="parah1"><span><i class="fas fa-check"></i></span> Status:</p>
+                      <p class="parah2"> <?php echo $row['status'] ?></p>
+                    </li>
                   </div>
 
 
@@ -125,7 +129,7 @@
         </div>
 
 
-         
+
 
       <?php } ?>
 
@@ -138,11 +142,11 @@
 
   </section>
 
-   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="script.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="script.js"></script>
 </body>
 
 </html>

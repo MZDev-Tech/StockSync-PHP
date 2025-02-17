@@ -1,5 +1,7 @@
-<?php 
+<?php
+
 if (session_status() === PHP_SESSION_NONE) {
+    session_name("USER_SESSION");
     session_start();
 }
 include('../connection.php');
@@ -8,12 +10,15 @@ include('../vendor/autoload.php');
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 
+// file to not allow user to directly access admin panel until they are login
+include('Check_token.php');
+
 // Code to verify JWT token generated after admin login
 $secret_key = "Zaviyan88$&90";
 $show_refreshToken = false; // Initialize the variable
 
-if (isset($_COOKIE["access_token"])) {
-    $token = $_COOKIE['access_token'];
+if (isset($_COOKIE["user_access_token"])) {
+    $token = $_COOKIE['user_access_token'];
 
     try {
         // Decode & verify the token
@@ -32,22 +37,22 @@ if (isset($_COOKIE["access_token"])) {
             $query = "UPDATE user SET status='inactive' where id='$id' && role='$role'";
             mysqli_query($con, $query);
             session_destroy();
-            setcookie('access_token', time() - 3600, "/");
+            setcookie('user_access_token', time() - 3600, "/");
 
             $_SESSION['message'] = 'Session expired. Please log in again.';
-            header('Location:../admin-login.php');
+            header('Location:../user-login.php');
             exit();
         }
     } catch (Exception $e) {
         // Token is invalid or expired
         $_SESSION['message'] = 'Session expired. Please log in again.';
-        header('Location:../admin-login.php');
+        header('Location:../user-login.php');
         exit();
     }
 } else {
     // No token found in cookies
     $_SESSION['message'] = "Unauthorized access. Please log in first.";
-    header('Location:../admin-login.php');
+    header('Location:../user-login.php');
     exit();
 }
 ?>
@@ -79,19 +84,20 @@ if (isset($_COOKIE["access_token"])) {
         </div>
 
         <div class="header-icons">
-        <button id="refreshTokenBtn" class="btn token-btn btn-sm">Refresh Token</button>
+            <button id="refreshTokenBtn" class="btn token-btn btn-sm">Refresh Token</button>
             <div class="icon1">
                 <i class="fas fa-bars" id="menuIcon"></i>
             </div>
 
             <?php
-           
+
             include('../connection.php');
-            $id=$_SESSION['id'];
-            $query = "SELECT * FROM user WHERE id='$id'";
+            $id = $_SESSION['id'];
+            $role = "user";
+            $query = "SELECT * FROM user WHERE id='$id' && role='$role'";
             $result = mysqli_query($con, $query);
             while ($row = mysqli_fetch_array($result)) {
-                ?>
+            ?>
                 <div class="admin">
                     <a href="User-profile.php">
                         <img src="../Images/<?php echo $row['image']; ?>" alt="Profile Img">
@@ -102,7 +108,7 @@ if (isset($_COOKIE["access_token"])) {
                 </div>
             <?php } ?>
 
-           
+
         </div>
     </header>
 
@@ -110,7 +116,7 @@ if (isset($_COOKIE["access_token"])) {
         document.addEventListener('DOMContentLoaded', () => {
             const header = document.getElementById('header-part');
             const menuIcon = document.getElementById('menuIcon');
-            let isMenuActive = false; 
+            let isMenuActive = false;
 
             // Toggle menu event
             menuIcon.addEventListener('click', () => {
@@ -203,7 +209,7 @@ if (isset($_COOKIE["access_token"])) {
                 $.ajax({
                     type: 'POST',
                     url: 'refresh_token.php',
-                    success: function (response) {
+                    success: function(response) {
                         console.log("Response from server:", response); // Log the response
                         let res = JSON.parse(response);
                         if (res.success) {
@@ -224,7 +230,7 @@ if (isset($_COOKIE["access_token"])) {
                             });
                         }
                     },
-                    error: function () {
+                    error: function() {
                         Swal.fire({
                             icon: "error",
                             title: "Oops...",

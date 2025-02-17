@@ -1,4 +1,5 @@
 <?php
+session_name("ADMIN_SESSION");
 session_start();
 include('../connection.php');
 
@@ -12,7 +13,7 @@ if (isset($_POST['submit'])) {
 
     $id = mysqli_real_escape_string($con, $_POST['id']);
     $name = mysqli_real_escape_string($con, $_POST['name']);
-    $email = mysqli_real_escape_stripng($con, $_POST['email']);
+    $email = mysqli_real_escape_string($con, $_POST['email']);
     $phone = mysqli_real_escape_string($con, $_POST['phone']);
     $designation = mysqli_real_escape_string($con, $_POST['designation']);
     $address = mysqli_real_escape_string($con, $_POST['address']);
@@ -44,7 +45,7 @@ if (isset($_POST['submit'])) {
     $stmt = mysqli_prepare($con, $query);
 
     // Bind the statement
-    mysqli_stmt_bind_param($stmt, 'ssissssi', $name, $email,$phone,$designation,$address, $newPassword, $imagePath, $id);
+    mysqli_stmt_bind_param($stmt, 'ssissssi', $name, $email, $phone, $designation, $address, $newPassword, $imagePath, $id);
     $result = mysqli_stmt_execute($stmt);
 
     if ($result) {
@@ -63,6 +64,7 @@ if (isset($_POST['submit'])) {
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -74,14 +76,16 @@ if (isset($_POST['submit'])) {
 
 </head>
 <style>
-  form input{
-    text-transform: none;
-    
-  }
-  form input::placeholder{
-    font-size: 13px;
-  }
+    form input {
+        text-transform: none;
+
+    }
+
+    form input::placeholder {
+        font-size: 13px;
+    }
 </style>
+
 <body>
     <?php include('sidebar.php'); ?>
 
@@ -92,78 +96,78 @@ if (isset($_POST['submit'])) {
             <?php
             include('../connection.php');
             $id = $_SESSION['id'];
-            $role='admin';
+            $role = 'admin';
             $query = "SELECT * FROM user WHERE id=? && role=?";
             $stmt = mysqli_prepare($con, $query);
-            mysqli_stmt_bind_param($stmt, 'is', $id,$role);
+            mysqli_stmt_bind_param($stmt, 'is', $id, $role);
             mysqli_stmt_execute($stmt);
             $result = mysqli_stmt_get_result($stmt);
             while ($row = mysqli_fetch_array($result)) {
             ?>
-        <div class="form-parent">
-            <div class="form-records">
-                <form method="POST" action="" enctype="multipart/form-data">
-                    <h4>Update Admin Profile</h4><br>
-                    <div class="form-group">
-                        <input type="hidden" name="id" class="form-control" value="<?php echo $row['id']; ?>">
+                <div class="form-parent">
+                    <div class="form-records">
+                        <form method="POST" action="" enctype="multipart/form-data">
+                            <h4>Update Admin Profile</h4><br>
+                            <div class="form-group">
+                                <input type="hidden" name="id" class="form-control" value="<?php echo $row['id']; ?>">
+                            </div>
+
+                            <div class="form-group">
+                                <label>Full Name</label>
+
+                                <input type="text" name="name" class="form-control" value="<?php echo $row['name']; ?>" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Email ID</label>
+
+                                <input type="text" name="email" class="form-control" value="<?php echo $row['email']; ?>" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Contact</label>
+
+                                <input type="text" name="phone" class="form-control" value="<?php echo $row['phone']; ?>" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Designation</label>
+
+                                <input type="text" name="designation" class="form-control" value="<?php echo $row['designation']; ?>" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Address</label>
+
+                                <input type="text" name="address" class="form-control" value="<?php echo $row['address']; ?>" required>
+                            </div>
+
+
+
+                            <div class="form-group">
+                                <label>Password</label>
+
+                                <input type="text" name="password" class="form-control" placeholder="Enter new password (leave blank to keep current password)">
+                            </div>
+
+                            <div class="form-group">
+                                <img src="../Images/<?php echo $row['image']; ?>" style="width:80px; height:80px; border-radius:5px; border: 3px solid #d5d7da;">
+                                <input type="hidden" name="img" value="<?php echo $row['image']; ?>" style="text-transform:none;">
+                            </div>
+
+                        <?php } ?>
+                        <div class="form-group">
+                            <b>Upload Image</b><br>
+                            <input type="file" name="image" class="form-control">
+                        </div>
+
+                        <div class="form-group">
+                            <button type="submit" name="submit" class="btn btn-info">Update Profile
+                            </button>
+                        </div>
+                        </form>
                     </div>
-
-                    <div class="form-group">
-                    <label>Full Name</label>
-
-                        <input type="text" name="name" class="form-control" value="<?php echo $row['name']; ?>" required>
-                    </div>
-
-                    <div class="form-group">
-                    <label>Email ID</label>
-
-                        <input type="text" name="email" class="form-control" value="<?php echo $row['email']; ?>" required>
-                    </div>
-
-                    <div class="form-group">
-                    <label>Contact</label>
-
-                        <input type="text" name="phone" class="form-control" value="<?php echo $row['phone']; ?>" required>
-                    </div>
-
-                    <div class="form-group">
-                    <label>Designation</label>
-
-                        <input type="text" name="designation" class="form-control" value="<?php echo $row['designation']; ?>" required>
-                    </div>
-
-                    <div class="form-group">
-                    <label>Address</label>
-
-                        <input type="text" name="address" class="form-control" value="<?php echo $row['address']; ?>" required>
-                    </div>
-
-                    
-
-                    <div class="form-group">
-                    <label>Password</label>
-
-                        <input type="text" name="password" class="form-control" placeholder="Enter new password (leave blank to keep current password)">
-                    </div>
-
-                    <div class="form-group">
-                        <img src="../Images/<?php echo $row['image']; ?>" style="width:80px; height:80px; border-radius:5px; border: 3px solid #d5d7da;">
-                        <input type="hidden" name="img" value="<?php echo $row['image']; ?>" style="text-transform:none;">
-                    </div>
-
-                    <?php } ?>
-                    <div class="form-group">
-                        <b>Upload Image</b><br>
-                        <input type="file" name="image" class="form-control">
-                    </div>
-
-                    <div class="form-group">
-                    <button type="submit" name="submit" class="btn btn-info">Update Profile
-                    </button>
-                    </div>
-                </form>
-            </div>
-            </div>
+                </div>
         </main>
     </section>
 
@@ -186,9 +190,7 @@ if (isset($_POST['submit'])) {
                 }
             })
         });
-
-
-
     </script>
 </body>
+
 </html>

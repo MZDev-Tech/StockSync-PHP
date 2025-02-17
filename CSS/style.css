@@ -750,7 +750,6 @@ li {
 #page-content .records .select-box select {
     cursor: pointer;
     margin: 0 4px;
-    -webkit-appearance: none;
     border: 1px solid #e6e5e5;
     height: 30px;
     padding: 6px 15px;
@@ -1728,7 +1727,8 @@ ul.data-product {
     color: var(--blue);
 }
 
-.file-topics ul li a {
+.file-topics ul li a,
+.file-topics ul li button {
     text-decoration: none;
     font-weight: 500;
     font-size: 14px;
@@ -1737,7 +1737,8 @@ ul.data-product {
     transition: .3s ease;
 }
 
-.file-topics ul li a:hover {
+.file-topics ul li a:hover,
+.file-topics ul li button:hover{
     color: var(--light-color);
 }
 
@@ -2099,9 +2100,7 @@ outline: none !important;
     margin-top: -4px;
     margin-bottom: 1rem;
     font-size: 15px;
-    padding: 0 25px 14px 25px;
-    text-align-last: center;
-    text-align: center !important;
+    padding: 0 30px 14px 40px;
     text-transform: none;
 }
 .remark-modal .modal-footer {
@@ -2150,6 +2149,9 @@ outline: none !important;
 }
 .sendfile-modal .modal-header i.file-icon{
 color:#716f6f !important;
+}
+.modal-body textarea{
+    text-transform: capitalize;
 }
 
 .sendfile-modal .modal-body label{
