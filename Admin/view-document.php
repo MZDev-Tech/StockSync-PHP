@@ -287,13 +287,12 @@ include('Check_token.php');
                                                 <select id="actionType" name="action_type" class="form-control" required>
                                                     <option value="">...</option>
                                                     <option value="release">Release</option>
-                                                    <option value="complete">Complete</option>
-                                                    <option value="onhold">Hold</option>
+
                                                 </select>
                                             </div>
 
                                             <!-- Receiver field, initially hidden -->
-                                            <div class="form-group" id="receiverField" style="display: none;">
+                                            <div class="form-group" id="receiverField" >
                                                 <label for="receiver">Receiver: <span>*</span></label>
                                                 <select id="receiver" name="to_user" class="form-control" required>
                                                     <option value="">...</option>
@@ -523,16 +522,7 @@ include('Check_token.php');
             });
 
 
-            // jQuery to show/hide receiver field based on the selected action type
-            $('#actionType').change(function() {
-                var actionType = $(this).val();
 
-                if (actionType === 'release') {
-                    $('#receiverField').show();
-                } else {
-                    $('#receiverField').hide();
-                }
-            });
         </script>
 
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>

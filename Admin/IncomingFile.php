@@ -146,14 +146,14 @@ include('Check_token.php');
                             $userId = $_SESSION['id'];
                             $query = "WITH LatestStatus AS (SELECT document_id,from_user,MAX(date) AS latest_date
                                       FROM document_tracking
-                                      WHERE to_user = '$userId' -- Current user is the recipient
+                                      WHERE to_user = '$userId' 
                                      GROUP BY document_id, from_user
                                       )
                                         SELECT documents.*, sender.name AS sender_name,  
                                         receiver.name AS receiver_name,
                                         sender.designation AS user_designation,
                                         sender.image AS user_image, dt.date,
-                                        dt.remark, dt.status, dt.to_user
+                                        dt.remark, dt.status, dt.to_user,dt.from_user
                                         FROM document_tracking dt
                                         JOIN documents ON dt.document_id = documents.id
                                         JOIN user AS sender ON dt.from_user = sender.id  
@@ -163,7 +163,7 @@ include('Check_token.php');
                                         AND dt.from_user = ls.from_user
                                         AND dt.date = ls.latest_date
                                         WHERE dt.status = 'release' 
-                                        AND dt.to_user = '$userId' -- Current user is the recipient
+                                        AND dt.to_user = '$userId' 
                                         ORDER BY dt.document_id, dt.date DESC
                                          LIMIT {$offset}, {$limit};";
 
@@ -332,16 +332,16 @@ include('Check_token.php');
 
                     <div class="container">
                         <div class="modal fade" id="fileStatusModal<?php echo $row['id']; ?>" role="dialog">
-                            <div class="modal-dialog">
+                            <div class="modal-dialog modal-dialog-centered modal-md">
                                 <div class="modal-content sendfile-modal">
                                     <div class="modal-header">
-                                        <h4 class="modal-title"><i class="fas fa-cog file-icon"></i> Operations</h4>
+                                        <h4 class="modal-title"><i class="fas fa-cog file-icon"></i> Modify</h4>
                                         <button type="button" data-dismiss="modal" class="close">&times;</button>
                                     </div>
                                     <div class="modal-body">
                                         <form id="updateFileForm<?php echo $row['id']; ?>" enctype="multipart/form-data">
                                             <input type="hidden" name="document_id" value="<?php echo $row['id']; ?>">
-                                            <input type="hidden" name="from_user" value="<?php echo $_SESSION['id']; ?>">
+                                            <input type="hidden" name="from_user" value="<?php echo $row['from_user']; ?>">
                                             <input type="hidden" name="to_user" value="<?php echo $row['to_user']; ?>">
 
                                             <div class="form-group">
@@ -361,7 +361,7 @@ include('Check_token.php');
 
 
 
-                                            <textarea type="hidden" name="remark" rows="4" placeholder="Type Message .." class="form-control" value="<?php echo $row['remark']; ?>" required><?php echo $row['remark']; ?></textarea>
+                                            <textarea style="display:none" name="remark" rows="4" placeholder="Type Message .." class="form-control" value="<?php echo $row['remark']; ?>" required><?php echo $row['remark']; ?></textarea>
                                         </form>
                                     </div>
                                     <!------Modal Footer---->

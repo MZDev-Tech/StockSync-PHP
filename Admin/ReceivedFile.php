@@ -96,14 +96,14 @@ include('Check_token.php');
                     $userId = $_SESSION['id'];
 
                     $query = "WITH latestStatus AS(
-                    SELECT document_id,to_user,MAX(date) AS latest_date
-                    from document_tracking WHERE from_user='$userId' 
-                    GROUP BY document_id, to_user
+                    SELECT document_id,from_user,MAX(date) AS latest_date
+                    from document_tracking WHERE to_user='$userId' 
+                    GROUP BY document_id, from_user
                     )
                     SELECT dt.* FROM document_tracking dt 
                     JOIN latestStatus ls ON dt.document_id = ls.document_id
-                    AND dt.to_user = ls.to_user AND dt.date = ls.latest_date
-                    WHERE status = 'received' AND from_user = '$userId' 
+                    AND dt.from_user = ls.from_user AND dt.date = ls.latest_date
+                    WHERE status = 'received' AND to_user = '$userId' 
                     ORDER BY document_id LIMIT {$offset}, {$limit}";
 
                     $result = mysqli_query($con, $query);
@@ -144,36 +144,28 @@ include('Check_token.php');
                             $offset = ($page - 1) * $limit;
                             $CountNumber = 1;
                             $userId = $_SESSION['id'];
-                            $query = "WITH LatestStatus AS (SELECT document_id, to_user,
-                            MAX(date) AS latest_date
-                            FROM document_tracking
-                            WHERE from_user = '$userId'
-                            GROUP BY document_id, to_user
-                        )
-                        SELECT 
-                            documents.*,
-                            sender.name AS sender_name,  
-                            receiver.name AS receiver_name,
-                            sender.designation AS user_designation,
-                            sender.image AS user_image,
-                            dt.date,
-                            dt.remark,
-                            dt.status,
-                            dt.to_user
-                        FROM document_tracking dt
-                        JOIN documents ON dt.document_id = documents.id
-                        JOIN user AS sender ON dt.from_user = sender.id  
-                        JOIN user AS receiver ON dt.to_user = receiver.id
-                        JOIN LatestStatus ls 
-                            ON dt.document_id = ls.document_id 
-                            AND dt.to_user = ls.to_user
-                            AND dt.date = ls.latest_date
-                        WHERE dt.status = 'received' 
-                        AND dt.from_user = '$userId'
-                        ORDER BY dt.document_id, dt.date DESC
-                        LIMIT {$offset}, {$limit};
-                    ";
-
+                            $query = "WITH LatestStatus AS (SELECT document_id,from_user,MAX(date) AS latest_date
+                                      FROM document_tracking
+                                      WHERE to_user = '$userId' 
+                                     GROUP BY document_id, from_user
+                                      )
+                                        SELECT documents.*, sender.name AS sender_name,  
+                                        receiver.name AS receiver_name,
+                                        sender.designation AS user_designation,
+                                        sender.image AS user_image, dt.date,
+                                        dt.remark, dt.status, dt.to_user,dt.from_user
+                                        FROM document_tracking dt
+                                        JOIN documents ON dt.document_id = documents.id
+                                        JOIN user AS sender ON dt.from_user = sender.id  
+                                        JOIN user AS receiver ON dt.to_user = receiver.id
+                                        JOIN LatestStatus ls 
+                                        ON dt.document_id = ls.document_id 
+                                        AND dt.from_user = ls.from_user
+                                        AND dt.date = ls.latest_date
+                                        WHERE dt.status = 'received' 
+                                        AND dt.to_user = '$userId' 
+                                        ORDER BY dt.document_id, dt.date DESC
+                                         LIMIT {$offset}, {$limit};";
 
 
                             $stmt = mysqli_prepare($con, $query);
@@ -190,6 +182,7 @@ include('Check_token.php');
                                             <td class="des filedes">
                                                 <?php echo $row['filename']; ?>
                                             </td>
+
 
 
                                             <td class="user-designation">
@@ -221,29 +214,29 @@ include('Check_token.php');
                                                                 <i class="fas fa-qrcode"></i> Barcode
                                                             </a>
                                                         </li>
+
                                                         <li>
                                                             <a class="dropdown-item" href="#fileStatusModal<?php echo $row['id'] ?>"
                                                                 data-toggle="modal" data-target="#fileStatusModal<?php echo $row['id'] ?>">
                                                                 <i class="fas fa-wrench"></i> Action
                                                             </a>
                                                         </li>
-
                                                         <li>
                                                             <a class="dropdown-item" href="#viewRemarkModal<?php echo $row['id'] ?>"
                                                                 data-toggle="modal" data-target="#viewRemarkModal<?php echo $row['id'] ?>">
                                                                 <i class="fa fa-pencil"></i> Remark
                                                             </a>
                                                         </li>
-
                                                         <li>
                                                             <hr class="dropdown-divider">
                                                         </li>
-
                                                         <li>
-                                                            <a class="dropdown-item" href="TrackRecord.php">
-                                                                <i class="far fa-folder"></i> Track File
+                                                            <a class="dropdown-item" href="#sendFileModal<?php echo $row['id'] ?>"
+                                                                data-toggle="modal" data-target="#sendFileModal<?php echo $row['id'] ?>">
+                                                                <i class="fa fa-paper-plane"></i> Send File
                                                             </a>
                                                         </li>
+
                                                     </ul>
                                                 </div>
                                             </td>
@@ -305,7 +298,7 @@ include('Check_token.php');
 
                     <div class="container">
                         <div class="modal fade" id="viewRemarkModal<?php echo $row['id']; ?>" role="dialog">
-                            <div class="modal-dialog">
+                            <div class="modal-dialog modal-dialog-centered">
 
                                 <!-- Modal content-->
                                 <div class="modal-content remark-modal">
@@ -338,7 +331,56 @@ include('Check_token.php');
                     <!----------------Action Model For document-------------------->
 
                     <div class="container">
-                        <div class="modal fade" id="sendfileModal<?php echo $row['id']; ?>" role="dialog">
+                        <div class="modal fade" id="fileStatusModal<?php echo $row['id']; ?>" role="dialog">
+                            <div class="modal-dialog">
+                                <div class="modal-content sendfile-modal">
+                                    <div class="modal-header">
+                                        <h4 class="modal-title"><i class="fas fa-cog file-icon"></i> Operation</h4>
+                                        <button type="button" data-dismiss="modal" class="close">&times; </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form method="" id="updateFileForm<?php echo $row['id'] ?>" enctype="multipart/form-data" action="sendFile.php">
+
+                                            <input type="hidden" name="document_id" value="<?php echo $row['id']; ?>">
+                                            <input type="hidden" name="from_user" value="<?php echo $row['from_user']; ?>">
+                                            <input type="hidden" name="to_user" value="<?php echo $row['to_user']; ?>">
+
+                                            <div class="form-group">
+                                                <label for="actionType">Action: <span>*</span></label>
+                                                <select id="actionType" name="action_type" class="form-control" required>
+                                                    <option value="">...</option>
+                                                    <option value="complete">Complete</option>
+                                                    <option value="onhold">OnHold</option>
+                                                </select>
+
+                                            </div>
+
+
+                                            <div class="form-group">
+                                                <label>File Title: <span>*</span></label>
+                                                <input type="text" name="filename" class="form-control" value="<?php echo $row['fileTitle']; ?>" readonly>
+                                            </div>
+
+
+                                            <div class="form-group">
+                                                <label>Remark: <span>*</span></label>
+                                                <textarea type="text" name="remark" rows="4" placeholder="Type Message .." class="form-control" required></textarea>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                        <button type="button" class="btn btn-info updateFileBtn" data-id="<?php echo $row['id'] ?>">Send</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!----------------Send file Model For document-------------------->
+
+                    <div class="container">
+                        <div class="modal fade" id="sendFileModal<?php echo $row['id']; ?>" role="dialog">
                             <div class="modal-dialog">
                                 <div class="modal-content sendfile-modal">
                                     <div class="modal-header">
@@ -346,7 +388,7 @@ include('Check_token.php');
                                         <button type="button" data-dismiss="modal" class="close">&times; </button>
                                     </div>
                                     <div class="modal-body">
-                                        <form method="" id="sendFileForm<?php echo $row['id'] ?>" enctype="multipart/form-data" action="sendFile.php">
+                                        <form method="" id="updateFileForm<?php echo $row['id'] ?>" enctype="multipart/form-data" action="sendFile.php">
                                             <div class="form-group">
                                                 <input type="hidden" name="document_id" class="form-control" value="<?php echo $row['id']; ?>">
                                             </div>
@@ -359,18 +401,10 @@ include('Check_token.php');
                                                 <select id="actionType" name="action_type" class="form-control" required>
                                                     <option value="">...</option>
                                                     <option value="release">Release</option>
-                                                    <option value="complete">Complete</option>
-                                                    <option value="onhold">OnHold</option>
+
                                                 </select>
                                             </div>
-
                                             <div class="form-group">
-                                                <label>File Title: <span>*</span></label>
-                                                <input type="text" name="filename" class="form-control" value="<?php echo $row['fileTitle']; ?>" readonly>
-                                            </div>
-
-                                            <!-- Receiver field, initially hidden -->
-                                            <div class="form-group" id="receiverField" style="display: none;">
                                                 <label for="receiver">Receiver: <span>*</span></label>
                                                 <select id="receiver" name="to_user" class="form-control" required>
                                                     <option value="">...</option>
@@ -384,9 +418,16 @@ include('Check_token.php');
                                                 </select>
                                             </div>
 
+
+                                            <div class="form-group">
+                                                <label>File Title: <span>*</span></label>
+                                                <input type="text" name="filename" class="form-control" value="<?php echo $row['fileTitle']; ?>" readonly>
+                                            </div>
+
+
                                             <div class="form-group">
                                                 <label>Remark: <span>*</span></label>
-                                                <textarea type="text" name="remarks" rows="4" placeholder="Type Message .." class="form-control" required></textarea>
+                                                <textarea type="text" name="remark" rows="4" placeholder="Type Message .." class="form-control" required></textarea>
                                             </div>
                                         </form>
                                     </div>
@@ -419,14 +460,14 @@ include('Check_token.php');
 
 
             $query_count = "WITH latestStatus AS(
-                SELECT document_id,to_user,MAX(date) AS latest_date 
-                FROM document_tracking WHERE from_user= '$userId' 
-                GROUP BY document_id, to_user
+                SELECT document_id,from_user,MAX(date) AS latest_date 
+                FROM document_tracking WHERE to_user= '$userId' 
+                GROUP BY document_id, from_user
                 ) 
                 SELECT count(*) AS total_received FROM document_tracking dt
                 JOIN latestStatus ls ON dt.document_id=ls.document_id
-                AND dt.to_user=ls.to_user AND dt.date=ls.latest_date
-                WHERE status='received' AND from_user='$userId'";
+                AND dt.from_user=ls.from_user AND dt.date=ls.latest_date
+                WHERE status='received' AND to_user='$userId'";
 
             $result = mysqli_query($con, $query_count);
             $row = mysqli_fetch_assoc($result);
@@ -559,10 +600,11 @@ include('Check_token.php');
             //ajax code to send file
 
             $(document).ready(function() {
-                $(".updateFileBtn").click(function() {
+                $(".updateFileBtn, .sendFileBtn").click(function() {
                     var documentId = $(this).data("id");
 
-                    var form = $("#updateFileForm" + documentId)[0];
+                    // Identify which form to use based on the button clicked
+                    var form = $(this).closest(".modal").find("form")[0];
                     var formData = new FormData(form); // Collects form data
 
                     $.ajax({
@@ -606,16 +648,17 @@ include('Check_token.php');
             });
 
 
-            // jQuery to show/hide receiver field based on the selected action type
-            $('#actionType').change(function() {
-                var actionType = $(this).val();
 
-                if (actionType === 'release') {
-                    $('#receiverField').show();
+
+            // jQuery to show/hide receiver field based on the selected action type
+            document.getElementById('actionType').addEventListener('change', function() {
+                const receiverField = document.getElementById('receiverField');
+                if (this.value === 'release' || this.value === 'resend') {
+                    receiverField.style.display = 'block';
                 } else {
-                    $('#receiverField').hide();
+                    receiverField.style.display = 'none';
                 }
-            });
+            })
         </script>
 
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
