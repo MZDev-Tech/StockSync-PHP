@@ -156,7 +156,8 @@ include('Check_token.php');
                             dt.date,
                             dt.remark,
                             dt.status,
-                            dt.to_user
+                            dt.to_user,
+                            dt.from_user
                         FROM document_tracking dt
                         JOIN documents ON dt.document_id = documents.id
                         JOIN user AS sender ON dt.from_user = sender.id  
@@ -169,8 +170,7 @@ include('Check_token.php');
                         WHERE dt.status = 'cancel' 
                         AND dt.from_user = '$userId'
                         ORDER BY dt.document_id, dt.date DESC
-                        LIMIT {$offset}, {$limit};
-                    ";
+                        LIMIT {$offset}, {$limit};";
 
 
 
@@ -236,10 +236,10 @@ include('Check_token.php');
                                                         <li>
                                                             <hr class="dropdown-divider">
                                                         </li>
-
                                                         <li>
-                                                            <a class="dropdown-item" href="TrackRecord.php">
-                                                                <i class="far fa-folder"></i> Track File
+                                                            <a class="dropdown-item" href="#sendFileModal<?php echo $row['id'] ?>"
+                                                                data-toggle="modal" data-target="#sendFileModal<?php echo $row['id'] ?>">
+                                                                <i class="fa fa-paper-plane"></i> Send File
                                                             </a>
                                                         </li>
                                                     </ul>
@@ -340,30 +340,81 @@ include('Check_token.php');
                             <div class="modal-dialog">
                                 <div class="modal-content sendfile-modal">
                                     <div class="modal-header">
-                                        <h4 class="modal-title"><i class="fas fa-cog file-icon"></i> Operations</h4>
-                                        <button type="button" data-dismiss="modal" class="close">&times;</button>
+                                        <h4 class="modal-title"><i class="fas fa-cog file-icon"></i> Operation</h4>
+                                        <button type="button" data-dismiss="modal" class="close">&times; </button>
                                     </div>
                                     <div class="modal-body">
-                                        <form id="updateFileForm<?php echo $row['id']; ?>" enctype="multipart/form-data">
+                                        <form method="" id="updateFileForm<?php echo $row['id'] ?>" enctype="multipart/form-data" action="sendFile.php">
+
                                             <input type="hidden" name="document_id" value="<?php echo $row['id']; ?>">
-                                            <input type="hidden" name="from_user" value="<?php echo $_SESSION['id']; ?>">
+                                            <input type="hidden" name="from_user" value="<?php echo $row['from_user']; ?>">
+                                            <input type="hidden" name="to_user" value="<?php echo $row['to_user']; ?>">
 
                                             <div class="form-group">
                                                 <label for="actionType">Action: <span>*</span></label>
                                                 <select id="actionType" name="action_type" class="form-control" required>
                                                     <option value="">...</option>
-                                                    <option value="release">Resend</option>
+                                                    <option value="complete">Complete</option>
                                                     <option value="onhold">OnHold</option>
                                                 </select>
+
                                             </div>
 
-                                            <!-- Receiver field, initially hidden -->
-                                            <div class="form-group" id="receiverField" style="display: none;">
+
+                                            <div class="form-group">
+                                                <label>File Title: <span>*</span></label>
+                                                <input type="text" name="filename" class="form-control" value="<?php echo $row['fileTitle']; ?>" readonly>
+                                            </div>
+
+
+                                            <div class="form-group">
+                                                <label>Remark: <span>*</span></label>
+                                                <textarea type="text" name="remark" rows="4" placeholder="Type Message .." class="form-control" required></textarea>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                        <button type="button" class="btn btn-info updateFileBtn" data-id="<?php echo $row['id'] ?>">Send</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!----------------Send file Model For document-------------------->
+
+                    <div class="container">
+                        <div class="modal fade" id="sendFileModal<?php echo $row['id']; ?>" role="dialog">
+                            <div class="modal-dialog">
+                                <div class="modal-content sendfile-modal">
+                                    <div class="modal-header">
+                                        <h4 class="modal-title"><i class="fas fa-cog file-icon"></i> Send File</h4>
+                                        <button type="button" data-dismiss="modal" class="close">&times; </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form method="" id="updateFileForm<?php echo $row['id'] ?>" enctype="multipart/form-data" action="sendFile.php">
+                                            <div class="form-group">
+                                                <input type="hidden" name="document_id" class="form-control" value="<?php echo $row['id']; ?>">
+                                            </div>
+                                            <div class="form-group">
+                                                <input type="hidden" name="from_user" class="form-control" value="<?php echo $_SESSION['id']; ?>">
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label for="actionType">Action: <span>*</span></label>
+                                                <select id="actionType" name="action_type" class="form-control" required>
+                                                    <option value="">...</option>
+                                                    <option value="Re-release">Re-release</option>
+
+                                                </select>
+                                            </div>
+                                            <div class="form-group">
                                                 <label for="receiver">Receiver: <span>*</span></label>
                                                 <select id="receiver" name="to_user" class="form-control" required>
                                                     <option value="">...</option>
                                                     <?php
-                                                    $query1 = "SELECT * FROM user WHERE role='user'";
+                                                    $query1 = "SELECT * FROM user ";
                                                     $result1 = mysqli_query($con, $query1);
                                                     while ($row1 = mysqli_fetch_assoc($result1)) {
                                                         echo "<option value='{$row1['id']}'>{$row1['name']}</option>";
@@ -373,23 +424,21 @@ include('Check_token.php');
                                             </div>
 
 
-
                                             <div class="form-group">
                                                 <label>File Title: <span>*</span></label>
-                                                <input type="text" name="filename" class="form-control"
-                                                    value="<?php echo $row['fileTitle']; ?>" readonly>
+                                                <input type="text" name="filename" class="form-control" value="<?php echo $row['fileTitle']; ?>" readonly>
                                             </div>
+
 
                                             <div class="form-group">
                                                 <label>Remark: <span>*</span></label>
-                                                <textarea name="remark" rows="4" placeholder="Type Message .." class="form-control" required></textarea>
+                                                <textarea type="text" name="remark" rows="4" placeholder="Type Message .." class="form-control" required></textarea>
                                             </div>
                                         </form>
                                     </div>
-                                    <!------Modal Footer---->
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                                        <button type="button" class="btn btn-info updateFileBtn" data-id="<?php echo $row['id']; ?>">Submit</button>
+                                        <button type="button" class="btn btn-info sendFileBtn" data-id="<?php echo $row['id'] ?>">Send</button>
                                     </div>
                                 </div>
                             </div>
@@ -556,10 +605,11 @@ include('Check_token.php');
             //ajax code to send file
 
             $(document).ready(function() {
-                $(".updateFileBtn").click(function() {
+                $(".updateFileBtn, .sendFileBtn").click(function() {
                     var documentId = $(this).data("id");
 
-                    var form = $("#updateFileForm" + documentId)[0];
+                    // Identify which form to use based on the button clicked
+                    var form = $(this).closest(".modal").find("form")[0];
                     var formData = new FormData(form);
 
                     $.ajax({
@@ -600,17 +650,6 @@ include('Check_token.php');
                         }
                     });
                 });
-            });
-
-            // jQuery to show/hide receiver field based on the selected action type
-            $('#actionType').change(function() {
-                var actionType = $(this).val();
-
-                if (actionType === 'release') {
-                    $('#receiverField').show();
-                } else {
-                    $('#receiverField').hide();
-                }
             });
         </script>
 

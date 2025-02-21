@@ -423,7 +423,7 @@ include('Check_token.php');
                                                 <label for="actionType">Action: <span>*</span></label>
                                                 <select id="actionType" name="action_type" class="form-control" required>
                                                     <option value="">...</option>
-                                                    <option value="release">Release</option>
+                                                    <option value="Re-release">Release</option>
 
                                                 </select>
                                             </div>

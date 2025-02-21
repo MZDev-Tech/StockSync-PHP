@@ -110,7 +110,7 @@ li {
   color: var(--blue);
 }
 
-.sidebar-part .brand {
+/* .sidebar-part .brand {
   display: flex;
   align-items: center;
   font-size: 25px;
@@ -120,12 +120,46 @@ li {
   position: sticky;
   top: 0;
   background: #fff;
+} */
+.sidebar-part .login-header {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  padding-bottom: 6px;
+  padding: 20px 0 10px 0;
+  position: sticky;
+  top: 0;
+  background: #fff;
+}
+
+.sidebar-part .login-header img {
+  width: 70px;
+  height: 60px;
+}
+
+.sidebar-part .headerContent {
+  margin-left: -2px;
+  padding-top: 12px;
+}
+.sidebar-part h3.admin-heading {
+  font-size: 18px;
+  font-weight: 700;
+  color: #130f40ad;
+  text-transform: uppercase;
+  margin-bottom: 0;
+}
+
+.sidebar-part .headerContent p {
+  font-size: 11px;
+  font-style: italic;
+  margin-top: 2px;
+  font-family: "Playfair Display", serif;
+  color: #383737;
 }
 
 .sidebar-part .brand img {
   width: 30px;
   height: 40px;
-  border-radius: 50%;
   margin-right: 8px;
 }
 
@@ -227,6 +261,93 @@ li {
   opacity: 0;
   transition: all 0.5s ease-in-out;
 }
+.sidebar-part .side-menu li .sub-listItems div.list-menu {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-right: 32px;
+  margin-left: 32px;
+  border-bottom: 1px solid #f1eeee;
+  transition: all 0.3s ease !important;
+  cursor: pointer;
+}
+.sidebar-part .side-menu li .sub-listItems span.fileCount {
+  display: inline-block;
+  height: 20px;
+  width: 20px;
+  line-height: 20px;
+  font-size: 11px !important;
+  font-weight: 600;
+  text-align: center;
+  border-radius: 50%;
+  background: #ff000069 !important;
+  color: #69182b !important;
+
+  box-shadow: 1px 1px 8px 4px rgba(0, 0, 0, 0.1);
+}
+.sidebar-part
+  .side-menu
+  li
+  .sub-listItems
+  div.list-menu:nth-child(1)
+  span.fileCount {
+  background: #ffee0069 !important;
+  color: #695d18 !important;
+}
+.sidebar-part
+  .side-menu
+  li
+  .sub-listItems
+  div.list-menu:nth-child(2)
+  span.fileCount {
+  background: #48ff0069 !important;
+  color: #366918 !important;
+}
+.sidebar-part
+  .side-menu
+  li
+  .sub-listItems
+  div.list-menu:nth-child(3)
+  span.fileCount {
+  background: #00ffaa69 !important;
+  color: #186955 !important;
+}
+.sidebar-part
+  .side-menu
+  li
+  .sub-listItems
+  div.list-menu:nth-child(4)
+  span.fileCount {
+  background: #008cff69 !important;
+  color: #183e69 !important;
+}
+.sidebar-part
+  .side-menu
+  li
+  .sub-listItems
+  div.list-menu:nth-child(5)
+  span.fileCount {
+  background: #ff00ea69 !important;
+  color: #691865 !important;
+}
+.sidebar-part
+  .side-menu
+  li
+  .sub-listItems
+  div.list-menu:nth-child(6)
+  span.fileCount {
+  background: #8c00ff69 !important;
+  color: #491869;
+}
+.sidebar-part
+  .side-menu
+  li
+  .sub-listItems
+  div.list-menu:nth-child(7)
+  span.fileCount {
+  background: #ff990069;
+  color: #695d18 !important;
+}
 
 .sidebar-part .side-menu li .sub-listItems.active {
   max-height: 500px;
@@ -236,24 +357,22 @@ li {
 }
 
 .sidebar-part .side-menu li .sub-listItems a {
-  padding: 8px 8px 8px 52px;
+  padding: 8px;
   color: #7d7a7ae8;
-  border-bottom: 1px solid #f1eeee;
   transition: all 0.3s ease !important;
   cursor: pointer;
 }
 
 .sidebar-part .side-menu li .sub-listItems a i {
   font-size: 14px;
-  color: rgb(66, 66, 66);
+  /* color: rgb(66, 66, 66); */
   margin-right: 10px;
-}
-.sidebar-part .side-menu li .sub-listItems a:hover i {
   color: var(--blue);
 }
 
 .sidebar-part .side-menu li .sub-listItems a:hover {
   color: rgb(63, 63, 63);
+  padding-left: 12px;
 }
 
 /* header & main page part start here */
@@ -1648,6 +1767,10 @@ ul.data-product {
   color: #383838;
   transition: 0.3s ease;
 }
+.file-topics ul li button:focus {
+  border: none !important;
+  outline: none !important;
+}
 
 .file-topics ul li a:hover,
 .file-topics ul li button:hover {
@@ -1885,9 +2008,8 @@ ul.data-product {
   visibility: hidden;
   transition: transform 0.3s ease-out, opacity 0.3s ease-out;
   position: absolute;
-  left: -180px !important;
+  left: -10px !important;
   z-index: 1000 !important;
-  top: -30px !important;
 }
 
 .dots-btn .dropdown-menu.show {

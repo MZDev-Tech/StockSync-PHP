@@ -160,74 +160,75 @@ include('Check_token.php');
                             $stmt = mysqli_prepare($con, $query);
                             mysqli_stmt_execute($stmt);
                             $result = mysqli_stmt_get_result($stmt);
-                            while ($row = mysqli_fetch_array($result)) {
+                            if (mysqli_num_rows($result) > 0) {
+                                while ($row = mysqli_fetch_array($result)) {
                             ?>
-                                <tbody>
-                                    <tr>
-                                        <td>#
-                                            <?php echo $CountNumber ?>.
-                                        </td>
-                                        <td>
-                                            <?php echo $row['filename']; ?>
-                                        </td>
-                                        <td class="des filedes">
-                                            <?php echo $row['fileTitle']; ?>
-                                        </td>
+                                    <tbody>
+                                        <tr>
+                                            <td>#
+                                                <?php echo $CountNumber ?>.
+                                            </td>
+                                            <td>
+                                                <?php echo $row['filename']; ?>
+                                            </td>
+                                            <td class="des filedes">
+                                                <?php echo $row['fileTitle']; ?>
+                                            </td>
 
 
 
-                                        <td style="padding-left:40px">
-                                            <?php echo $row['created_at']; ?>
-                                        </td>
-                                        <td class="dots-btn" style="padding-left:60px">
-                                            <!-- Dropdown Container -->
-                                            <div class="dropdown">
-                                                <!-- Dots Icon (Dropdown Toggle) -->
-                                                <a href="#" class="dropdown-toggle no-btn" id="dotsDropdown"
-                                                    data-bs-toggle="dropdown" aria-expanded="false">
-                                                    <i class="fas fa-ellipsis-h dots"></i>
-                                                </a>
+                                            <td style="padding-left:40px">
+                                                <?php echo $row['created_at']; ?>
+                                            </td>
+                                            <td class="dots-btn" style="padding-left:60px">
+                                                <!-- Dropdown Container -->
+                                                <div class="dropdown">
+                                                    <!-- Dots Icon (Dropdown Toggle) -->
+                                                    <a href="#" class="dropdown-toggle no-btn" id="dotsDropdown"
+                                                        data-bs-toggle="dropdown" aria-expanded="false">
+                                                        <i class="fas fa-ellipsis-h dots"></i>
+                                                    </a>
 
-                                                <!-- Dropdown Menu -->
-                                                <ul class="dropdown-menu" aria-labelledby="dotsDropdown">
-                                                    <li>
-                                                        <a class="dropdown-item" href="#barcodeModal<?php echo $row['id'] ?>"
-                                                            data-toggle="modal"
-                                                            data-target="#barcodeModal<?php echo $row['id'] ?>">
-                                                            <i class="fas fa-qrcode"></i> Barcode
-                                                        </a>
-                                                    </li>
-                                                    <li>
-                                                        <a class="dropdown-item" href="#sendfileModal<?php echo $row['id'] ?>"
-                                                            data-toggle="modal" data-target="#sendfileModal<?php echo $row['id'] ?>">
-                                                            <i class="far fa-paper-plane"></i> Send File
-                                                        </a>
-                                                    </li>
-                                                    <li>
-                                                        <hr class="dropdown-divider">
-                                                    </li>
-                                                    <li>
-                                                        <a class="dropdown-item" href="TrackRecord.php">
-                                                            <i class="far fa-folder"></i> Track File
-                                                        </a>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </td>
+                                                    <!-- Dropdown Menu -->
+                                                    <ul class="dropdown-menu" aria-labelledby="dotsDropdown">
+                                                        <li>
+                                                            <a class="dropdown-item" href="#barcodeModal<?php echo $row['id'] ?>"
+                                                                data-toggle="modal"
+                                                                data-target="#barcodeModal<?php echo $row['id'] ?>">
+                                                                <i class="fas fa-qrcode"></i> Barcode
+                                                            </a>
+                                                        </li>
+                                                        <li>
+                                                            <a class="dropdown-item" href="#sendfileModal<?php echo $row['id'] ?>"
+                                                                data-toggle="modal" data-target="#sendfileModal<?php echo $row['id'] ?>">
+                                                                <i class="far fa-paper-plane"></i> Send File
+                                                            </a>
+                                                        </li>
+                                                        <li>
+                                                            <hr class="dropdown-divider">
+                                                        </li>
+                                                        <li>
+                                                            <a class="dropdown-item" href="TrackRecord.php">
+                                                                <i class="far fa-folder"></i> Track File
+                                                            </a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </td>
 
-                                        <td class="action">
-                                            <a href="update-document.php?id=<?php echo $row['id']; ?>"><i
-                                                    class="fa-solid fa-pen-to-square"></i></a>
-                                            <a href="javascript:void(0);" onclick="confirmDelete(<?php echo $row['id']; ?>)"><i
-                                                    class="fa-solid fa-trash"></i></a>
+                                            <td class="action">
+                                                <a href="update-document.php?id=<?php echo $row['id']; ?>"><i
+                                                        class="fa-solid fa-pen-to-square"></i></a>
+                                                <a href="javascript:void(0);" onclick="confirmDelete(<?php echo $row['id']; ?>)"><i
+                                                        class="fa-solid fa-trash"></i></a>
 
-                                            <a href="single-document.php?id=<?php echo $row['id']; ?>"><i
-                                                    class="fa-solid fa-eye"></i></a>
+                                                <a href="single-document.php?id=<?php echo $row['id']; ?>"><i
+                                                        class="fa-solid fa-eye"></i></a>
 
 
-                                        </td>
-                                    </tr>
-                                </tbody>
+                                            </td>
+                                        </tr>
+                                    </tbody>
 
                     </div>
 
@@ -333,63 +334,66 @@ include('Check_token.php');
 
 
 
-                <?php $CountNumber++;
+            <?php $CountNumber++;
+                                    // Close the statement
+                                    mysqli_stmt_close($stmt);
+                                }
+                            } else {
+                                echo "<tr><td colspan='6' style='text-align:center; color:#130f40;'>No file record available at a moment</td></tr>";
                             }
-                            // Close the statement
-                            mysqli_stmt_close($stmt);
-                ?>
+            ?>
 
-                </table>
+            </table>
 
+
+            <?php
+            $id = $_SESSION['id'];
+            $query = "select COUNT(*) as total from documents Where created_by = '$id'";
+            $result = mysqli_query($con, $query);
+            $row = mysqli_fetch_assoc($result);
+            $total_records = $row['total'];
+            $total_pages = ceil($total_records / $limit);
+            ?>
+            <div class="pagination-part">
+                <div class="pagination-info">Showing
+                    <?php echo ($offset + 1) ?> to
+                    <?php echo min($offset + $limit, $total_records) ?> of total
+                    <?php echo $total_records ?> entries
+                </div>
 
                 <?php
-                $id = $_SESSION['id'];
-                $query = "select COUNT(*) as total from documents Where created_by = '$id'";
-                $result = mysqli_query($con, $query);
-                $row = mysqli_fetch_assoc($result);
-                $total_records = $row['total'];
-                $total_pages = ceil($total_records / $limit);
+                echo '<div class="pagination-btns">';
+
+                // Previous Button
+                if ($page > 1) {
+                    echo '<a class="paginate_button previous" href="View-document.php?page=' . ($page - 1) . '"><i class="fas fa-chevron-left"></i></a>';
+                } else {
+                    // Disable Previous button if on the first page or only 1 page exists
+                    echo '<a class="paginate_button previous disabled" href="javascript:void(0)"><i class="fas fa-chevron-left"></i></a>';
+                }
+
+                // Page Number Buttons
+                for ($i = 1; $i <= $total_pages; $i++) {
+                    if ($i == $page) {
+                        $active = 'current';
+                    } else {
+                        $active = '';
+                    }
+                    echo '<a class="paginate_button ' . $active . '" href="View-document.php?page=' . $i . '">' . $i . '</a>';
+                }
+
+                // Next Button
+                if ($total_pages > $page) {
+                    echo '<a class="paginate_button next" href="View-document.php?page=' . ($page + 1) . '"><i class="fas fa-chevron-right"></i></a>';
+                } else {
+                    // Disable Next button if on the last page or only 1 page exists
+                    echo '<a class="paginate_button next disabled" href="javascript:void(0)"><i class="fas fa-chevron-right"></i></a>';
+                }
+
+                echo '</div>';
                 ?>
-                <div class="pagination-part">
-                    <div class="pagination-info">Showing
-                        <?php echo ($offset + 1) ?> to
-                        <?php echo min($offset + $limit, $total_records) ?> of total
-                        <?php echo $total_records ?> entries
-                    </div>
 
-                    <?php
-                    echo '<div class="pagination-btns">';
-
-                    // Previous Button
-                    if ($page > 1) {
-                        echo '<a class="paginate_button previous" href="View-document.php?page=' . ($page - 1) . '"><i class="fas fa-chevron-left"></i></a>';
-                    } else {
-                        // Disable Previous button if on the first page or only 1 page exists
-                        echo '<a class="paginate_button previous disabled" href="javascript:void(0)"><i class="fas fa-chevron-left"></i></a>';
-                    }
-
-                    // Page Number Buttons
-                    for ($i = 1; $i <= $total_pages; $i++) {
-                        if ($i == $page) {
-                            $active = 'current';
-                        } else {
-                            $active = '';
-                        }
-                        echo '<a class="paginate_button ' . $active . '" href="View-document.php?page=' . $i . '">' . $i . '</a>';
-                    }
-
-                    // Next Button
-                    if ($total_pages > $page) {
-                        echo '<a class="paginate_button next" href="View-document.php?page=' . ($page + 1) . '"><i class="fas fa-chevron-right"></i></a>';
-                    } else {
-                        // Disable Next button if on the last page or only 1 page exists
-                        echo '<a class="paginate_button next disabled" href="javascript:void(0)"><i class="fas fa-chevron-right"></i></a>';
-                    }
-
-                    echo '</div>';
-                    ?>
-
-                </div>
+            </div>
                 </div>
 
             </main>

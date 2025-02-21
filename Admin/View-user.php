@@ -141,117 +141,121 @@ include('Check_token.php');
                         $stmt = mysqli_prepare($con, $query);
                         mysqli_stmt_execute($stmt);
                         $result = mysqli_stmt_get_result($stmt);
-                        while ($row = mysqli_fetch_array($result)) {
+                        if (mysqli_num_rows($result) > 0) {
+                            while ($row = mysqli_fetch_array($result)) {
                         ?>
-                            <tbody>
-                                <tr>
-                                    <td>#
-                                        <?php echo $row['id']; ?>.
-                                    </td>
-                                    <td>
-                                        <?php echo $row['name']; ?>
-                                    </td>
-                                    <td style="text-transform:none">
-                                        <?php echo $row['email']; ?>
-                                    </td>
+                                <tbody>
+                                    <tr>
+                                        <td>#
+                                            <?php echo $row['id']; ?>.
+                                        </td>
+                                        <td>
+                                            <?php echo $row['name']; ?>
+                                        </td>
+                                        <td style="text-transform:none">
+                                            <?php echo $row['email']; ?>
+                                        </td>
 
 
 
-                                    <td style="padding-left:40px">
-                                        <?php echo $row['password']; ?>
-                                    </td style="padding-left:40px">
-                                    <td>
+                                        <td style="padding-left:40px">
+                                            <?php echo $row['password']; ?>
+                                        </td style="padding-left:40px">
+                                        <td>
 
-                                        <?php
-                                        $status = $row['status'];
-                                        $bgcolor = ($status == 'active') ? 'bg-active' : 'bg-inactive';
-                                        echo "<span class='status $bgcolor'>$status</span>";
+                                            <?php
+                                            $status = $row['status'];
+                                            $bgcolor = ($status == 'active') ? 'bg-active' : 'bg-inactive';
+                                            echo "<span class='status $bgcolor'>$status</span>";
 
-                                        ?>
-                                    </td>
-                                    <td class="single-img">
-                                        <?php if (!empty($row['image']) && file_exists('../Images' . $row['image'])) {
-                                            echo '<img src="../Images/' . $row['image'] . '">';
-                                        } else {
-                                            echo '<img src="../Images/user-profile.jpg">';
-                                        }
-                                        ?>
+                                            ?>
+                                        </td>
+                                        <td class="single-img">
+                                            <?php if (!empty($row['image']) && file_exists('../Images' . $row['image'])) {
+                                                echo '<img src="../Images/' . $row['image'] . '">';
+                                            } else {
+                                                echo '<img src="../Images/user-profile.jpg">';
+                                            }
+                                            ?>
 
-                                    </td>
-
-
-                                    <td class="action">
-                                        <a href="update-user.php?id=<?php echo $row['id']; ?>"><i
-                                                class="fa-solid fa-pen-to-square"></i></a>
-                                        <a href="javascript:void(0);" onclick="confirmDelete(<?php echo $row['id']; ?>)"><i
-                                                class="fa-solid fa-trash"></i></a>
-
-                                        <a href="single-user.php?id=<?php echo $row['id']; ?>"><i
-                                                class="fa-solid fa-eye"></i></a>
+                                        </td>
 
 
-                                    </td>
-                                </tr>
+                                        <td class="action">
+                                            <a href="update-user.php?id=<?php echo $row['id']; ?>"><i
+                                                    class="fa-solid fa-pen-to-square"></i></a>
+                                            <a href="javascript:void(0);" onclick="confirmDelete(<?php echo $row['id']; ?>)"><i
+                                                    class="fa-solid fa-trash"></i></a>
 
-                            </tbody>
+                                            <a href="single-user.php?id=<?php echo $row['id']; ?>"><i
+                                                    class="fa-solid fa-eye"></i></a>
+
+
+                                        </td>
+                                    </tr>
+
+                                </tbody>
 
                 </div>
 
-            <?php }
-                        // Close the statement
-                        mysqli_stmt_close($stmt);
-            ?>
-            </table>
+        <?php }
+                            // Close the statement
+                            mysqli_stmt_close($stmt);
+                        } else {
+                            echo "<tr><td colspan='6' style='text-align:center; color:#130f40;'>No User record available at a moment</td></tr>";
+                        }
+        ?>
+        </table>
+
+        <?php
+        $query = "select COUNT(*) as total from user";
+        $result = mysqli_query($con, $query);
+        $row = mysqli_fetch_assoc($result);
+        $total_records = $row['total'];
+        $total_pages = ceil($total_records / $limit);
+        ?>
+        <div class="pagination-part">
+            <div class="pagination-info">Showing
+                <?php echo ($offset + 1) ?> to
+                <?php echo min($offset + $limit, $total_records) ?> of total
+                <?php echo $total_records ?> entries
+            </div>
 
             <?php
-            $query = "select COUNT(*) as total from user";
-            $result = mysqli_query($con, $query);
-            $row = mysqli_fetch_assoc($result);
-            $total_records = $row['total'];
-            $total_pages = ceil($total_records / $limit);
+            echo '<div class="pagination-btns">';
+
+            // Previous Button
+            if ($page > 1) {
+                echo '<a class="paginate_button previous" href="View-user.php?page=' . ($page - 1) . '"><i class="fas fa-chevron-left"></i></a>';
+            } else {
+                // Disable Previous button if on the first page or only 1 page exists
+                echo '<a class="paginate_button previous disabled" href="javascript:void(0)"><i class="fas fa-chevron-left"></i></a>';
+            }
+
+            // Page Number Buttons
+            for ($i = 1; $i <= $total_pages; $i++) {
+                if ($i == $page) {
+                    $active = 'current';
+                } else {
+                    $active = '';
+                }
+                echo '<a class="paginate_button ' . $active . '" href="View-user.php?page=' . $i . '">' . $i . '</a>';
+            }
+
+            // Next Button
+            if ($total_pages > $page) {
+                echo '<a class="paginate_button next" href="View-user.php?page=' . ($page + 1) . '"><i class="fas fa-chevron-right"></i></a>';
+            } else {
+                // Disable Next button if on the last page or only 1 page exists
+                echo '<a class="paginate_button next disabled" href="javascript:void(0)"><i class="fas fa-chevron-right"></i></a>';
+            }
+
+            echo '</div>';
             ?>
-            <div class="pagination-part">
-                <div class="pagination-info">Showing
-                    <?php echo ($offset + 1) ?> to
-                    <?php echo min($offset + $limit, $total_records) ?> of total
-                    <?php echo $total_records ?> entries
-                </div>
-
-                <?php
-                echo '<div class="pagination-btns">';
-
-                // Previous Button
-                if ($page > 1) {
-                    echo '<a class="paginate_button previous" href="View-user.php?page=' . ($page - 1) . '"><i class="fas fa-chevron-left"></i></a>';
-                } else {
-                    // Disable Previous button if on the first page or only 1 page exists
-                    echo '<a class="paginate_button previous disabled" href="javascript:void(0)"><i class="fas fa-chevron-left"></i></a>';
-                }
-
-                // Page Number Buttons
-                for ($i = 1; $i <= $total_pages; $i++) {
-                    if ($i == $page) {
-                        $active = 'current';
-                    } else {
-                        $active = '';
-                    }
-                    echo '<a class="paginate_button ' . $active . '" href="View-user.php?page=' . $i . '">' . $i . '</a>';
-                }
-
-                // Next Button
-                if ($total_pages > $page) {
-                    echo '<a class="paginate_button next" href="View-user.php?page=' . ($page + 1) . '"><i class="fas fa-chevron-right"></i></a>';
-                } else {
-                    // Disable Next button if on the last page or only 1 page exists
-                    echo '<a class="paginate_button next disabled" href="javascript:void(0)"><i class="fas fa-chevron-right"></i></a>';
-                }
-
-                echo '</div>';
-                ?>
 
 
 
-            </div>
+        </div>
             </div>
 
         </main>

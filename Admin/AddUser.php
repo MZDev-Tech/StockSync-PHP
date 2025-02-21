@@ -74,7 +74,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $imagePath = "../Images/" . basename($_FILES['image']['name']);
         move_uploaded_file($_FILES['image']['tmp_name'], $imagePath);
 
-        $query = "INSERT INTO user(`name`, `email`,`designation`, `phone`,`address`, `password`, `image`,`status`) VALUES (?, ?, ?, ?, ?)";
+        $query = "INSERT INTO user(`name`, `email`,`designation`, `phone`,`address`, `password`, `image`,`status`) VALUES (?, ?, ?,?,?, ?,?,?)";
         $stmt = mysqli_prepare($con, $query);
         mysqli_stmt_bind_param($stmt, 'sssissss', $name, $email, $designation, $phone, $address, $password, $imagePath, $status);
 

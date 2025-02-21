@@ -1,7 +1,48 @@
-<?php 
+<?php
 // file to not allow admin to directly access admin panel until they are login
 include('Check_token.php');
+
+// Database connection
+include('../connection.php');
+
+$trackingRecords = [];
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['search'])) {
+    $barcode = $_POST['search'];
+
+    // Query to get document and its tracking history
+    $sql = "SELECT d.barcode, d.description, d.created_at, 
+            d.created_by,d.fileTitle,
+            dt.*, sender.name AS sender_name,
+            sender.image AS sender_image, 
+            receiver.name AS receiver_name,
+            receiver.image AS receiver_image
+            FROM documents d
+            JOIN document_tracking dt ON d.id = dt.document_id
+            JOIN user sender ON dt.from_user = sender.id
+            JOIN user receiver ON dt.to_user = receiver.id
+            WHERE d.barcode = ?
+            ORDER BY dt.date ASC";
+
+    $stmt = $con->prepare($sql);
+    $stmt->bind_param("s", $barcode);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($result->num_rows > 0) {
+        while ($row = $result->fetch_assoc()) {
+            $trackingRecords[] = $row;
+        }
+    } else {
+        $noRecordsFound = true;
+    }
+
+    $stmt->close();
+}
+
+$con->close();
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -14,47 +55,34 @@ include('Check_token.php');
     <link rel="stylesheet" href="../CSS/style.css">
     <!-- Font Icons Link -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
-    <link rel="stylesheet"
-        href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css">
-
-
+    <link rel="stylesheet" href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css">
 </head>
 
 <body>
-
-
     <!-----------SideBar Section------------------->
     <?php include('sidebar.php'); ?>
-
 
     <!----------------Main Header Section--------------------->
     <section id="main-page">
         <?php include('Header.php'); ?>
 
-
         <!----------------Main Page Design--------------------->
         <main id="page-content">
-
-
             <!-- Record Table -->
-
-
             <div class="single-recordParent">
                 <div class="track-recordParent">
                     <div class="track-record">
                         <h2>Track File Record</h2>
-
                         <div class="row" style="margin:25px 20px 8px 20px">
                             <div class="col-12 search-record">
                                 <form method="POST" action="">
                                     <div class="input-box">
-                                        <input type="text" class="form-control" name="searh" placeholder="Enter barcode to track record">
+                                        <input type="text" class="form-control" name="search" placeholder="Enter barcode to track record">
                                         <i class="fa fa-search"></i>
                                     </div>
                                 </form>
                             </div>
                         </div>
-
                     </div>
 
                     <div class="card result-part">
@@ -62,130 +90,52 @@ include('Check_token.php');
                             RESULT
                         </div>
                         <div class="card-body">
-                            <!-- <blockquote class="blockquote mb-0">
-                                <p>No Record Found.</p>
-                                <footer class="blockquote-footer">Try with different <cite title="Source Title">barcode</cite></footer>
-                            </blockquote> -->
-
-                            <!-- <blockquote class="blockquote mb-0">
-                                <p style="font-weight:600; font-size:17px">Scan Barcode To Track File.</p>
-                                <footer class="blockquote-footer">Keep the barcode steady while scanning for best results.</footer>
-                                </blockquote> -->
-
-                            <div class="col-lg-12">
-    
-            <h5 class="header-title" >File Record Office</h5>
-            <ul class="track-list activity-wid">
-                <li class="activity-list activity-border">
-                    <div class="activity-icon avatar-sm">
-                        <img src="https://bootdey.com/img/Content/avatar/avatar1.png" class="Imgfile rounded-circle" alt="">
-                    </div>
-                    <div class="card Track-subpart">
-                        <div class="card-header" style="display:flex; gap:12px;background:rgba(164, 197, 184, 0.07); ">
-                            <h5 class="result-name">Ali Ahmand</h5>
-                            <p class="result-name2">- Received the document</p>
-                        </div>
-
-                        <div class="card-body">
-                            <div class="date-part">
-                            <p class="trackdata"><i class="far fa-calendar-alt"></i> Date & Time</p>
-                            <p class="trackdata2">February 10 2024 09:41 PM </p>
-                            </div> 
-                            <div class="remark-part">
-                            <p class="trackdata"><i class="fa fa-pen"></i> REMARKS:</p>
-                            <p class="trackdata2">Send by: <span>Zaviyan Akram</span></p>
-</div>
-                            <p class="btn btn-info status-btn text-white">Status pending</p>                 
-                        </div>
-
-                    </div>
-                </li>
-
-                
-
-
-
-            </ul>
-
-            <h5 class="header-title" >File Record Office</h5>
-            <ul class="track-list activity-wid">
-                <li class="activity-list activity-border">
-                    <div class="activity-icon avatar-sm">
-                        <img src="https://bootdey.com/img/Content/avatar/avatar1.png" class="Imgfile rounded-circle" alt="">
-                    </div>
-                    <div class="card Track-subpart">
-                        <div class="card-header" style="display:flex; gap:12px;background:rgba(164, 197, 184, 0.07); ">
-                            <h5 class="result-name">Ali Ahmand</h5>
-                            <p class="result-name2">- Released the document</p>
-                        </div>
-
-                        <div class="card-body">
-                            <div class="date-part">
-                            <p class="trackdata"><i class="far fa-calendar-alt"></i> Date & Time</p>
-                            <p class="trackdata2">February 10 2024 09:41 PM </p>
-                            </div> 
-                            <div class="remark-part">
-                            <p class="trackdata"><i class="fa fa-pen"></i> REMARKS:</p>
-                            <p class="trackdata2">Send by: <span>Zaviyan Akram</span></p>
-</div>
-                            <p class="btn btn-info status-btn text-white">Status pending</p>                 
-                        </div>
-
-                    </div>
-                </li>
-
-                
-
-
-
-            </ul>
-
-            <h5 class="header-title" >File Record Office</h5>
-            <ul class="track-list activity-wid">
-                <li class="activity-list activity-border">
-                    <div class="activity-icon avatar-sm">
-                        <img src="https://bootdey.com/img/Content/avatar/avatar1.png" class="Imgfile rounded-circle" alt="">
-                    </div>
-                    <div class="card Track-subpart">
-                        <div class="card-header" style="display:flex; gap:12px;background:rgba(164, 197, 184, 0.07); ">
-                            <h5 class="result-name">Ali Ahmand</h5>
-                            <p class="result-name2">- Received the document</p>
-                        </div>
-
-                        <div class="card-body">
-                            <div class="date-part">
-                            <p class="trackdata"><i class="far fa-calendar-alt"></i> Date & Time</p>
-                            <p class="trackdata2">February 10 2024 09:41 PM </p>
-                            </div> 
-                            <div class="remark-part">
-                            <p class="trackdata"><i class="fa fa-pen"></i> REMARKS:</p>
-                            <p class="trackdata2">Send by: <span>Zaviyan Akram</span></p>
-</div>
-                            <p class="btn btn-info status-btn text-white" >Status pending</p>                 
-                        </div>
-
-                    </div>
-                </li>
-
-                
-
-
-
-            </ul>
-
-                           </div>
-    
-
+                            <?php if (isset($noRecordsFound)): ?>
+                                <blockquote class="blockquote mb-0">
+                                    <p>No Record Found.</p>
+                                    <footer class="blockquote-footer">Try with different <cite title="Source Title">barcode</cite></footer>
+                                </blockquote>
+                            <?php elseif (!empty($trackingRecords)): ?>
+                                <div class="col-lg-12">
+                                    <h5 class="header-title">File Record Office</h5>
+                                    <ul class="track-list activity-wid">
+                                        <?php foreach ($trackingRecords as $record): ?>
+                                            <li class="activity-list activity-border">
+                                                <div class="activity-icon avatar-sm">
+                                                    <img src="../Images/<?php echo $record['sender_image'] ?>" class="Imgfile rounded-circle" alt="">
+                                                </div>
+                                                <div class="card Track-subpart">
+                                                    <div class="card-header" style="display:flex; gap:12px;background:rgba(164, 197, 184, 0.07);">
+                                                        <h5 class="result-name"><?php echo htmlspecialchars($record['sender_name']); ?></h5>
+                                                        <p class="result-name2">- <?php echo htmlspecialchars($record['status']); ?> the document</p>
+                                                    </div>
+                                                    <div class="card-body">
+                                                        <div class="date-part">
+                                                            <p class="trackdata"><i class="far fa-calendar-alt"></i> Date & Time</p>
+                                                            <p class="trackdata2"><?php echo htmlspecialchars($record['date']); ?></p>
+                                                        </div>
+                                                        <div class="remark-part">
+                                                            <p class="trackdata"><i class="fa fa-pen"></i> REMARKS:</p>
+                                                            <p class="trackdata2">Send To: <span><?php echo htmlspecialchars($record['receiver_name']); ?></span></p>
+                                                        </div>
+                                                        <p class="btn btn-info status-btn text-white">Status: <?php echo htmlspecialchars($record['status']); ?></p>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                        <?php endforeach; ?>
+                                    </ul>
+                                </div>
+                            <?php else: ?>
+                                <blockquote class="blockquote mb-0">
+                                    <p style="font-weight:600; font-size:17px">Scan Barcode To Track File.</p>
+                                    <footer class="blockquote-footer">Keep the barcode steady while scanning for best results.</footer>
+                                </blockquote>
+                            <?php endif; ?>
                         </div>
                     </div>
                 </div>
-
             </div>
-
-            </div>
-
         </main>
-
     </section>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -193,9 +143,6 @@ include('Check_token.php');
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="script.js"></script>
-
-
-
 </body>
 
 </html>

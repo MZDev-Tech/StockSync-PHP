@@ -130,8 +130,12 @@ if (isset($_POST['submit'])) {
                             </div>
 
                             <div class="form-group">
-                                <img src="../Images/<?php echo $row['image']; ?>"
-                                    style="width:80px; height:80px; border-radius:5px; border: 3px solid #d5d7da; ">
+
+                                <?php if (!empty($row['image']) && file_exists($row['image'])) {
+                                    echo '<img src="../Images/' . $row['image'] . '" class="ml-2" style="width:80px;  height:80px; border-radius:5px; border: 3px solid #d5d7da;">';
+                                } else {
+                                    echo '<img src="../Images/imgdefault.png " class="ml-2" style="width:80px; height:80px; border-radius:5px; border: 3px solid #d5d7da;">';
+                                } ?>
                                 <input type="hidden" name="img" value="<?php echo $row['image']; ?>" style="text-transform:none;">
                             </div>
 

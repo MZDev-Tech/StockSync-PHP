@@ -1,161 +1,231 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;300;400;500;600&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@100;300;400;500;600&display=swap");
 
 :root {
-    --pink: rgb(207, 107, 124);
-    --light-color: #8a8d8f;
-    --black: #130f40;
-    --light-gray: #f7f7f7b7;
-    --bg: #3a465f;
-    --blue: rgb(43, 144, 151);
-    --shadow: 2px 2px 12px rgba(0, 0, 0, .15);
+  --pink: rgb(207, 107, 124);
+  --light-color: #8a8d8f;
+  --black: #130f40;
+  --light-gray: #f7f7f7b7;
+  --bg: #3a465f;
+  --blue: rgb(43, 144, 151);
+  --shadow: 2px 2px 12px rgba(0, 0, 0, 0.15);
 }
 
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    outline: 0;
-    border: 0;
-    text-transform: capitalize;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  outline: 0;
+  border: 0;
+  text-transform: capitalize;
 }
 
 body::-webkit-scrollbar {
-    height: 2px;
-    width: 8px;
+  height: 2px;
+  width: 8px;
 }
 
 body::-webkit-scrollbar-track {
-    background: #f8f7f7;
+  background: #f8f7f7;
 }
 
 body::-webkit-scrollbar-thumb {
-    background-color: #cacaca;
-    border-radius: 5px;
-
-
+  background-color: #cacaca;
+  border-radius: 5px;
 }
 
 input:focus {
-    box-shadow: none !important;
-    outline: none !important;
+  box-shadow: none !important;
+  outline: none !important;
 }
-
 
 body {
-    background:linear-gradient(85deg,#eaf8f8f5,transparent);
-  min-height:100vh;
+  background: linear-gradient(85deg, #eaf8f8f5, transparent);
+  min-height: 100vh;
+  overflow-x: hidden;
 }
 
-.login-header{
-    width: 100%;
-    
+.login-gradient1 {
+  display: block;
+  position: absolute;
+  width: 260px; /* Match background size */
+  height: 280px;
+  right: -10px; /* Keep it positioned at the bottom right */
+  bottom: -10px;
+  z-index: -1;
+  overflow: hidden;
 }
-.login-header .brand {
-    display: flex;
-    align-items: center;
-    color: var(--black);
-    padding: 18px 0 6px 18px;
-    position: sticky;
-    top: 0;
-   
 
+.login-gradient1::before {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-image: url("../Images/ball.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  opacity: 0.5;
+  /* Center the image */
+  top: 0;
+  left: 0;
+
+  /* Animation */
+  animation: rotateBG 20s linear infinite;
+}
+
+@keyframes rotateBG {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.login-gradient2 {
+  background-image: url("https://www.sliderrevolution.com/wp-content/uploads/2020/03/geo1.png");
+  background-position: left top;
+  background-size: 280px 340px;
+  width: 100%;
+  height: 100%;
+  background-repeat: no-repeat;
+  position: absolute;
+  z-index: -1;
+}
+.login-header {
+  width: 100%;
+  padding-top: 12px;
+  display: flex;
+  align-items: center;
+  margin-bottom: 6px;
+  margin-left: 18px;
+}
+
+.login-header img {
+  width: 100px;
+  height: 80px;
+  margin-bottom: 10px;
+}
+
+.headerContent {
+  margin-left: -2px;
+}
+h3.admin-heading {
+  font-size: 24px;
+  font-weight: 700;
+  color: #130f40ad;
+  text-transform: uppercase;
+  margin-bottom: 0;
+}
+
+.headerContent p {
+  font-size: 15px;
+  font-style: italic;
+  margin-top: 2px;
+  font-family: "Playfair Display", serif;
+  color: #4a4747;
+}
+
+/* .login-header .brand {
+  display: flex;
+  align-items: center;
+  color: var(--black);
+  padding: 18px 0 6px 18px;
+  position: sticky;
+  top: 0;
 }
 
 .login-header .brand img {
-    width: 30px;
-    height: 38px;
-    border-radius: 50%;
-    margin-right: 8px;
+  width: 30px;
+  height: 38px;
+  border-radius: 50%;
+  margin-right: 8px;
 }
 
 .login-header .brand span {
-    font-size: 22px;
-    font-weight: 600;
-
-}
+  font-size: 22px;
+  font-weight: 600;
+} */
 
 .login-header .brand span.li-brand {
-    color: rgb(44, 147, 155);
-    
+  color: rgb(44, 147, 155);
 }
 
-.row{
-    align-items: center;
-    margin-bottom: 40px;
+.row {
+  align-items: center;
+  margin-bottom: 10px;
 }
 .user-loginParent {
-    padding-top: 2rem ;
+  padding-top: 2rem;
 }
-.user-subpart{
-    border:1px solid rgba(199, 198, 198, 0.26);
-    padding:36px 20px 10px 20px;
-    border-radius: 6px;
- 
+.user-subpart {
+  border: 1px solid rgba(199, 198, 198, 0.26);
+  padding: 14px 20px 10px 20px;
+  border-radius: 6px;
 }
 
 .img-fluid {
-    max-width: 100%;
-    height: auto;
+  max-width: 100%;
+  height: auto;
 }
-.user-loginParent .Userdata-part, .user-loginParent .bg {
-    width: 50%;
+.user-loginParent .Userdata-part,
+.user-loginParent .bg {
+  width: 50%;
 }
 .Userdata-part p {
-    color: #525252;
-    font-weight: 300;
+  color: #525252;
+  font-weight: 300;
 }
 
- 
 .user-loginParent .bg .form-group.first {
-    border-top-left-radius: 7px;
-    border-top-right-radius: 7px;
+  border-top-left-radius: 7px;
+  border-top-right-radius: 7px;
 }
- 
+
 .user-loginParent .bg .form-group label {
-    font-size: 12px;
-    display: block;
-    margin-bottom: 0;
-    color: #3f3f3f;
+  font-size: 12px;
+  display: block;
+  margin-bottom: 0;
+  color: #3f3f3f;
 }
 
-.user-loginParent .Userdata-part .form-group input{
-    background: transparent;
-    border: 1px solid rgba(34, 127, 134, 0.555);
-    padding-left: 12px;
-    transition: .3s all ease;
-    font-size: 14px !important;
-    text-transform: none !important;
+.user-loginParent .Userdata-part .form-group input {
+  background: transparent;
+  border: 1px solid rgba(34, 127, 134, 0.555);
+  padding-left: 12px;
+  transition: 0.3s all ease;
+  font-size: 14px !important;
+  text-transform: none !important;
 }
-.user-loginParent .bg .form-group input::placeholder{
-
-color: #4b4a4a;
+.user-loginParent .bg .form-group input::placeholder {
+  color: #4b4a4a;
 }
-.user-loginParent .Userdata-part .form-group input:hover{
-    padding-left: 18px;
-    border: 1px solid rgb(34, 128, 134);
+.user-loginParent .Userdata-part .form-group input:hover {
+  padding-left: 18px;
+  border: 1px solid rgb(34, 128, 134);
 }
 
 .user-loginParent .btn {
-    height: 44px;
-    padding-left: 30px;
-    padding-right: 30px;
-    border-radius:20px !important;
+  height: 44px;
+  padding-left: 30px;
+  padding-right: 30px;
+  border-radius: 20px !important;
 }
 
 @media (max-width: 1199.98px) {
-    .user-loginParent .Userdata-part, .user-loginParent .bg {
-        width: 100%;
-    }
+  .user-loginParent .Userdata-part,
+  .user-loginParent .bg {
+    width: 100%;
+  }
 }
 
-@media screen and (max-width:768px){
+@media screen and (max-width: 768px) {
   .container {
     max-width: 720px;
-}  
+  }
 
-.order-md-2 {
+  .order-md-2 {
     -webkit-box-ordinal-group: 3;
     -ms-flex-order: 2;
     order: 2;
-}
+  }
 }

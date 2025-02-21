@@ -131,13 +131,18 @@ if (isset($_COOKIE['user_access_token'])) {
                             <div class="card">
                                 <div class="card-body">
                                     <div class="d-flex flex-column align-items-center text-center">
-                                        <img src="../Images/<?php echo $row['image'] ?>" alt="userImg"
-                                            class="rounded-circle" width="150">
+                                        <?php if (!empty($row['image']) && file_exists($row['image'])) {
+                                            echo "<img src='../Images/" . $row['image'] . "' class='rounded-circle' width='120' height='120'>";
+                                        } else {
+
+                                            echo '<img src="../Images/imgdefault.jpg" class="rounded-circle" width="120" height="120">';
+                                        } ?>
+
                                         <div class="mt-3">
                                             <h4>
                                                 <?php echo htmlspecialchars($row['name']); ?>
                                             </h4>
-                                            <p class="text-secondary mb-1"><?php echo htmlspecialchars($row['role']) ?></p>
+                                            <p class="text-secondary mb-1"><?php echo htmlspecialchars($row['designation']) ?></p>
                                             <p class="text-muted font-size-sm" style="text-transform:none">
                                                 <?php echo htmlspecialchars($row['email']); ?>
                                             </p>

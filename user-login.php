@@ -104,11 +104,14 @@ if (isset($_COOKIE['email']) && isset($_COOKIE['password'])) {
 </head>
 
 <body>
+    <div class="login-gradient1"></div>
+    <!-- <div class="login-gradient2"></div> -->
+
     <div class="login-header">
-        <div href="#" class="brand">
-            <img src="Images/log11.png" alt="">
-            <span class="link-text">Inventory</span>
-            <span class="link-text li-brand">System</span></>
+        <img src="Images/loginGif.gif" alt="">
+        <div class="headerContent">
+            <h3 class="admin-heading">Stocksync</h3>
+            <p>Inventory & file management System</p>
         </div>
     </div>
     <div class="user-loginParent">

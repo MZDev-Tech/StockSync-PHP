@@ -203,87 +203,96 @@ ob_end_flush();
             $stmt = mysqli_prepare($con, $query);
             mysqli_stmt_execute($stmt);
             $result = mysqli_stmt_get_result($stmt);
-            while ($row = mysqli_fetch_array($result)) {
+            if (mysqli_num_rows($result) > 0) {
+              while ($row = mysqli_fetch_array($result)) {
             ?>
-              <tbody>
-                <tr>
-                  <td>#
-                    <?php echo $Sr ?>
-                  </td>
-                  <td>
+                <tbody>
+                  <tr>
+                    <td>#
+                      <?php echo $Sr ?>
+                    </td>
+                    <td>
 
-                    <?php echo $row['brand']; ?>
-                  </td>
-                  <td>
-                    <?php echo $row['category']; ?>
-                  </td>
-                  <td>
-                    <?php echo $row['serialNumber']; ?>
-                  </td>
+                      <?php echo $row['brand']; ?>
+                    </td>
+                    <td>
+                      <?php echo $row['category']; ?>
+                    </td>
+                    <td>
+                      <?php echo $row['serialNumber']; ?>
+                    </td>
 
-                  <td> <img src="../Images/<?php echo $row['image']; ?>"></td>
+                    <td>
+                      <?php if (!empty($row['image']) && file_exists($row['image'])) {
+                        echo '<img src="../Images/' . $row['image'] . '" >';
+                      } else {
+                        echo '<img src="../Images/productdefault.png " >';
+                      } ?>
+                    </td>
 
-                  <td class="action">
+                    <td class="action">
 
-                    <a href="update-product.php?id=<?php echo $row['id']; ?>"><i
-                        class="fa-solid fa-pen-to-square"></i></a>
-                    <a href="javascript:void(0);" onclick="confirmDelete(<?php echo $row['id']; ?>)"><i
-                        class="fa-solid fa-trash"></i></a>
-                    <a href="single-product.php?id=<?php echo $row['id']; ?>"><i class="fa-solid fa-eye"></i></a>
+                      <a href="update-product.php?id=<?php echo $row['id']; ?>"><i
+                          class="fa-solid fa-pen-to-square"></i></a>
+                      <a href="javascript:void(0);" onclick="confirmDelete(<?php echo $row['id']; ?>)"><i
+                          class="fa-solid fa-trash"></i></a>
+                      <a href="single-product.php?id=<?php echo $row['id']; ?>"><i class="fa-solid fa-eye"></i></a>
 
-                  </td>
-                </tr>
+                    </td>
+                  </tr>
 
-              </tbody>
+                </tbody>
 
 
 
 
         </div>
 
-      <?php $Sr++;
+    <?php $Sr++;
+              }
+            } else {
+              echo "<tr><td colspan='6' style='text-align:center; color:#130f40;'>No Product record available at a moment</td></tr>";
             }
-            mysqli_stmt_close($stmt);
-      ?>
-      </table>
-      <?php
-      $query = "select COUNT(*) as total from laptops";
-      $result = mysqli_query($con, $query);
-      $row = mysqli_fetch_assoc($result);
-      $total_records = $row['total'];
-      $total_pages = ceil($total_records / $limit);
-      ?>
-      <div class="pagination-part">
-        <div class="pagination-info">Showing
-          <?php echo ($offset + 1) ?> to
-          <?php echo min($offset + $limit, $total_records) ?> of
-          <?php echo $total_records ?> entries
-        </div>
-        <?php
-
-        echo '<div class="pagination-btns">';
-        if ($page > 1) {
-          echo ' <a class="paginate_button previous " href="View-products.php?page=' . ($page - 1) . '"><i class="fas fa-chevron-left"></i></a>';
-        }
-        for ($i = 1; $i <= $total_pages; $i++) {
-
-          if ($i == $page) {
-            $active = 'current';
-          } else {
-            $active = '';
-          }
-          echo '<a class="paginate_button ' . $active . '" href="View-products.php?page=' . $i . '">' . $i . '</a>';
-        }
-        if ($total_pages > $page) {
-          echo '<a class="paginate_button next" href="View-products.php?page=' . ($page + 1) . '"><i class="fas fa-chevron-right"></i></a>';
-        }
-        echo '</div>';
-
-        ?>
-
-
-
+    ?>
+    </table>
+    <?php
+    $query = "select COUNT(*) as total from laptops";
+    $result = mysqli_query($con, $query);
+    $row = mysqli_fetch_assoc($result);
+    $total_records = $row['total'];
+    $total_pages = ceil($total_records / $limit);
+    ?>
+    <div class="pagination-part">
+      <div class="pagination-info">Showing
+        <?php echo ($offset + 1) ?> to
+        <?php echo min($offset + $limit, $total_records) ?> of
+        <?php echo $total_records ?> entries
       </div>
+      <?php
+
+      echo '<div class="pagination-btns">';
+      if ($page > 1) {
+        echo ' <a class="paginate_button previous " href="View-products.php?page=' . ($page - 1) . '"><i class="fas fa-chevron-left"></i></a>';
+      }
+      for ($i = 1; $i <= $total_pages; $i++) {
+
+        if ($i == $page) {
+          $active = 'current';
+        } else {
+          $active = '';
+        }
+        echo '<a class="paginate_button ' . $active . '" href="View-products.php?page=' . $i . '">' . $i . '</a>';
+      }
+      if ($total_pages > $page) {
+        echo '<a class="paginate_button next" href="View-products.php?page=' . ($page + 1) . '"><i class="fas fa-chevron-right"></i></a>';
+      }
+      echo '</div>';
+
+      ?>
+
+
+
+    </div>
       </div>
 
 

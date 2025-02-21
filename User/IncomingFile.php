@@ -14,7 +14,7 @@ include('Check_token.php');
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Released Files</title>
+    <title>Incoming Files</title>
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <!-- External CSS File Link -->
@@ -69,7 +69,7 @@ include('Check_token.php');
                             <div class="d-flex align-items-center top-recordPart">
                                 <i class="fa-solid fa-tablet-screen-button"></i>
                                 <div>
-                                    <h2 class="mb-1">Outgoing Record</h2>
+                                    <h2 class="mb-1">Incoming Record</h2>
                                     <p class="mb-0">Manage your records efficiently</p>
                                 </div>
 
@@ -83,7 +83,7 @@ include('Check_token.php');
                 <div class="records">
                     <div class="record-header">
                         <div>
-                            <h4>Released Files</h4>
+                            <h4>Incoming Files</h4>
                         </div>
 
                     </div>
@@ -109,7 +109,7 @@ include('Check_token.php');
                     $result = mysqli_query($con, $query);
 
                     ?>
-                    <form method="GET" action="OutgoingFile.php">
+                    <form method="GET" action="IncomingFile.php">
                         <div class="select-box">
                             <label>Show
                                 <select name="select-record" class="select-btn" onchange="this.form.submit()">
@@ -129,9 +129,9 @@ include('Check_token.php');
                                 <tr>
                                     <th style="width:90px">S-N</th>
                                     <th style="width:190px"><span class="las la-sort"></span>FileName</th>
-                                    <th style="width:230px"><span class="las la-sort"></span>Send To</th>
+                                    <th style="width:230px"><span class="las la-sort"></span>Coming From</th>
                                     <th style="width:150px"><span class="las la-sort"></span>Options</th>
-                                    <th style="width:210px"><span class="las la-sort"></span>Released Date</th>
+                                    <th style="width:210px"><span class="las la-sort"></span>Incoming Date</th>
                                     <th><span class="las la-sort"></span>Manage</th>
 
 
@@ -144,36 +144,28 @@ include('Check_token.php');
                             $offset = ($page - 1) * $limit;
                             $CountNumber = 1;
                             $userId = $_SESSION['id'];
-                            $query = "WITH LatestStatus AS (SELECT document_id, to_user,
-                            MAX(date) AS latest_date
-                            FROM document_tracking
-                            WHERE from_user = '$userId'
-                            GROUP BY document_id, to_user
-                        )
-                        SELECT 
-                            documents.*,
-                            sender.name AS sender_name,  
-                            receiver.name AS receiver_name,
-                            userDetails.designation AS user_designation,
-                            userDetails.image AS user_image,
-                            dt.date,
-                            dt.remark,
-                            dt.status,
-                            dt.to_user
-                        FROM document_tracking dt
-                        JOIN documents ON dt.document_id = documents.id
-                        JOIN user AS sender ON dt.from_user = sender.id  
-                        JOIN user AS receiver ON dt.to_user = receiver.id
-                        JOIN user AS userDetails ON dt.to_user = userDetails.id 
-                        JOIN LatestStatus ls 
-                            ON dt.document_id = ls.document_id 
-                            AND dt.from_user = ls.from_user
-                            AND dt.date = ls.latest_date
-                        WHERE dt.status = 'release' 
-                        AND dt.to_user = '$userId'
-                        ORDER BY dt.document_id, dt.date DESC
-                        LIMIT {$offset}, {$limit};
-                    ";
+                            $query = "WITH LatestStatus AS (SELECT document_id,from_user,MAX(date) AS latest_date
+                                      FROM document_tracking
+                                      WHERE to_user = '$userId' 
+                                     GROUP BY document_id, from_user
+                                      )
+                                        SELECT documents.*, sender.name AS sender_name,  
+                                        receiver.name AS receiver_name,
+                                        sender.designation AS user_designation,
+                                        sender.image AS user_image, dt.date,
+                                        dt.remark, dt.status, dt.to_user,dt.from_user
+                                        FROM document_tracking dt
+                                        JOIN documents ON dt.document_id = documents.id
+                                        JOIN user AS sender ON dt.from_user = sender.id  
+                                        JOIN user AS receiver ON dt.to_user = receiver.id
+                                        JOIN LatestStatus ls 
+                                        ON dt.document_id = ls.document_id 
+                                        AND dt.from_user = ls.from_user
+                                        AND dt.date = ls.latest_date
+                                        WHERE dt.status = 'release' 
+                                        AND dt.to_user = '$userId' 
+                                        ORDER BY dt.document_id, dt.date DESC
+                                         LIMIT {$offset}, {$limit};";
 
 
 
@@ -197,7 +189,7 @@ include('Check_token.php');
                                                 <img src="<?php echo file_exists("../Image/" . $row['user_image']) && !empty($row['user_image']) ? "../Image/" . $row['user_image'] : '../Images/ImgIcon.png'; ?>"
                                                     onerror="this.onerror=null; this.src='../Images/ImgIcon.png';">
                                                 <div class="fileUser-data">
-                                                    <h5><?php echo $row['receiver_name']; ?></h5>
+                                                    <h5><?php echo $row['sender_name']; ?></h5>
                                                     <p><?php echo $row['user_designation']; ?></p>
                                                 </div>
 
@@ -340,27 +332,17 @@ include('Check_token.php');
 
                     <div class="container">
                         <div class="modal fade" id="fileStatusModal<?php echo $row['id']; ?>" role="dialog">
-                            <div class="modal-dialog">
+                            <div class="modal-dialog modal-dialog-centered modal-md">
                                 <div class="modal-content sendfile-modal">
                                     <div class="modal-header">
-                                        <h4 class="modal-title"><i class="fas fa-cog file-icon"></i> Operations</h4>
+                                        <h4 class="modal-title"><i class="fas fa-cog file-icon"></i> Modify</h4>
                                         <button type="button" data-dismiss="modal" class="close">&times;</button>
                                     </div>
                                     <div class="modal-body">
                                         <form id="updateFileForm<?php echo $row['id']; ?>" enctype="multipart/form-data">
                                             <input type="hidden" name="document_id" value="<?php echo $row['id']; ?>">
-                                            <input type="hidden" name="from_user" value="<?php echo $_SESSION['id']; ?>">
+                                            <input type="hidden" name="from_user" value="<?php echo $row['from_user']; ?>">
                                             <input type="hidden" name="to_user" value="<?php echo $row['to_user']; ?>">
-
-                                            <div class="form-group">
-                                                <label for="actionType">Action: <span>*</span></label>
-                                                <select id="actionType" name="action_type" class="form-control" required>
-                                                    <option value="">...</option>
-                                                    <option value="received">Receive</option>
-                                                    <option value="cancel">Cancel</option>
-                                                    <option value="onhold">OnHold</option>
-                                                </select>
-                                            </div>
 
                                             <div class="form-group">
                                                 <label>File Title: <span>*</span></label>
@@ -369,9 +351,17 @@ include('Check_token.php');
                                             </div>
 
                                             <div class="form-group">
-                                                <label>Remark: <span>*</span></label>
-                                                <textarea name="remark" rows="4" placeholder="Type Message .." class="form-control" required></textarea>
+                                                <label for="actionType">Action: <span>*</span></label>
+                                                <select id="actionType" name="action_type" class="form-control" required>
+                                                    <option value="">...</option>
+                                                    <option value="received">Receive</option>
+                                                    <option value="reject">Reject</option>
+                                                </select>
                                             </div>
+
+
+
+                                            <textarea style="display:none" name="remark" rows="4" placeholder="Type Message .." class="form-control" value="<?php echo $row['remark']; ?>" required><?php echo $row['remark']; ?></textarea>
                                         </form>
                                     </div>
                                     <!------Modal Footer---->
@@ -429,7 +419,7 @@ include('Check_token.php');
 
                 // Previous Button
                 if ($page > 1) {
-                    echo '<a class="paginate_button previous" href="OutgoingFile.php?page=' . ($page - 1) . '"><i class="fas fa-chevron-left"></i></a>';
+                    echo '<a class="paginate_button previous" href="IncomingFile.php?page=' . ($page - 1) . '"><i class="fas fa-chevron-left"></i></a>';
                 } else {
                     // Disable Previous button if on the first page or only 1 page exists
                     echo '<a class="paginate_button previous disabled" href="javascript:void(0)"><i class="fas fa-chevron-left"></i></a>';
@@ -442,12 +432,12 @@ include('Check_token.php');
                     } else {
                         $active = '';
                     }
-                    echo '<a class="paginate_button ' . $active . '" href="OutgoingFile.php?page=' . $i . '">' . $i . '</a>';
+                    echo '<a class="paginate_button ' . $active . '" href="IncomingFile.php?page=' . $i . '">' . $i . '</a>';
                 }
 
                 // Next Button
                 if ($total_pages > $page) {
-                    echo '<a class="paginate_button next" href="OutgoingFile.php?page=' . ($page + 1) . '"><i class="fas fa-chevron-right"></i></a>';
+                    echo '<a class="paginate_button next" href="IncomingFile.php?page=' . ($page + 1) . '"><i class="fas fa-chevron-right"></i></a>';
                 } else {
                     // Disable Next button if on the last page or only 1 page exists
                     echo '<a class="paginate_button next disabled" href="javascript:void(0)"><i class="fas fa-chevron-right"></i></a>';

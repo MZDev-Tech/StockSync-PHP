@@ -120,7 +120,7 @@ if (isset($_COOKIE['email']) && isset($_COOKIE['password'])) {
 
 <body>
 
-
+    <div class="tp-headerbggradient"></div>
     <div id="admin-loginForm">
 
 
@@ -128,10 +128,14 @@ if (isset($_COOKIE['email']) && isset($_COOKIE['password'])) {
             <div class="login-formwrap">
 
                 <div class="admin-top">
-                    <img src="Images/log11.png" alt="">
-                    <h3 class="admin-heading">Inventory <span>Management</span></h3>
+                    <img src="Images/adminIcon.gif" alt="">
+                    <div class="headerContent">
+                        <h3 class="admin-heading">Stocksync</h3>
+                        <p>Inventory & file management System</p>
+                    </div>
                 </div>
                 <h4 class="sub-heading">Please enter your admin credentials. </h4>
+
 
                 <!-----------alert message------------->
                 <?php if (isset($_SESSION['message'])) { ?>

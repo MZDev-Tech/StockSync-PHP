@@ -103,7 +103,7 @@ include('Check_token.php');
                     SELECT dt.* FROM document_tracking dt 
                     JOIN latestStatus ls ON dt.document_id = ls.document_id
                     AND dt.to_user = ls.to_user AND dt.date = ls.latest_date
-                    WHERE status = 'release' AND from_user = '$userId' 
+                    WHERE (status = 'release' OR status='Re-release')  AND from_user = '$userId' 
                     ORDER BY document_id LIMIT {$offset}, {$limit}";
 
                     $result = mysqli_query($con, $query);

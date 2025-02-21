@@ -50,8 +50,11 @@ include('Check_token.php');
           <div class="details-sec">
             <div class="product-details">
               <div class="part-left">
-                <img src="../Images/<?php echo $row['image'] ?>" alt="" />
-                <ul class="left-downpart">
+                <?php if (!empty($row['image']) && file_exists($row['image'])) {
+                  echo '<img src="../Images/' . $row['image'] . '" >';
+                } else {
+                  echo '<img src="../Images/productdefault.png " >';
+                } ?> <ul class="left-downpart">
                   <h3> System Overview</h3>
                   <div class="part2">
                     <li class="line1">

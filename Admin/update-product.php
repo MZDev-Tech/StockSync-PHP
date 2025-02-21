@@ -266,8 +266,12 @@ if (isset($_POST['submit'])) {
 
                                             <div class="form-group col-md-12 mb-3">
                                                 <label for="currentImage">Current Image</label><br>
-                                                <img src="../Images/<?php echo $row['image']; ?>"
-                                                    style="width:80px; height:80px; border-radius:5px; border: 3px solid #d5d7da;">
+                                                <?php if (!empty($row['image']) && file_exists($row['image'])) {
+                                                    echo '<img src="../Images/' . $row['image'] . '" class="ml-2" style="width:80px;  height:80px; border-radius:5px; border: 3px solid #d5d7da;">';
+                                                } else {
+                                                    echo '<img src="../Images/productdefault.png " class="ml-2" style="width:80px; height:80px; border-radius:5px; border: 3px solid #d5d7da;">';
+                                                } ?>
+
                                                 <input type="hidden" name="img" value="<?php echo $row['image']; ?>"
                                                     class="form-control" readonly>
                                             </div>

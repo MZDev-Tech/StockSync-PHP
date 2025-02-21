@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 // file to not allow user to directly access user panel until they are login
 include('Check_token.php');
@@ -18,6 +18,7 @@ include('Check_token.php');
     <!-- Print-specific CSS -->
     <link rel="stylesheet" href="../CSS/print.css" media="print">
 </head>
+
 
 <body>
     <!-----------SideBar Section------------------->
@@ -55,14 +56,14 @@ include('Check_token.php');
                                 </div>
                                 <div class="text-part">
 
-                                <div class="text-part">
-    <?php 
-        $description = $row['description'];
-        // Decode HTML entities to ensure proper display of content
-        $description = html_entity_decode($description, ENT_QUOTES, 'UTF-8');
-        echo $description;
-    ?>
-</div>
+                                    <div class="text-part">
+                                        <?php
+                                        $description = $row['description'];
+                                        // Decode HTML entities to ensure proper display of content
+                                        $description = html_entity_decode($description, ENT_QUOTES, 'UTF-8');
+                                        echo $description;
+                                        ?>
+                                    </div>
 
                                 </div>
                             </div>
@@ -79,7 +80,7 @@ include('Check_token.php');
                                     <li><i class="fas fa-edit"></i> <a href="update-document.php?id=<?php echo $row['id'] ?>">Update Record</a></li>
                                     <li><i class="far fa-file-pdf"></i> <a href="javascript:void(0);" onclick="printDocument()">Print Document</a></li>
                                     <li><i class="fas fa-download"></i> <a href="javascript:void(0);" onclick="downloadPDF()">Download File</a></li>
-                                    <li><i class="fas fa-arrow-left"></i> <button style="background:transparent" onclick="history.back()">Go Back</button>
+                                    <li><i class="fas fa-arrow-left"></i> <button style="background:transparent; " onclick="history.back()">Go Back</button>
                                     </li>
                                 </ul>
                             </div>
@@ -106,7 +107,9 @@ include('Check_token.php');
         }
 
         function downloadPDF() {
-            const { jsPDF } = window.jspdf;
+            const {
+                jsPDF
+            } = window.jspdf;
             const element = document.getElementById("documentContent");
 
             html2canvas(element, {
