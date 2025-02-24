@@ -72,6 +72,12 @@ ob_end_flush();
     <!-- External CSS File Link -->
     <link rel="stylesheet" href="../CSS/style.css">
     <link rel="stylesheet" href="sweetalert2.min.css">
+
+    <!-- Font Icons Link -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    <link rel="stylesheet"
+        href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </head>
 
 <body>
@@ -88,7 +94,7 @@ ob_end_flush();
 
         <div class="header-icons">
             <button id="refreshTokenBtn" class="btn token-btn btn-sm">Refresh Token</button>
-            <div class="icon1">
+            <div class="icon1 menuBar">
                 <i class="fas fa-bars" id="menuIcon"></i>
             </div>
 
@@ -101,10 +107,12 @@ ob_end_flush();
 
             <div class="icon2 messIcon">
                 <i class="fa-solid fa-bell"></i>
-                <div class="bg-wrapper">
+                <div class="bg-wrapper wrapper1">
                     <span class="notification">2</span>
                 </div>
             </div>
+
+
 
             <?php
             include('../connection.php');
@@ -119,6 +127,41 @@ ob_end_flush();
                             <span></span>
                         </div>
                     </a>
+
+                    <div class="header-dropdown">
+                        <!-- Dropdown Container -->
+                        <div class="dropdown">
+                            <!-- Dots Icon (Dropdown Toggle) -->
+                            <a href="#" class="dropdown-toggle no-btn" id="dotsDropdown"
+                                data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fas fa-angle-down angleicon"></i>
+                            </a>
+
+                            <!-- Dropdown Menu -->
+                            <ul class="dropdown-menu" aria-labelledby="dotsDropdown">
+                                <li>
+                                    <a class="dropdown-item" href="Admin-profile.php">
+                                        <i class="far fa-user"></i> Manage Profile
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="update-profile.php">
+                                        <i class="fas fa-unlock-alt"></i> Handle Password
+                                    </a>
+                                </li>
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="#" onclick="confirmLogout(event)">
+                                        <i class="fas fa-arrow-right-from-bracket"></i> Logout
+                                    </a>
+                                </li>
+
+
+                            </ul>
+                        </div>
+                    </div>
                 </div>
             <?php } ?>
 
@@ -254,6 +297,25 @@ ob_end_flush();
                 });
             });
         });
+        //sweet alert for logout
+
+        function confirmLogout(event) {
+            event.preventDefault();
+            Swal.fire({
+                title: "Are you sure?",
+                text: "You will be logged out!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                cancelButtonText: "Cancel",
+                confirmButtonText: "Yes, Logout!",
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = "logout.php";
+                }
+            });
+        }
     </script>
 
     <!-- External JS File Link -->

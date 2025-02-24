@@ -105,11 +105,46 @@ if (isset($_COOKIE["user_access_token"])) {
                             <span></span>
                         </div>
                     </a>
+
+                    <div class="header-dropdown">
+                        <!-- Dropdown Container -->
+                        <div class="dropdown">
+                            <!-- Dots Icon (Dropdown Toggle) -->
+                            <a href="#" class="dropdown-toggle no-btn" id="dotsDropdown"
+                                data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fas fa-angle-down angleicon"></i>
+                            </a>
+
+                            <!-- Dropdown Menu -->
+                            <ul class="dropdown-menu" aria-labelledby="dotsDropdown">
+                                <li>
+                                    <a class="dropdown-item" href="Admin-profile.php">
+                                        <i class="far fa-user"></i> Manage Profile
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="update-profile.php">
+                                        <i class="fas fa-unlock-alt"></i> Handle Password
+                                    </a>
+                                </li>
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="#" onclick="confirmLogout(event)">
+                                        <i class="fas fa-arrow-right-from-bracket"></i> Logout
+                                    </a>
+                                </li>
+
+
+                            </ul>
+                        </div>
+                    </div>
                 </div>
             <?php } ?>
 
 
-        </div>
+            </>
     </header>
 
     <script>

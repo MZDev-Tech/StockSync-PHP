@@ -123,6 +123,15 @@ $is_document_page = ($current_page == 'view-document.php'  || $current_page == '
                             class="far fa-arrow-alt-circle-right list-icon"></i> Logout</a>
                 </li>
             </ul>
+            <div class="setting-btn">
+                <i class="fas fa-gear" id="settingsIcon"></i>
+                <div class="theme-dropdown" id="themeDropdown">
+                    <p class="theme-option" id="default"> <span> <i class="fas fa-sun"></i>
+                        </span> Light Mode(Default)</p>
+                    <p class="theme-option" id="dark-mode"> <span><i class="fas fa-moon"></i></span> Dark Mode</p>
+                    <p class="theme-option" id="light-darkmode"> <span><i class="fas fa-cloud-moon"></i></span> Dark Purple Mode </p>
+                </div>
+            </div>
     </section>
 
 
@@ -145,6 +154,48 @@ $is_document_page = ($current_page == 'view-document.php'  || $current_page == '
                 arrowIcon.classList.add("fa-caret-right");
             }
         };
+
+        //js select themeOptions of sidebar
+        document.addEventListener("DOMContentLoaded", function() {
+            const settingsBtn = document.querySelector(".setting-btn");
+            const themeDropdown = document.getElementById("themeDropdown");
+            const themeOptions = document.querySelectorAll(".theme-option");
+            const sidebar = document.querySelector(".sidebar-part");
+
+            // Toggle dropdown on settings button click
+            settingsBtn.addEventListener("click", function(event) {
+                themeDropdown.style.display = themeDropdown.style.display === "block" ? "none" : "block";
+                event.stopPropagation(); // Prevent closing immediately
+            });
+
+            // Apply theme on selection
+            themeOptions.forEach(option => {
+                option.addEventListener("click", function() {
+                    let theme = this.id; // Get ID of clicked option
+
+                    // Remove all theme classes
+                    sidebar.classList.remove("dark-mode", "light-darkmode");
+
+                    // Add the selected theme as a class
+                    if (theme !== "default") {
+                        sidebar.classList.add(theme);
+                    }
+
+                    // Delay hiding the dropdown to ensure the class is applied
+                    setTimeout(() => {
+                        themeDropdown.style.display = "none";
+                    }, 100)
+                });
+            });
+
+            // Close dropdown when clicking outside
+            document.addEventListener("click", function(event) {
+                if (!settingsBtn.contains(event.target) && !themeDropdown.contains(event.target)) {
+                    themeDropdown.style.display = "none";
+                }
+            });
+
+        });
 
         //sweet alert for logout
 

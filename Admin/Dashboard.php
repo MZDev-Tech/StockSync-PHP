@@ -95,6 +95,17 @@ include('Check_token.php');
               <!-- Image Section -->
               <div class="col-sm-5 text-center">
                 <img src="../Images/admin.png" alt="Badge Image" height="175" class="w-100">
+                <!-- <div class="customers-badge">
+                  <div class="customer-avatars">
+                    <img src="assets/img/avatar-1.webp" alt="Customer 1" class="avatar">
+                    <img src="assets/img/avatar-2.webp" alt="Customer 2" class="avatar">
+                    <img src="assets/img/avatar-3.webp" alt="Customer 3" class="avatar">
+                    <img src="assets/img/avatar-4.webp" alt="Customer 4" class="avatar">
+                    <img src="assets/img/avatar-5.webp" alt="Customer 5" class="avatar">
+                    <span class="avatar more">12+</span>
+                  </div>
+                  <p class="mb-0 mt-2">12,000+ lorem ipsum dolor sit amet consectetur adipiscing elit</p>
+                </div> -->
               </div>
             </div>
           </div>

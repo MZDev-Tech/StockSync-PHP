@@ -118,7 +118,7 @@ if (isset($_COOKIE['email']) && isset($_COOKIE['password'])) {
         <div class="container user-subpart">
             <div class="row">
                 <div class="col-md-6 order-md-2">
-                    <img src="Images/bg11.svg" alt="Image" class="img-fluid">
+                    <img src="Images/bgg.webp" alt="Image" class="img-fluid">
                 </div>
                 <div class="col-md-6 Userdata-part">
                     <div class="row justify-content-center">
