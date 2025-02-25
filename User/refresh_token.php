@@ -20,9 +20,10 @@ if (isset($_COOKIE['user_access_token'])) {
     try {
         //decode the token
         $decoded_token = JWT::decode($token, new Key($secret_key, 'HS256'));
-        //update admin status to active when token refresh
+        //update user status to active when token refresh
         $user_id = $decoded_token->data->id;
-        $query = "UPDATE user SET status='active' WHERE id='$user_id'";
+        $role = 'user';
+        $query = "UPDATE user SET status='active' WHERE id='$user_id' && role='$role'";
         mysqli_query($con, $query);
         // Generate a new expiration time (1 hour)
         $new_expTime = time() + 3600;

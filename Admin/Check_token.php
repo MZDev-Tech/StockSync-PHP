@@ -3,6 +3,7 @@ ob_start(); // Start output buffering
 
 include '../vendor/autoload.php';
 include('../connection.php');
+
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 
@@ -18,17 +19,21 @@ if (isset($_COOKIE['access_token'])) {
 
         // Get expiration time for the token
         $expiration_time = $decoded_token->exp;
+        $user_id = $decoded_token->data->id;
+
 
         // If the token has expired, redirect to the login page
         if ($expiration_time < time()) {
             // Token expired, clear cookies and session, and redirect
-            setcookie('access_token', '', time() - 3600, "/"); 
+            $query = "UPDATE user SET status = 'inactive' WHERE id = $user_id";
+            mysqli_query($con, $query);
+
+            setcookie('access_token', '', time() - 3600, "/");
             session_destroy();
             $_SESSION['message'] = 'Session expired. Please log in again.';
             header('Location: ../admin-login.php');
             exit();
         }
-
     } catch (Exception $e) {
         // Token is invalid or expired
         $_SESSION['message'] = 'Session expired. Please log in again.';
@@ -44,4 +49,3 @@ if (isset($_COOKIE['access_token'])) {
 
 // Flush the output buffer
 ob_end_flush();
-?>

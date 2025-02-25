@@ -152,11 +152,12 @@ if (isset($_COOKIE['email']) && isset($_COOKIE['password'])) {
                                         required>
 
                                 </div>
-                                <div class="form-group last mb-4">
+                                <div class="form-group last mb-4 field-group">
                                     <label for="password">Password</label>
                                     <input type="password" name="password" class="form-control"
                                         value="<?php echo $cookie_password ?>" placeholder="Enter password"
                                         id="password" required>
+                                    <i class="fas fa-eye-slash input-icon" id="eyeIcon"></i>
 
                                 </div>
 
@@ -179,6 +180,22 @@ if (isset($_COOKIE['email']) && isset($_COOKIE['password'])) {
         </div>
     </div>
 
+    <script>
+        const eyeIcon = document.getElementById('eyeIcon');
+        const passwordField = document.getElementById('password');
+        eyeIcon.addEventListener('click', () => {
+            if (passwordField.type === 'password') {
+                passwordField.type = 'value';
+                eyeIcon.classList.remove('fa-eye-slash');
+                eyeIcon.classList.add('fa-eye');
+
+            } else {
+                passwordField.type = "password";
+                eyeIcon.classList.remove('fa-eye');
+                eyeIcon.classList.add('fa-eye-slash');
+            }
+        });
+    </script>
 </body>
 
 </html>

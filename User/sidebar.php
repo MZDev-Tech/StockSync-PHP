@@ -9,6 +9,7 @@ include('../connection.php');
 
 // file to not allow user to directly access user panel until they are login
 include('Check_token.php');
+include('file_counts.php');
 
 
 //get the current file name
@@ -43,28 +44,35 @@ $is_document_page = ($current_page == 'view-document.php'  || $current_page == '
 <body>
     <section class="sidebar-part">
         <span class="cross-icon"><i class="fa fa-close" id="crossbtn"></i></span>
-        <a href="#" class="brand">
-            <img src="../Images/log11.png" alt="">
-            <span class="link-text">Inventory</span>
-            <span class="link-text li-brand">System</span></a>
-        </a>
+        <div class="login-header">
+            <img src="../Images/loginGif.gif" alt="">
+            <div class="headerContent">
+                <h3 class="admin-heading">Stocksync</h3>
+                <p>Inventory & file management Sys.</p>
+            </div>
+        </div>
 
         <?php
         include('../connection.php');
         $id = $_SESSION['id'];
         $role = 'user';
-        $query = "select * from user where id='$id' && role='$role'";
+        $query = "select * from user where id='$id' ";
         $result = mysqli_query($con, $query);
         while ($row = mysqli_fetch_array($result)) {
         ?>
             <div class="admin-part">
-                <a href="admin-profile.php">
-                    <img src="../Images/<?php echo $row['image']; ?>" alt="Profile Img">
+                <a href="user-profile.php">
+                    <?php if (!empty($row['image']) && file_exists('../Images/' . $row['image'])) {
+                        echo '<img src="../Images/' . $row['image'] . '" >';
+                    } else {
+                        echo '<img src="../Images/user-profile.jpg" >';
+                    }
+                    ?>
                     <div class="profile-data">
                         <h5>
                             <?php echo $row['name']; ?>
                         </h5>
-                        <span><?php echo $row['email']; ?></span>
+                        <span style="text-transform:capitalize;"><?php echo $row['designation']; ?> <span style="font-size: 13px; text-transform:capitalize;">(User)</span></span>
                     </div>
                 </a>
 
@@ -99,13 +107,27 @@ $is_document_page = ($current_page == 'view-document.php'  || $current_page == '
                             <i class="fas fa-caret-right arrow-right" id="arrowIcon"></i></span></a>
 
                     <div class="sub-listItems">
-                        <a href="IncomingFile.php"><i class="fa fa-inbox"></i> Incoming</a>
-                        <a href="ReceivedFile.php"><i class="fa fa-download"></i> Received</a>
-                        <a href="OutgoingFile.php"><i class="far fa-paper-plane"></i> Outgoing</a>
-                        <a href="OnholdFile.php"><i class="far fa-pause-circle"></i> Onhold</a>
-                        <a href="CompleteFile.php"><i class="far fa-check-circle"></i> Complete</a>
-                        <a href="CancelFile.php"><i class=" far fa-times-circle"></i> Cancelled</a>
-                        <a href="AllFiles.php"><i class="far fa-file-alt"></i> All Files</a>
+                        <div class="list-menu">
+                            <a href="IncomingFile.php"><i class="fa fa-inbox"></i> Incoming </a><span class="fileCount"><?php echo $counts['incoming'] ?></span>
+                        </div>
+                        <div class="list-menu">
+                            <a href="ReceivedFile.php"><i class="fa fa-download"></i> Received </a><span class="fileCount"><?php echo $counts['received'] ?></span>
+                        </div>
+                        <div class="list-menu">
+                            <a href="OutgoingFile.php"><i class="far fa-paper-plane"></i> Outgoing</a><span class="fileCount"><?php echo $counts['outgoing'] ?></span>
+                        </div>
+                        <div class="list-menu">
+                            <a href="OnholdFile.php"><i class="far fa-pause-circle"></i> Onhold</a><span class="fileCount"><?php echo $counts['onhold'] ?></span>
+                        </div>
+                        <div class="list-menu">
+                            <a href="CompleteFile.php"><i class="far fa-check-circle"></i> Complete</a><span class="fileCount"><?php echo $counts['complete'] ?></span>
+                        </div>
+                        <div class="list-menu">
+                            <a href="CancelFile.php"><i class=" far fa-times-circle"></i> Cancelled</a><span class="fileCount"><?php echo $counts['cancelled'] ?></span>
+                        </div>
+                        <div class="list-menu">
+                            <a href="AllFiles.php"><i class="far fa-file-alt"></i> All Files</a><span class="fileCount"><?php echo $counts['all'] ?></span>
+                        </div>
                     </div>
 
 
@@ -154,6 +176,24 @@ $is_document_page = ($current_page == 'view-document.php'  || $current_page == '
                 arrowIcon.classList.add("fa-caret-right");
             }
         };
+
+        //file count logic here
+        function updateFileCounts() {
+            fetch('file_counts.php')
+                .then(response => response.json())
+                .then(data => {
+                    document.querySelector(".sub-listItems a[href='IncomingFile.php'] .fileCount").textContent = data.incoming;
+                    document.querySelector(".sub-listItems a[href='ReceivedFile.php'] .fileCount").textContent = data.received;
+                    document.querySelector(".sub-listItems a[href='OutgoingFile.php'] .fileCount").textContent = data.outgoing;
+                    document.querySelector(".sub-listItems a[href='OnholdFile.php'] .fileCount").textContent = data.onhold;
+                    document.querySelector(".sub-listItems a[href='CompleteFile.php'] .fileCount").textContent = data.complete;
+                    document.querySelector(".sub-listItems a[href='CancelFile.php'] .fileCount").textContent = data.cancelled;
+                    document.querySelector(".sub-listItems a[href='AllFiles.php'] .fileCount").textContent = data.all;
+                })
+                .catch(error => console.error('Error fetching counts:', error));
+        }
+
+
 
         //js select themeOptions of sidebar
         document.addEventListener("DOMContentLoaded", function() {

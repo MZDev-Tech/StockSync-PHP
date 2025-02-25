@@ -217,7 +217,22 @@ h3.admin-heading {
   padding-right: 30px;
   border-radius: 20px !important;
 }
+.field-group {
+  position: relative;
+}
+.input-icon {
+  position: absolute;
+  right: 12px;
+  top: 44px;
+  font-size: 14px !important;
+  color: #3a3a3aee;
+  cursor: pointer;
+  transition: 0.5 all ease;
+}
 
+.input-icon:hover {
+  color: #293b79ee;
+}
 @media (max-width: 1199.98px) {
   .user-loginParent .Userdata-part,
   .user-loginParent .bg {

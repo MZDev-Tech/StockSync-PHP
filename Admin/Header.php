@@ -122,8 +122,11 @@ ob_end_flush();
             ?>
                 <div class="admin">
                     <a href="admin-profile.php">
-                        <img src="../Images/<?php echo $row['image']; ?>" alt="Profile Img">
-                        <div class="bg-wrapper1">
+                        <?php if (!empty($row['image']) && file_exists('../Images/' . $row['image'])) {
+                            echo '<img src="../Images/' . $row['image'] . '">';
+                        } else {
+                            echo '<img src="../Images/user-profile.jpg">';
+                        } ?> <div class="bg-wrapper1">
                             <span></span>
                         </div>
                     </a>

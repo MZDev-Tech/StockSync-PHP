@@ -68,7 +68,11 @@ $is_document_page = ($current_page == 'view-document.php' || $current_page == 'A
         ?>
             <div class="admin-part">
                 <a href="admin-profile.php">
-                    <img src="../Images/<?php echo $row['image']; ?>" alt="Profile Img">
+                    <?php if (!empty($row['image']) && file_exists('../Images/' . $row['image'])) {
+                        echo '<img src="../Images/' . $row['image'] . '">';
+                    } else {
+                        echo '<img src="../Images/user-profile.jpg">';
+                    } ?>
                     <div class="profile-data">
                         <h5>
                             <?php echo $row['name']; ?>

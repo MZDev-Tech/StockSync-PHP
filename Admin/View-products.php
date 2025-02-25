@@ -223,13 +223,12 @@ include('Check_token.php');
 
                     <td>
                       <?php if (!empty($row['image']) && file_exists($row['image'])) {
-                         echo '<img src="../Images/'.$row['image'].' ">';
+                        echo '<img src="../Images/' . $row['image'] . ' ">';
                       } else {
                         echo '<img src="../Images/productdefault.png ">';
-
+                      } ?>
                       
-                      }?>
-                       </td>
+                    </td>
 
                     <td class="action">
 

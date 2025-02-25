@@ -172,11 +172,12 @@ li {
   height: 75px;
   border: 1px solid rgba(0, 0, 0, 0.24);
   border-radius: 50%;
-  margin-left: 48px;
+  margin: auto !important;
+  display: block;
 }
 
 .sidebar-part .admin-part .profile-data {
-  margin-left: 10px;
+  padding-left: 10px;
   margin-top: 8px;
   text-transform: none;
   color: #282829;
@@ -268,8 +269,8 @@ li {
   font-weight: 600;
   text-align: center;
   border-radius: 50%;
-  background: #ff000069 !important;
-  color: #69182b !important;
+  background: #ff000069;
+  color: #69182b;
 
   box-shadow: 1px 1px 8px 4px rgba(0, 0, 0, 0.1);
 }
@@ -279,8 +280,8 @@ li {
   .sub-listItems
   div.list-menu:nth-child(1)
   span.fileCount {
-  background: #ffee0069 !important;
-  color: #695d18 !important;
+  background: #ffee0069;
+  color: #695d18;
 }
 .sidebar-part
   .side-menu
@@ -288,8 +289,8 @@ li {
   .sub-listItems
   div.list-menu:nth-child(2)
   span.fileCount {
-  background: #48ff0069 !important;
-  color: #366918 !important;
+  background: #48ff0069;
+  color: #366918;
 }
 .sidebar-part
   .side-menu
@@ -297,8 +298,8 @@ li {
   .sub-listItems
   div.list-menu:nth-child(3)
   span.fileCount {
-  background: #00ffaa69 !important;
-  color: #186955 !important;
+  background: #00ffaa69;
+  color: #186955;
 }
 .sidebar-part
   .side-menu
@@ -306,8 +307,8 @@ li {
   .sub-listItems
   div.list-menu:nth-child(4)
   span.fileCount {
-  background: #008cff69 !important;
-  color: #183e69 !important;
+  background: #008cff69;
+  color: #183e69;
 }
 .sidebar-part
   .side-menu
@@ -315,8 +316,8 @@ li {
   .sub-listItems
   div.list-menu:nth-child(5)
   span.fileCount {
-  background: #ff00ea69 !important;
-  color: #691865 !important;
+  background: #ff00ea69;
+  color: #691865;
 }
 .sidebar-part
   .side-menu
@@ -324,7 +325,7 @@ li {
   .sub-listItems
   div.list-menu:nth-child(6)
   span.fileCount {
-  background: #8c00ff69 !important;
+  background: #8c00ff69;
   color: #491869;
 }
 .sidebar-part
@@ -334,13 +335,13 @@ li {
   div.list-menu:nth-child(7)
   span.fileCount {
   background: #ff990069;
-  color: #695d18 !important;
+  color: #695d18;
 }
 
 .sidebar-part .side-menu li .sub-listItems.active {
   max-height: 500px;
   opacity: 1;
-  margin-top: 12px !important;
+  margin-top: 12px;
   margin-bottom: 12px !important;
 }
 
@@ -473,6 +474,9 @@ div.setting-btn i#settingsIcon {
 .light-darkmode li .sub-listItems a i {
   color: rgb(228 208 233) !important;
 }
+.light-darkmode li .sub-listItems a:hover i {
+  color: rgb(165 210 217) !important;
+}
 .light-darkmode li .sub-listItems a:hover {
   color: #fff !important;
 }
@@ -481,32 +485,31 @@ div.setting-btn i#settingsIcon {
 }
 .light-darkmode li .sub-listItems span.fileCount {
   box-shadow: 1px 1px 8px 4px rgb(246 236 247 / 33%) !important;
-  color: #fff !important;
 }
 .light-darkmode li .sub-listItems div.list-menu span.fileCount {
   background: #ff0000e1 !important;
 }
 .light-darkmode li .sub-listItems div.list-menu:nth-child(1) span.fileCount {
-  background: #ffee00e0 !important;
+  background: #ffee00c9 !important;
 }
 .light-darkmode li .sub-listItems div.list-menu:nth-child(2) span.fileCount {
-  background: #48ff00e3 !important;
+  background: #48ff00d1 !important;
 }
 
 .light-darkmode li .sub-listItems div.list-menu:nth-child(3) span.fileCount {
-  background: #00ffaae0 !important;
+  background: #00ffaad9 !important;
 }
 .light-darkmode li .sub-listItems div.list-menu:nth-child(4) span.fileCount {
-  background: #008cffed !important;
+  background: #008cffd6 !important;
 }
 .light-darkmode li .sub-listItems div.list-menu:nth-child(5) span.fileCount {
-  background: #ff00eae6 !important;
+  background: #ff00ead4 !important;
 }
 .light-darkmode li .sub-listItems div.list-menu:nth-child(6) span.fileCount {
   background: #d0a5f3e3 !important;
 }
 .light-darkmode li .sub-listItems div.list-menu:nth-child(7) span.fileCount {
-  background: #ffee00e0 !important;
+  background: #fdb815cc !important;
 }
 
 .light-darkmode .headerContent p,
@@ -529,13 +532,13 @@ div.setting-btn i#settingsIcon {
 }
 .light-darkmode .side-menu li i.list-icon {
   background-color: #7f7195 !important;
-  color: #c7b2e3 !important;
+  color: #bcd4f3 !important;
 }
 
 .light-darkmode .side-menu li a.list-item.active i.list-icon,
 .light-darkmode .side-menu li a.list-item:hover i.list-icon {
   background-color: #ab9fbf !important;
-  color: #f9f9f9 !important;
+  color: #8ddaf9 !important;
 }
 
 .light-darkmode .side-menu li a.list-item.active,
@@ -568,32 +571,32 @@ div.setting-btn i#settingsIcon {
   background: #ff0000e1 !important;
 }
 .dark-mode li .sub-listItems div.list-menu:nth-child(1) span.fileCount {
-  background: #ffee00e0 !important;
+  background: #ffee00c9 !important;
 }
 .dark-mode li .sub-listItems div.list-menu:nth-child(2) span.fileCount {
-  background: #48ff00e3 !important;
+  background: #48ff00d1 !important;
 }
 
 .dark-mode li .sub-listItems div.list-menu:nth-child(3) span.fileCount {
-  background: #00ffaae0 !important;
+  background: #00ffaad9 !important;
 }
 .dark-mode li .sub-listItems div.list-menu:nth-child(4) span.fileCount {
-  background: #008cffed !important;
+  background: #008cffd6 !important;
 }
 .dark-mode li .sub-listItems div.list-menu:nth-child(5) span.fileCount {
-  background: #ff00eae6 !important;
+  background: #ff00ead4 !important;
 }
 .dark-mode li .sub-listItems div.list-menu:nth-child(6) span.fileCount {
   background: #d0a5f3e3 !important;
 }
 .dark-mode li .sub-listItems div.list-menu:nth-child(7) span.fileCount {
-  background: #ffee00e0 !important;
+  background: #fdb815cc !important;
 }
 
 .dark-mode .headerContent p,
 .dark-mode .profile-data span,
 .dark-mode .side-menu li a {
-  color: #a5abb1 !important;
+  color: #a5abb1;
 }
 .dark-mode h3.admin-heading {
   color: #fff !important;
@@ -846,6 +849,20 @@ div.setting-btn i#settingsIcon {
   font-weight: 400;
   color: #4b4b4be0;
   margin: 2px;
+}
+
+#page-content .dashboard-parent {
+  display: flex;
+  gap: 10px;
+  width: 100%;
+  margin: 0 10px;
+}
+
+#page-content .dashboard-parent .dashboard-left {
+  width: 70%;
+}
+#page-content .dashboard-parent .dashboard-right {
+  width: 30%;
 }
 
 #page-content .welcome-card {

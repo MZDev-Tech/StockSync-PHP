@@ -85,9 +85,25 @@ if (isset($_COOKIE["user_access_token"])) {
 
         <div class="header-icons">
             <button id="refreshTokenBtn" class="btn token-btn btn-sm">Refresh Token</button>
-            <div class="icon1">
+            <div class="icon1 menuBar">
                 <i class="fas fa-bars" id="menuIcon"></i>
             </div>
+
+            <div class="icon1 messIcon">
+                <i class="fa-solid fa-envelope"></i>
+                <div class="bg-wrapper">
+                    <span class="notification">1</span>
+                </div>
+            </div>
+
+            <div class="icon2 messIcon">
+                <i class="fa-solid fa-bell"></i>
+                <div class="bg-wrapper wrapper1">
+                    <span class="notification">2</span>
+                </div>
+            </div>
+
+
 
             <?php
 
@@ -100,8 +116,12 @@ if (isset($_COOKIE["user_access_token"])) {
             ?>
                 <div class="admin">
                     <a href="User-profile.php">
-                        <img src="../Images/<?php echo $row['image']; ?>" alt="Profile Img">
-                        <div class="bg-wrapper1">
+                        <?php if (!empty($row['image']) && file_exists('../Images/' . $row['image'])) {
+                            echo '<img src="../Images/' . $row['image'] . '">';
+                        } else {
+                            echo '<img src="../Images/user-profile.jpg">';
+                        }
+                        ?> <div class="bg-wrapper1">
                             <span></span>
                         </div>
                     </a>
@@ -144,7 +164,7 @@ if (isset($_COOKIE["user_access_token"])) {
             <?php } ?>
 
 
-            </>
+
     </header>
 
     <script>

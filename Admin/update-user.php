@@ -109,7 +109,7 @@ if (isset($_POST['submit'])) {
 
                             <div class="form-group">
                                 <label style="color:black">Company Designation</label>
-                                <input type="text" name="designation" placeholder="Enter designation" class="form-control" value="<?php echo $row['role']; ?>"
+                                <input type="text" name="designation" placeholder="Enter designation" class="form-control" value="<?php echo $row['designation']; ?>"
                                     required>
                             </div>
 

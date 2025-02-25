@@ -185,7 +185,7 @@ if (isset($_COOKIE['email']) && isset($_COOKIE['password'])) {
                     </div>
 
                     <div class=" user-login">
-                        <p>Need to access a <a href="user-login.php">User account?</a></p>
+                        <p style="font-style:italic;">Need to access a <a href="user-login.php">User account?</a></p>
 
                     </div>
 

@@ -18,10 +18,14 @@ if (isset($_COOKIE['user_access_token'])) {
 
         // Get expiration time for the token
         $expiration_time = $decoded_token->exp;
+        $user_id = $decoded_token->data->id;
+
 
         // If the token has expired, redirect to the login page
         if ($expiration_time < time()) {
             // Token expired, clear cookies and session, and redirect
+            $query = "UPDATE user SET status = 'inactive' WHERE id = $user_id";
+            mysqli_query($con, $query);
             setcookie('user_access_token', '', time() - 3600, "/");
             session_destroy();
             $_SESSION['message'] = 'Session expired. Please login again.';

@@ -105,10 +105,10 @@ include('Check_token.php');
                                 <div class="card-body">
                                     <div class="d-flex flex-column align-items-center text-center">
                                         <?php if (!empty($row['image']) && file_exists($row['image'])) {
-                                            echo '<img src="../Images/' . $row['image'] . '" alt="userImg"  class="rounded-circle" width="150">';
+                                            echo '<img src="../Images/' . $row['image'] . '" alt="userImg"  class="rounded-circle" width="150" height="150">';
                                         } else {
 
-                                            echo "<img src='../Images/imgdefault.jpg'  class='rounded-circle' width='150'>";
+                                            echo "<img src='../Images/imgdefault.jpg'  class='rounded-circle' width='150' height='150'>";
                                         } ?>
 
                                         <div class="mt-3">
