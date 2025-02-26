@@ -1,4 +1,4 @@
-# Inventory and File Management Systemn - PHP Language
+# STOCKSYNC (Inventory and File Management Systemn) - PHP Language
 
 ## Overview
 The **Inventory and File Management System** is a comprehensive web-based application designed to streamline inventory tracking, document management, and employee workflow processes. Built using **PHP, MySQL, JavaScript, CSS, HTML, and AJAX**, this system ensures efficient record-keeping, enhanced security, and structured user management. 
