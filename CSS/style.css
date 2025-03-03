@@ -89,7 +89,7 @@ li {
 }
 
 .sidebar-part .cross-icon {
-  margin-left: 210px;
+  margin-left: 198px;
   display: none;
   width: 26px;
   height: 26px;
@@ -366,7 +366,7 @@ li {
 
 div.setting-btn {
   border-radius: 50px;
-  position: fixed;
+  position: sticky;
   left: 180px;
   bottom: 15px;
   padding: 0;
@@ -853,7 +853,6 @@ div.setting-btn i#settingsIcon {
 
 #page-content .dashboard-parent {
   display: flex;
-  gap: 10px;
   width: 100%;
   margin: 0 10px;
 }
@@ -863,6 +862,58 @@ div.setting-btn i#settingsIcon {
 }
 #page-content .dashboard-parent .dashboard-right {
   width: 30%;
+}
+.white_card .white_card_body {
+  padding: 5px 30px 25px 30px;
+}
+.project_complete {
+  background: #c7d7d4;
+  background-image: url("https://demo.dashboardpack.com/analytic-html/img/pro_complete.png");
+  height: 100%;
+  background-size: cover;
+  background-repeat: no-repeat;
+  border-radius: 20px;
+  padding: 30px 50px 330px 50px;
+  margin-right: 20px;
+}
+.project_complete .single_pro {
+  margin-bottom: 25px;
+  position: relative;
+}
+.project_complete::before {
+  content: "";
+  position: absolute;
+  background: url("../images/dotarrow.gif");
+}
+.project_complete .single_pro .probox {
+  width: 14px;
+  height: 13px;
+  border-radius: 3px;
+  background: rgb(209 102 75 / 72%);
+  margin-right: 10px;
+  position: relative;
+  top: 5px;
+  flex: 14px 0 0;
+}
+.project_complete .single_pro .box_content h4 {
+  font-size: 25px;
+  font-weight: 900;
+  color: #d7502d;
+  margin-bottom: 0;
+}
+.project_complete .single_pro .box_content span {
+  font-size: 12px;
+  color: #fdfdfd;
+  font-weight: 600;
+}
+.project_complete .single_pro .probox.blue_box {
+  background: rgba(47, 98, 165, 0.34);
+}
+.project_complete .single_pro .box_content h4.bluish_text {
+  color: #2f62a5;
+}
+.project_complete .single_pro .box_content span.grayis_text {
+  color: #fdfdfd;
 }
 
 #page-content .welcome-card {
@@ -913,28 +964,55 @@ div.setting-btn i#settingsIcon {
   align-items: center;
   justify-content: space-between;
   gap: 10px;
-  padding: 10px 18px;
+  padding: 8px 18px 6px 18px;
   border-radius: 8px;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+  transition: 0.3s all ease;
+}
+#main-page .card-grid .card:hover {
+  background: #fff;
+}
+
+#main-page .card-grid .card-wrapper {
+  /* background: rgba(211, 212, 212, 0.87);
+  padding-left: 6px;
+  z-index: -1;
+  border-radius: 8px; */
   border: 1px solid #ddd;
   transition: 0.3s all ease;
   background-color: #fff;
   cursor: pointer;
-}
-
-#main-page .card-grid .card:hover {
-  background-color: #e6f7fd;
-}
-
-#main-page .card-grid .card-wrapper {
-  background: rgba(211, 212, 212, 0.87);
-  padding-left: 6px;
-  z-index: -1;
   border-radius: 8px;
-  transition: 0.3s all ease;
+}
+#main-page .card-grid .card-wrapper .card-footer {
+  background-color: #fff;
+  border-top: none;
+  border-end-start-radius: 8px;
+  border-end-end-radius: 8px;
+  padding: 8px 16px 10px 16px;
+}
+#main-page .card-grid .card-wrapper .card-footer a.text-white {
+  color: #fff !important;
+  border: 1px solid #efebeb6e;
+  padding: 2px 14px;
+  margin-top: 6px;
+  border-radius: 4px;
+  font-size: 12px;
+}
+#main-page .card-grid .card-wrapper:nth-child(1) .card-footer {
+  background: linear-gradient(to right, #fe9365c0, #feb798cb);
+}
+#main-page .card-grid .card-wrapper:nth-child(2) .card-footer {
+  background: linear-gradient(to right, #0ac282c5, #0df3a2b0);
 }
 
-#main-page .card-grid .card-wrapper:hover {
-  background: var(--blue);
+#main-page .card-grid .card-wrapper:nth-child(3) .card-footer {
+  background: linear-gradient(to right, #9653a3a9, #d89cf0b9);
+}
+
+#main-page .card-grid .card-wrapper:nth-child(4) .card-footer {
+  background: linear-gradient(to right, #01a9ac9f, #01dbdfab);
 }
 
 #main-page .card-grid .card-wrapper .child-content {
@@ -944,7 +1022,6 @@ div.setting-btn i#settingsIcon {
 #main-page .card-grid .card-wrapper .child-content h2 {
   font-size: 20px !important;
   font-weight: 600;
-  color: var(--black);
 }
 
 #main-page .card-grid .card-wrapper .child-content p {
@@ -2585,6 +2662,24 @@ ul.data-product {
   }
 }
 
+@media screen and (max-width: 1020px) {
+  #page-content .dashboard-parent {
+    flex-wrap: wrap !important;
+  }
+
+  #page-content .dashboard-parent .dashboard-left {
+    width: 100%;
+  }
+  #page-content .dashboard-parent .dashboard-right {
+    width: 100%;
+  }
+  #page-content .dashboard-parent .dashboard-right .project_complete {
+    padding: 50px 50px 230px 50px;
+    margin-right: 20px;
+    margin-left: 30px;
+  }
+}
+
 @media screen and (max-width: 920px) {
   .track-recordParent {
     margin: 15px 20px 20px 20px;
@@ -3035,6 +3130,9 @@ ul.data-product {
   .single-recordChild2 {
     width: 95%;
     margin: 10px 8px 10px 8px;
+  }
+  #page-content .dashboard-parent .dashboard-right .project_complete {
+    padding: 20px 50px 160px 50px;
   }
 }
 

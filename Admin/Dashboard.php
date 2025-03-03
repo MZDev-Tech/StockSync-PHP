@@ -23,6 +23,7 @@ include('Check_token.php');
   <!-- Font Icons Link -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
   <link rel="stylesheet" href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 
   <script>
     $(document).ready(function() {
@@ -97,17 +98,7 @@ include('Check_token.php');
                   <!-- Image Section -->
                   <div class="col-sm-5 text-center">
                     <img src="../Images/dashboard.gif" alt="Badge Image" height="185" class="w-100">
-                    <!-- <div class="customers-badge">
-                  <div class="customer-avatars">
-                    <img src="assets/img/avatar-1.webp" alt="Customer 1" class="avatar">
-                    <img src="assets/img/avatar-2.webp" alt="Customer 2" class="avatar">
-                    <img src="assets/img/avatar-3.webp" alt="Customer 3" class="avatar">
-                    <img src="assets/img/avatar-4.webp" alt="Customer 4" class="avatar">
-                    <img src="assets/img/avatar-5.webp" alt="Customer 5" class="avatar">
-                    <span class="avatar more">12+</span>
-                  </div>
-                  <p class="mb-0 mt-2">12,000+ lorem ipsum dolor sit amet consectetur adipiscing elit</p>
-                </div> -->
+
                   </div>
                 </div>
               </div>
@@ -124,16 +115,36 @@ include('Check_token.php');
             $query = "SELECT COUNT(*) as total_categories FROM category";
             $category_result = mysqli_query($con, $query);
             $category_count = mysqli_fetch_assoc($category_result)['total_categories'];
+
+            //fetch total number of registered users
+            $query = "SELECT COUNT(*) as total_users FROM user where role='user'";
+            $user_result = mysqli_query($con, $query);
+            $user_count = mysqli_fetch_assoc($user_result)['total_users'];
+
+            //fetch total number of files
+            $query = "SELECT COUNT(*) as total_file FROM documents";
+            $file_result = mysqli_query($con, $query);
+            $file_count = mysqli_fetch_assoc($file_result)['total_file'];
             ?>
             <div class="card-grid">
               <div class="card-wrapper">
                 <div class="card ">
                   <div class="child-content">
-                    <h2>0<?php echo $product_count ?></h2>
+                    <h2 style="color: #db825c;" id="product-count">0</h2>
                     <p>Total Products</p>
                   </div>
                   <div class="icon-wrap">
-                    <i class="fa-regular fa-clipboard"></i>
+                    <img src="../Images/box.gif" alt="" width="50" height="50">
+                  </div>
+                </div>
+                <div class="card-footer bg-c-yellow">
+                  <div class="row align-items-center">
+                    <div class="col-9">
+                      <a href="View-products.php" class="text-white m-b-0">View</a>
+                    </div>
+                    <div class="col-3 text-right">
+                      <span class="material-icons" style="color:#fff">trending_up</span>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -141,11 +152,44 @@ include('Check_token.php');
               <div class="card-wrapper">
                 <div class="card ">
                   <div class="child-content">
-                    <h2>0<?php echo $category_count ?></h2>
+                    <h2 style="color: #1e8d66;" id="category-count">0</h2>
                     <p>Total Categories</p>
                   </div>
                   <div class="icon-wrap">
-                    <i class="fa-regular fa-clock"></i>
+                    <img src="../Images/checklist.gif" alt="" width="50" height="50">
+                  </div>
+                </div>
+                <div class="card-footer bg-c-yellow">
+                  <div class="row align-items-center">
+                    <div class="col-9">
+                      <a href="View-category.php" class="text-white m-b-0">View</a>
+                    </div>
+                    <div class="col-3 text-right">
+                      <span class="material-icons" style="color:#fff">trending_up</span>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+
+              <div class="card-wrapper">
+                <div class="card ">
+                  <div class="child-content">
+                    <h2 style="color:#692377" id="file-count">0</h2>
+                    <p>Total Documents</p>
+                  </div>
+                  <div class="icon-wrap">
+                    <img src="../Images/document.gif" alt="" width="50" height="50">
+                  </div>
+                </div>
+                <div class="card-footer bg-c-yellow">
+                  <div class="row align-items-center">
+                    <div class="col-9">
+                      <a href="view-document.php" class="text-white m-b-0">View</a>
+                    </div>
+                    <div class="col-3 text-right">
+                      <span class="material-icons" style="color:#fff">trending_up</span>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -153,36 +197,50 @@ include('Check_token.php');
               <div class="card-wrapper">
                 <div class="card ">
                   <div class="child-content">
-                    <h2>200</h2>
-                    <p>Total Requests</p>
+                    <h2 id="user-count" style="color:#368d8f">0</h2>
+                    <p>Total Users</p>
                   </div>
                   <div class="icon-wrap">
-                    <i class="fa-regular fa-envelope"></i>
+                    <img src="../Images/user.gif" alt="" width="50" height="50">
                   </div>
                 </div>
-              </div>
-
-              <div class="card-wrapper">
-                <div class="card ">
-                  <div class="child-content">
-                    <h2>100</h2>
-                    <p>Total Feedback</p>
-                  </div>
-                  <div class="icon-wrap">
-                    <i class="fa-regular fa-message"></i>
+                <div class="card-footer bg-c-yellow">
+                  <div class="row align-items-center">
+                    <div class="col-9">
+                      <a href="View-user.php" class="text-white m-b-0">View</a>
+                    </div>
+                    <div class="col-3 text-right">
+                      <span class="material-icons" style="color:#fff">trending_up</span>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
 
-          <!-- Elfsight Weather | Untitled Weather -->
           <div class="widget-container dashboard-right">
-            <script src="https://static.elfsight.com/platform/platform.js" async></script>
-            <div class="elfsight-app-fa819366-b60f-48fb-8a81-134faee45bdf" data-elfsight-app-lazy></div>
+            <div class=" white_card_body pt_25">
+              <div class="project_complete">
+                <div class="single_pro d-flex">
+                  <div class="probox"></div>
+                  <div class="box_content">
+                    <h4>5685</h4>
+                    <span>Project completed</span>
+                  </div>
+                </div>
+                <div class="single_pro d-flex">
+                  <div class="probox blue_box"></div>
+                  <div class="box_content">
+                    <h4 class="bluish_text">5685</h4>
+                    <span class="grayis_text">Project completed</span>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
 
         </div>
+
         <!------------------Recent Product Design----------------------->
 
         <div class="records">
@@ -222,7 +280,7 @@ include('Check_token.php');
             <table width="100%" class="table">
               <thead>
                 <tr>
-                  <th>ID</th>
+                  <th>S-N</th>
                   <th><span class="las la-sort"></span>Product</th>
                   <th><span class="las la-sort"></span>Model</th>
                   <th><span class="las la-sort"></span>RAM</th>
@@ -232,7 +290,7 @@ include('Check_token.php');
               <?php
               include('../connection.php');
               $page = isset($_GET['page']) ? (int) $_GET['page'] : 1;
-
+              $Sr = 1;
               $offset = ($page - 1) * $limit;
               $query = "select * from laptops ORDER BY id LIMIT {$offset},{$limit}";
               $result = mysqli_query($con, $query);
@@ -241,7 +299,7 @@ include('Check_token.php');
                 <tbody>
                   <tr>
                     <td>#
-                      <?php echo $row['id']; ?>.
+                      <?php echo $Sr ?>
                     </td>
 
                     <td class="product-data">
@@ -268,7 +326,8 @@ include('Check_token.php');
 
           </div>
 
-        <?php } ?>
+        <?php $Sr++;
+              } ?>
         </table>
 
         <?php
@@ -312,6 +371,41 @@ include('Check_token.php');
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script src="script.js"></script>
+  <script>
+    //traget where we will show the animated value in HTML and finalvalue is value coming from DB
+    function animateCount(target, finalValue) {
+      let start = 0;
+      let end = 200;
+      let duration = 5000; // (5 seconds)
+      let intervalTime = duration / end; // Time per increment is 20ms
+
+      let interval = setInterval(() => {
+        start++;
+        target.textContent = (start < 10 ? "0" : "") + start + "+"; // Ensures '0' appears if <10
+
+        if (start >= end) {
+          clearInterval(interval);
+          // Ensure proper formatting of final value
+          let formattedFinalValue = finalValue < 10 ? "0" + finalValue : finalValue;
+          target.textContent = formattedFinalValue + "+";
+        }
+      }, intervalTime);
+    }
+
+    // Get original DB values from PHP
+    let productCount = <?php echo $product_count; ?>;
+    let categoryCount = <?php echo $category_count; ?>;
+    let fileCount = <?php echo $file_count; ?>;
+    let userCount = <?php echo $user_count; ?>;
+
+    // Start animation
+    animateCount(document.getElementById("product-count"), productCount);
+    animateCount(document.getElementById("category-count"), categoryCount);
+    animateCount(document.getElementById("file-count"), fileCount);
+    animateCount(document.getElementById("user-count"), userCount);
+  </script>
+
+
 </body>
 
 </html>

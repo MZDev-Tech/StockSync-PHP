@@ -6,6 +6,7 @@ if (session_status() === PHP_SESSION_NONE) {
 include('../connection.php');
 include('Check_token.php');
 
+
 // Function to execute SQL query and return the count
 function getCount($query)
 {
@@ -88,3 +89,4 @@ $counts = [
     'cancelled' => getCount($cancelledQuery),
     'all' => getCount($allFilesQuery)
 ];
+// echo json_encode($counts);
