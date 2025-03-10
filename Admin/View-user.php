@@ -100,6 +100,7 @@ include('Check_token.php');
                 $limit = isset($_GET['select-record']) ? (int) $_GET['select-record'] : 3;
                 $page = isset($_GET['page']) ? (int) $_GET['page'] : 1;
                 $offset = ($page - 1) * $limit;
+
                 $role = 'user';
                 $query = "select * from user WHERE role='$role' ORDER BY id LIMIT {$offset}, {$limit}";
                 $result = mysqli_query($con, $query);
@@ -137,6 +138,7 @@ include('Check_token.php');
                         $page = isset($_GET['page']) ? (int) $_GET['page'] : 1;
                         $offset = ($page - 1) * $limit;
                         $role = 'user';
+                        $Sr = 1;
                         $query = "select * from user WHERE role='$role' ORDER BY id LIMIT {$offset},{$limit}";
                         $stmt = mysqli_prepare($con, $query);
                         mysqli_stmt_execute($stmt);
@@ -147,7 +149,7 @@ include('Check_token.php');
                                 <tbody>
                                     <tr>
                                         <td>#
-                                            <?php echo $row['id']; ?>.
+                                            <?php echo $Sr ?>.
                                         </td>
                                         <td>
                                             <?php echo $row['name']; ?>
@@ -197,7 +199,9 @@ include('Check_token.php');
 
                 </div>
 
-        <?php }
+        <?php
+                                $Sr++;
+                            }
                             // Close the statement
                             mysqli_stmt_close($stmt);
                         } else {
@@ -207,9 +211,10 @@ include('Check_token.php');
         </table>
 
         <?php
-        $query = "select COUNT(*) as total from user";
+        $role = 'user';
+        $query = "select COUNT(*) as total from user where role='$role'";
         $result = mysqli_query($con, $query);
-        $row = mysqli_fetch_assoc($result);
+        $row = mysqli_fetch_assoc(result: $result);
         $total_records = $row['total'];
         $total_pages = ceil($total_records / $limit);
         ?>
@@ -260,6 +265,15 @@ include('Check_token.php');
         </main>
 
     </section>
+
+    <!-- External jquery, popper File Link for bootstrap 4 -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+
+    <!-- Bootstrap 4 (JS) -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="script.js"></script>
     <script>
         function confirmDelete(productId) {
             Swal.fire({
@@ -275,17 +289,20 @@ include('Check_token.php');
                     $.ajax({
                         url: 'delete-user.php',
                         type: 'GET',
+
                         data: {
                             id: productId
                         },
+                        dataType: 'json',
                         success: function(response) {
                             if (response.trim() == 'success') {
                                 Swal.fire("Deleted!", "Your file has been deleted.", "success");
                                 setTimeout(() => {
+
                                     location.reload();
                                 }, 2000);
                             } else {
-                                Swal.fire("Error!", "Failed to delete the product.", "error");
+                                Swal.fire("Error!", "Failed to delete the user.", "error");
                             }
                         },
                         error: function(xhr, status, error) {
@@ -296,11 +313,6 @@ include('Check_token.php');
             });
         }
     </script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="script.js"></script>
 </body>
 
 </html>

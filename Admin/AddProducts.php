@@ -61,6 +61,18 @@ if (isset($_POST['submit'])) {
     $query = "Insert into laptops(`category`,`brand`, `model`, `processor`,`RAM`,`storage`,`price`, `quantity`,`serialNumber`, `description`, `image`,`delivery_date`,`person_name`,`designation`,`status`,`total_age`) values('$category','$brand','$model','$processor','$RAM','$storage','$price','$quantity','$serialNumber','$description','$imagePath','$delivery_date','$person_name','$designation','$status','$total_age')";
     $result = mysqli_query($con, $query);
     if ($result) {
+        // Get the last inserted product ID
+        $product_id = mysqli_insert_id($con);
+
+        // Insert notification into the database
+        $notify_title = "Inventory Revamped! ";
+        $notify_message = " New '$category' from $brand brand added";
+        $image = '../Images/notify-product.gif';
+
+        $notify_query = "INSERT INTO notifications (`type`,`image`, `related_id`, `title`,`message`, `status`) VALUES ('product', ?, ?,?,?, 'unread')";
+        $notify_stmt = mysqli_prepare($con, $notify_query);
+        mysqli_stmt_bind_param($notify_stmt, 'siss', $image, $product_id, $notify_title, $notify_message);
+        mysqli_stmt_execute($notify_stmt);
 
         $_SESSION['message'] = 'Record added successfully..';
         header('Location:View-products.php');
@@ -81,7 +93,7 @@ if (isset($_POST['submit'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add Products</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../Bootstrap/css/bootstrap.min.css">
     <!-- External CSS File Link -->
     <link rel="stylesheet" href="../CSS/style.css">
     <!-- Font Icons Link -->
@@ -276,9 +288,13 @@ if (isset($_POST['submit'])) {
         </main>
 
     </section>
+    <!-- External jquery, popper File Link for bootstrap 4 -->
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <!-- Bootstrap 4 (JS) -->
+    <script src="../Bootstrap/js/bootstrap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="script.js"></script>
 </body>

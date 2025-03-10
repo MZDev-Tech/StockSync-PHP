@@ -65,7 +65,7 @@ if (isset($_COOKIE["user_access_token"])) {
     <title>Header</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../Bootstrap/css/bootstrap.min.css">
     <!-- External CSS File Link -->
     <link rel="stylesheet" href="../CSS/style.css">
     <link rel="stylesheet" href="sweetalert2.min.css">
@@ -297,10 +297,13 @@ if (isset($_COOKIE["user_access_token"])) {
         });
     </script>
 
-    <!-- External JS File Link -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <!-- External jquery, popper File Link for bootstrap 4 -->
+
+    <script src="../Bootstrap/js/jquery.min.js"></script>
+    <script src="../Bootstrap/js/popper.min.js"></script>
+
+    <!-- Bootstrap 4 (JS) -->
+    <script src="../Bootstrap/js/bootstrap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="script.js"></script>
 </body>

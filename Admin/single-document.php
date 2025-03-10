@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 // file to not allow admin to directly access admin panel until they are login
 include('Check_token.php');
@@ -10,7 +10,7 @@ include('Check_token.php');
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Single Document</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../Bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="../CSS/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
     <link rel="stylesheet"
@@ -55,14 +55,14 @@ include('Check_token.php');
                                 </div>
                                 <div class="text-part">
 
-                                <div class="text-part">
-    <?php 
-        $description = $row['description'];
-        // Decode HTML entities to ensure proper display of content
-        $description = html_entity_decode($description, ENT_QUOTES, 'UTF-8');
-        echo $description;
-    ?>
-</div>
+                                    <div class="text-part">
+                                        <?php
+                                        $description = $row['description'];
+                                        // Decode HTML entities to ensure proper display of content
+                                        $description = html_entity_decode($description, ENT_QUOTES, 'UTF-8');
+                                        echo $description;
+                                        ?>
+                                    </div>
 
                                 </div>
                             </div>
@@ -90,9 +90,13 @@ include('Check_token.php');
         </main>
     </section>
 
+    <!-- External jquery, popper File Link for bootstrap 4 -->
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <!-- Bootstrap 4 (JS) -->
+    <script src="../Bootstrap/js/bootstrap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -106,7 +110,9 @@ include('Check_token.php');
         }
 
         function downloadPDF() {
-            const { jsPDF } = window.jspdf;
+            const {
+                jsPDF
+            } = window.jspdf;
             const element = document.getElementById("documentContent");
 
             html2canvas(element, {

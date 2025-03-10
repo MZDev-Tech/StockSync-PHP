@@ -46,7 +46,7 @@ if (isset($_COOKIE['access_token'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Profile</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../Bootstrap/css/bootstrap.min.css">
 
 
     <!-- External CSS File Link -->
@@ -247,7 +247,7 @@ if (isset($_COOKIE['access_token'])) {
 
 
 
-                                            <a href="update-profile.php" class="btn btn-info" style="font-size:14px">Update
+                                            <a href="update-profile.php" class="btn btn-info" style="font-size:13px; color:#fff">Update
                                                 Data</a>
 
 
@@ -364,9 +364,14 @@ if (isset($_COOKIE['access_token'])) {
 
     </section>
 
+    <!-- External jquery, popper File Link for bootstrap 4 -->
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+
+    <!-- Bootstrap 4 (JS) -->
+    <script src="../Bootstrap/js/bootstrap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="script.js"></script>
     <script>

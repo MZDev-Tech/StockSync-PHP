@@ -18,7 +18,7 @@ ob_end_flush();
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>View Products</title>
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link rel="stylesheet" href="../Bootstrap/css/bootstrap.min.css">
   <!-- External CSS File Link -->
   <link rel="stylesheet" href="../CSS/style.css">
   <!-- Font Icons Link -->
@@ -138,7 +138,7 @@ ob_end_flush();
                   </select>
                 </div>
                 <div class="col-12 col-sm-6 col-md-3" style="padding-right:0">
-                  <button type="submit" class="btn btn-info mt-4" style="color:#fff;" title="Download Report">
+                  <button type="submit" class="btn mt-4" style="color:#fff; background: #729b8c; border:0;" title="Download Report">
                     <i class="fas fa-download" style=" font-size:16px"></i>
                   </button>
                 </div>
@@ -340,9 +340,13 @@ ob_end_flush();
       });
     }
   </script>
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <!-- External jquery, popper File Link for bootstrap 4 -->
+
+  <script src="../Bootstrap/js/jquery.min.js"></script>
+  <script src="../Bootstrap/js/popper.min.js"></script>
+
+  <!-- Bootstrap 4 (JS) -->
+  <script src="../Bootstrap/js/bootstrap.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script src="script.js"></script>
 </body>

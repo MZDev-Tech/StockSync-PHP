@@ -74,7 +74,6 @@ if (isset($_POST['submit'])) {
         header('Location:View-products.php');
         exit();
     }
-
 }
 
 ?>
@@ -86,7 +85,7 @@ if (isset($_POST['submit'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add Products</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../Bootstrap/css/bootstrap.min.css">
     <!-- External CSS File Link -->
     <link rel="stylesheet" href="../CSS/style.css">
     <!-- Font Icons Link -->
@@ -94,7 +93,7 @@ if (isset($_POST['submit'])) {
     <link rel="stylesheet"
         href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css">
 
-    </head>
+</head>
 
 <body>
 
@@ -138,7 +137,7 @@ if (isset($_POST['submit'])) {
                                             <?php
                                             $list = mysqli_query($con, 'select * from category');
                                             while ($row = mysqli_fetch_assoc($list)) {
-                                                ?>
+                                            ?>
                                                 <option value="<?php echo $row['name'] ?>"><?php echo $row['name'] ?>
                                                 </option>
                                             <?php } ?>
@@ -281,10 +280,15 @@ if (isset($_POST['submit'])) {
         </main>
 
     </section>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <!-- External jquery, popper File Link for bootstrap 4 -->
+
+    <script src="../Bootstrap/js/jquery.min.js"></script>
+    <script src="../Bootstrap/js/popper.min.js"></script>
+
+    <!-- Bootstrap 4 (JS) -->
+    <script src="../Bootstrap/js/bootstrap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="script.js"></script>
 </body>
+
 </html>

@@ -14,7 +14,7 @@ include('Check_token.php');
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dashboard</title>
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link rel="stylesheet" href="../Bootstrap/css/bootstrap.min.css">
 
   <!-- External CSS File Link -->
   <link rel="stylesheet" href="../CSS/style.css">
@@ -42,6 +42,23 @@ include('Check_token.php');
     .card-grid .card:hover {
       background-color: rgb(213, 238, 248);
     }
+
+    a.btn-profile {
+      font-size: 14px;
+      color: #729b8c;
+      border: 1px solid #729b8c;
+      margin-right: 12px;
+      transition: all .3s ease;
+    }
+
+    a.btn-profile:hover {
+      background: #729b8c;
+      color: #fff;
+    }
+
+    h5.admin-welcome {
+      color: #729b8c !important;
+    }
   </style>
   <!-----------SideBar Section------------------->
   <?php include('sidebar.php'); ?>
@@ -62,7 +79,7 @@ include('Check_token.php');
         <!-----------alert message------------->
         <?php if (isset($_SESSION['message'])) { ?>
           <div class="alert alert-success data-dismissible fade show" id="alertMessage"
-            style="width: 100%; margin: 10px 40px 16px 40px; padding:16px; font-size:14px">
+            style="width: 100%; margin: 10px 20px 16px 40px; padding:16px; font-size:14px">
             <strong>Success! </strong>
             <?php echo $_SESSION['message'] ?>
             <button type="button" data-dismiss="alert" class="close" aria-label="close">
@@ -87,7 +104,7 @@ include('Check_token.php');
                   </h5>
                   <p class="mb-6">We're glad to have you here. Explore your profile to see updates and personalized
                     features.</p>
-                  <a href="User-profile.php" class="btn btn-sm btn-outline-info">Go to Profile</a>
+                  <a href="User-profile.php" class="btn btn-sm btn-profile">Go to Profile</a>
                 </div>
               </div>
               <!-- Image Section -->
@@ -286,9 +303,13 @@ include('Check_token.php');
 
   </section>
 
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <!-- External jquery, popper File Link for bootstrap 4 -->
+
+  <script src="../Bootstrap/js/jquery.min.js"></script>
+  <script src="../Bootstrap/js/popper.min.js"></script>
+
+  <!-- Bootstrap 4 (JS) -->
+  <script src="../Bootstrap/js/bootstrap.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script src="script.js"></script>
 </body>

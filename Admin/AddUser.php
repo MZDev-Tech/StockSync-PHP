@@ -79,6 +79,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         mysqli_stmt_bind_param($stmt, 'sssissss', $name, $email, $designation, $phone, $address, $password, $imagePath, $status);
 
         if (mysqli_stmt_execute($stmt)) {
+            // Get the last inserted file ID
+            $user_id = mysqli_insert_id($con);
+            //insert notification
+            $notify_title = "New User Joined";
+            $notify_message = " '$name' has been registered to site.";
+            $image = '../Images/notify-user.gif';
+
+            $notify_query = "INSERT INTO notifications (`type`,`image`, `related_id`, `title`,`message`, `status`) VALUES ('user', ?, ?,?,?, 'unread')";
+            $notify_stmt = mysqli_prepare($con, $notify_query);
+            mysqli_stmt_bind_param($notify_stmt, 'siss',  $image, $user_id,  $notify_title, $notify_message);
+
+            mysqli_stmt_execute($notify_stmt);
             $_SESSION['message'] = 'User added successfully.';
             header('Location: View-user.php');
             exit();
@@ -99,7 +111,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add User</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../Bootstrap/css/bootstrap.min.css">
     <!-- External CSS File Link -->
     <link rel="stylesheet" href="../CSS/style.css">
     <!-- Font Icons Link -->
@@ -113,7 +125,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     <!-----------SideBar Section------------------->
     <?php include('sidebar.php'); ?>
-
 
     <!----------------Main Header Section--------------------->
     <section id="main-page">
@@ -141,7 +152,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                         </div>
                         <div class="form-group">
-                            <input type="text" name="designation" placeholder="Company designation" class="form-control" required>
+                            <input type="text" name="designation" placeholder="Company designation" value="<?php echo (isset($_POST['designation']) ? htmlspecialchars($_POST['designation']) : '') ?>" class="form-control" required>
 
                         </div>
 
@@ -152,7 +163,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         </div>
 
                         <div class="form-group">
-                            <input type="text" name="address" placeholder="Address" class="form-control" required>
+                            <input type="text" name="address" value="<?php echo (isset($_POST['address']) ? htmlspecialchars($_POST['address']) : '') ?>" placeholder="Address" class="form-control" required>
 
                         </div>
 
@@ -183,9 +194,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     </section>
 
+    <!-- External jquery, popper File Link for bootstrap 4  -->
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <!-- Bootstrap 4 (JS) -->
+    <script src="../Bootstrap/js/bootstrap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="script.js"></script>
 </body>

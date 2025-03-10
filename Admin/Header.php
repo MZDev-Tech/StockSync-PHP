@@ -59,6 +59,7 @@ if (isset($_COOKIE["access_token"])) {
 // Flush the output buffer
 ob_end_flush();
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -69,15 +70,12 @@ ob_end_flush();
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
     <!-- External CSS File Link -->
     <link rel="stylesheet" href="../CSS/style.css">
     <link rel="stylesheet" href="sweetalert2.min.css">
 
-    <!-- Font Icons Link -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
-    <link rel="stylesheet"
-        href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
 </head>
 
 <body>
@@ -91,87 +89,181 @@ ob_end_flush();
                 </div>
             </form>
         </div>
-
-        <div class="header-icons">
-            <button id="refreshTokenBtn" class="btn token-btn btn-sm">Refresh Token</button>
-            <div class="icon1 menuBar">
-                <i class="fas fa-bars" id="menuIcon"></i>
+        <div class="d-flex align-items-center">
+            <div class="icon1 nav-menu">
+                <!-- <img src="../images/menu.gif" id="menuIcon" style="width:30px; height:30px; margin-right:8px;"> -->
+                <i class="fas fa-bars" id="menuIcon1"></i>
             </div>
+            <div class="icon1">
+                <img src="../images/arrowDown.gif" id="subNavIcon">
+            </div>
+        </div>
 
-            <div class="icon1 messIcon">
-                <i class="fa-solid fa-envelope"></i>
-                <div class="bg-wrapper">
-                    <span class="notification">1</span>
+        <div class="sub-navbar" id="subNavbar">
+            <div class="header-icons">
+
+                <button id="refreshTokenBtn" class="btn token-btn btn-sm">Refresh Token</button>
+                <div class="icon1 menuBar">
+                    <i class="fas fa-bars" id="menuIcon"></i>
                 </div>
-            </div>
 
-            <div class="icon2 messIcon">
-                <i class="fa-solid fa-bell"></i>
-                <div class="bg-wrapper wrapper1">
-                    <span class="notification">2</span>
-                </div>
-            </div>
-
-
-
-            <?php
-            include('../connection.php');
-            $query = "SELECT * FROM admin WHERE id='1'";
-            $result = mysqli_query($con, $query);
-            while ($row = mysqli_fetch_array($result)) {
-            ?>
-                <div class="admin">
-                    <a href="admin-profile.php">
-                        <?php if (!empty($row['image']) && file_exists('../Images/' . $row['image'])) {
-                            echo '<img src="../Images/' . $row['image'] . '">';
-                        } else {
-                            echo '<img src="../Images/user-profile.jpg">';
-                        } ?> <div class="bg-wrapper1">
-                            <span></span>
+                <div class="icon1 messIcon">
+                    <i class="fa-solid fa-envelope" id="messageIcon"></i>
+                    <div class="bg-wrapper">
+                        <span class="notification">1</span>
+                    </div>
+                    <!-- Message dropdown -->
+                    <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end py-0 message-dropdown" id="MessageMenu" aria-labelledby="alertsDropdown" data-bs-popper="static">
+                        <div class="dropdown-menu-header1">
+                            <span style="font-size:18px;color:rgba(65, 64, 64, 0.96)"> <img src="../images/chat.png" style="width:30px; height:30px; margin-right:10px;">User Messages</span>
+                            <span class="count-message">5 new</span>
                         </div>
-                    </a>
+                        <ul class="list-group1">
+                            <li class="message-li">
+                                <a href="#" class="list-group-item1">
+                                    <div class="row g-0 align-items-center">
+                                        <div class="notify-img">
+                                            <img src="../Images/7.jpg" alt="">
+                                        </div>
+                                        <div class="col-10">
+                                            <div style="font-size: 14px; color:rgb(58, 57, 57);">Ali Ahmand</div>
+                                            <div class="text-muted">Send you a new message</div>
+                                        </div>
+                                        <span class="time">3m ago</span>
 
-                    <div class="header-dropdown">
-                        <!-- Dropdown Container -->
-                        <div class="dropdown">
-                            <!-- Dots Icon (Dropdown Toggle) -->
-                            <a href="#" class="dropdown-toggle no-btn" id="dotsDropdown"
-                                data-bs-toggle="dropdown" aria-expanded="false">
-                                <i class="fas fa-angle-down angleicon"></i>
-                            </a>
+                                    </div>
+                                </a>
+                            </li>
 
-                            <!-- Dropdown Menu -->
-                            <ul class="dropdown-menu" aria-labelledby="dotsDropdown">
-                                <li>
-                                    <a class="dropdown-item" href="Admin-profile.php">
-                                        <i class="far fa-user"></i> Manage Profile
-                                    </a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item" href="update-profile.php">
-                                        <i class="fas fa-unlock-alt"></i> Handle Password
-                                    </a>
-                                </li>
-                                <li>
-                                    <hr class="dropdown-divider">
-                                </li>
-                                <li>
-                                    <a class="dropdown-item" href="#" onclick="confirmLogout(event)">
-                                        <i class="fas fa-arrow-right-from-bracket"></i> Logout
-                                    </a>
-                                </li>
+                            <li class="message-li">
+                                <a href="#" class="list-group-item1">
+                                    <div class="row g-0 align-items-center">
+                                        <div class="notify-img">
+                                            <img src="../Images/7.jpg" alt="">
+                                        </div>
+                                        <div class="col-10" style="display:inline-block">
+                                            <div style="font-size: 14px; color:rgb(58, 57, 57);">Update completed</div>
+                                            <div class="text-muted">Send you a new message.</div>
+                                        </div>
+                                        <span class="time">2h ago</span>
+                                    </div>
+                                </a>
+                            </li>
 
-
-                            </ul>
+                        </ul>
+                        <div class="dropdown-menu-footer">
+                            <a href="#" class="footer-btn">View All Messages</a>
                         </div>
                     </div>
                 </div>
-            <?php } ?>
+
+                <div class="icon2 messIcon">
+                    <i class="fa-solid fa-bell" id="notificationIcon"></i>
+                    <div class="bg-wrapper wrapper1">
+                        <?php
+                        $query = "SELECT COUNT(*) as total from notifications where status='unread'";
+                        $stmt = mysqli_prepare($con, $query);
+                        mysqli_stmt_execute($stmt);
+                        $result = mysqli_stmt_get_result($stmt);
+                        $row = mysqli_fetch_assoc($result);
+                        $totalunread = $row['total'];
+
+                        ?>
+                        <span class="notification"><?php echo $totalunread ?></span>
+                    </div>
+                    <!-- notification dropdown -->
+                    <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end py-0 notification-dropdown" id="notificationMenu" aria-labelledby="alertsDropdown" data-bs-popper="static">
+                        <div class="dropdown-menu-header d-flex align-items-center justify-content-center g-10">
+                            <img src="../Images/exclamation.png" width="25px" height="25px" style="margin-right:10px">
+                            <span style="font-size:18px;color: #fbf9f9f5"> New Notifications</span>
+                        </div>
+
+                        <div id="notificationList">
+                            <!-- Notifications will be loaded here using AJAX -->
+                        </div>
+
+                        <div class="dropdown-notify-footer" id="clearNotifications">
+                            <a href="#" class="clear-notify">Clear All notifications</a>
+                        </div>
+                    </div>
+
+                </div>
 
 
+
+
+                <?php
+                include('../connection.php');
+                $query = "SELECT * FROM admin WHERE id='1'";
+                $result = mysqli_query($con, $query);
+                while ($row = mysqli_fetch_array($result)) {
+                ?>
+                    <div class="admin">
+                        <a href="admin-profile.php">
+                            <?php if (!empty($row['image']) && file_exists('../Images/' . $row['image'])) {
+                                echo '<img src="../Images/' . $row['image'] . '">';
+                            } else {
+                                echo '<img src="../Images/user-profile.jpg">';
+                            } ?> <div class="bg-wrapper1">
+                                <span></span>
+                            </div>
+                        </a>
+
+                        <div class="header-dropdown">
+                            <!-- Dropdown Container -->
+                            <div class="dropdown">
+                                <!-- Dots Icon (Dropdown Toggle) -->
+                                <a href="#" class="dropdown-toggle no-btn" id="dotsDropdown"
+                                    data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="fas fa-angle-down angleicon"></i>
+                                </a>
+
+                                <!-- Dropdown Menu -->
+                                <ul class="dropdown-menu" aria-labelledby="dotsDropdown">
+                                    <li>
+                                        <a class="dropdown-item" href="Admin-profile.php">
+                                            <i class="far fa-user"></i> Manage Profile
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" href="update-profile.php">
+                                            <i class="fas fa-unlock-alt"></i> Handle Password
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <hr class="dropdown-divider">
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" href="#" onclick="confirmLogout(event)">
+                                            <i class="fas fa-arrow-right-from-bracket"></i> Logout
+                                        </a>
+                                    </li>
+
+
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                <?php } ?>
+
+
+            </div>
         </div>
+
+
     </header>
 
+
+
+    <!-- External jquery, popper File Link for bootstrap 4 -->
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+
+    <!-- Bootstrap 4 (JS) -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="script.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const header = document.getElementById('header-part');
@@ -265,12 +357,11 @@ ob_end_flush();
 
             // Refresh Token Button Script
             refreshButton.addEventListener('click', () => {
-                // Send AJAX request to refresh token
                 $.ajax({
                     type: 'POST',
                     url: 'refresh_token.php',
                     success: function(response) {
-                        console.log("Response from server:", response); // Log the response
+                        console.log("refresh token Response from server:", response);
                         let res = JSON.parse(response);
                         if (res.success) {
                             Swal.fire({
@@ -300,6 +391,7 @@ ob_end_flush();
                 });
             });
         });
+
         //sweet alert for logout
 
         function confirmLogout(event) {
@@ -319,14 +411,87 @@ ob_end_flush();
                 }
             });
         }
+
+        //script to show notification dropdown
+        let notificationIcon = document.getElementById('notificationIcon');
+        let dropdown = document.getElementById('notificationMenu');
+
+        notificationIcon.addEventListener('click', (e) => {
+            e.stopPropagation();
+            let isOpen = dropdown.classList.contains('show');
+
+            document.querySelectorAll('.dropdown-menu.show').forEach(menu => menu.classList.remove('show'));
+
+            if (!isOpen) {
+                dropdown.classList.add('show');
+            } else {
+                dropdown.classList.remove('show');
+            }
+        });
+
+        // Close notification dropdown when clicking anywhere else
+        document.addEventListener('click', () => {
+            dropdown.classList.remove('show');
+        });
+
+        //script to show message dropdown
+        let messageIcon = document.getElementById('messageIcon');
+        let messageDropdown = document.getElementById('MessageMenu');
+        messageIcon.addEventListener('click', (e) => {
+            e.stopPropagation();
+            let messageOpen = messageDropdown.classList.contains('show');
+            document.querySelectorAll('.dropdown-menu.show').forEach(menu => menu.classList.remove('show'));
+            if (!messageOpen) {
+                messageDropdown.classList.add('show');
+            } else {
+                messageDropdown.classList.remove('show');
+            }
+        });
+
+        //show sub navbar in small screens
+        document.getElementById("subNavIcon").addEventListener("click", function() {
+            document.querySelector(".sub-navbar").classList.toggle("show");
+        });
+
+        $(document).ready(function() {
+            function loadNotifications() {
+                $.ajax({
+                    url: 'fetch-notification.php',
+                    type: 'GET',
+                    success: function(data) {
+                        $('#notificationList').html(data);
+                        // Hide "Clear All Notifications" if no notifications exist
+                        if ($("#notificationList").text().includes("No new notifications")) {
+                            $('#clearNotifications').hide();
+                        } else {
+                            $('#clearNotifications').show();
+                        }
+                    }
+                });
+            }
+
+            // Auto-refresh notifications every 10 seconds 1000ms=10s(bcz 1000ms =1s)
+            setInterval(loadNotifications, 10000);
+            loadNotifications();
+
+            // Clear all notifications (Event Delegation Fix)
+            $(document).on('click', '#clearNotifications', function(e) {
+                e.preventDefault();
+                $.ajax({
+                    url: 'clear-notifications.php',
+                    type: 'POST',
+                    success: function(response) {
+                        if (response.trim() === 'success') {
+                            loadNotifications();
+                        } else {
+                            alert("Error clearing notifications.");
+                        }
+                    }
+                });
+            });
+        });
     </script>
 
-    <!-- External JS File Link -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="script.js"></script>
 </body>
 
 </html>
