@@ -3001,7 +3001,7 @@ ul.data-product {
   height: 40px;
   border-radius: 50%;
   border: 1px solid #e3dede;
-    box-shadow: 1px 2px 4px 1px rgba(0, 0, 0, 0.1);
+  box-shadow: 1px 2px 4px 1px rgba(0, 0, 0, 0.1);
 }
 
 .people-list-sidebar img {
@@ -3196,29 +3196,30 @@ ul.data-product {
   height: 0;
 }
 
-@media only screen and (max-width: 767px) {
-  .chat-app .people-list-sidebar {
-    height: 465px;
-    width: 100%;
-    overflow-x: auto;
-    background: #fff;
-    left: -400px;
-    display: none;
-  }
-  .chat-app .people-list-sidebar.open {
-    left: 0;
-  }
-  .chat-app .chat-leftpart {
-    margin: 0;
-  }
-  .chat-app .chat-leftpart .chat-header {
-    border-radius: 0.55rem 0.55rem 0 0;
-  }
-  .chat-app .chat-history {
-    height: 300px;
-    overflow-x: auto;
-  }
+/* google charts design start here */
+
+.chart-parent {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin: 10px 35px;
 }
+.chart-parent .chart-left {
+  width: 50%;
+  background: #fff;
+  padding: 40px 20px 50px 20px;
+  max-width: 700px;
+  height: 450px;
+}
+.chart-parent .chart-right {
+  width: 50%;
+  background: #fff;
+  padding: 20px 10px;
+  max-width: 700px;
+  height: 450px;
+}
+
 /* media queries for smal screen for single product page*/
 @media screen and (max-width: 1100px) {
   .part-left,
@@ -3517,6 +3518,28 @@ ul.data-product {
   }
   #header-part .search-box input {
     width: 50%;
+  }
+
+  .chat-app .people-list-sidebar {
+    height: 465px;
+    width: 100%;
+    overflow-x: auto;
+    background: #fff;
+    left: -400px;
+    display: none;
+  }
+  .chat-app .people-list-sidebar.open {
+    left: 0;
+  }
+  .chat-app .chat-leftpart {
+    margin: 0;
+  }
+  .chat-app .chat-leftpart .chat-header {
+    border-radius: 0.55rem 0.55rem 0 0;
+  }
+  .chat-app .chat-history {
+    height: 300px;
+    overflow-x: auto;
   }
 }
 

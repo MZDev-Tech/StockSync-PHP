@@ -24,6 +24,7 @@ include('Check_token.php');
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
   <link rel="stylesheet" href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css">
   <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
   <script>
     $(document).ready(function() {
@@ -258,6 +259,15 @@ include('Check_token.php');
 
         </div>
 
+        <!-- charts parts start here -->
+        <div class="chart-parent">
+          <div class="chart-left">
+            <?php include('product-chart.php') ?>
+          </div>
+          <div class="chart-right">
+            <?php include('document-chart.php') ?>
+          </div>
+        </div>
         <!------------------Recent Product Design----------------------->
 
         <div class="records">
@@ -392,8 +402,10 @@ include('Check_token.php');
   <script src="../Bootstrap/js/bootstrap.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-
   <script src="script.js"></script>
+
+
+
   <script>
     //traget where we will show the animated value in HTML and finalvalue is value coming from DB
     function animateCount(target, finalValue) {

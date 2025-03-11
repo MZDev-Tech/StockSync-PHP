@@ -152,7 +152,7 @@ ob_end_flush();
 
                         </ul>
                         <div class="dropdown-menu-footer">
-                            <a href="#" class="footer-btn">View All Messages</a>
+                            <a href="chats.php" class="footer-btn">View All Messages</a>
                         </div>
                     </div>
                 </div>
@@ -252,7 +252,6 @@ ob_end_flush();
 
 
     </header>
-
 
 
     <!-- External jquery, popper File Link for bootstrap 4 -->

@@ -14,6 +14,7 @@ include 'file_counts.php';
 
 //get the current file name
 $current_page = basename($_SERVER['PHP_SELF']);
+$is_dashboard_page = ($current_page == 'Dashboard.php' || $current_page == 'chats.php');
 $is_category_page = ($current_page == 'View-category.php' || $current_page == 'AddCategory.php' || $current_page == 'update-category.php');
 $is_product_page = ($current_page == 'View-products.php' || $current_page == 'AddProducts.php' || $current_page == 'update-product.php' || ($current_page == 'single-product.php'));
 $is_Admin_page = ($current_page == 'Admin-Profile.php' || $current_page == 'update-profile.php');
@@ -89,7 +90,7 @@ $is_document_page = ($current_page == 'view-document.php' || $current_page == 'A
             <ul class="side-menu">
                 <li>
                     <a href="Dashboard.php"
-                        class="list-item <?php echo ($current_page == 'Dashboard.php') ? 'active' : '' ?>"><i
+                        class="list-item <?php echo $is_dashboard_page ? 'active' : '' ?>"><i
                             class="fa-brands fa-windows list-icon"></i> Dashboard</a>
                 </li>
 
