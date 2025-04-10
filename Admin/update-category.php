@@ -8,7 +8,7 @@ include('Check_token.php');
 
 
 // code to check if admin has submit data
-if (isset($_POST['submit'])) {
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && (isset($_POST['save_data']))) {
     $id = mysqli_real_escape_string($con, $_POST['id']);
     $name = mysqli_real_escape_string($con, $_POST['name']);
     $detail = mysqli_real_escape_string($con, $_POST['detail']);
@@ -27,137 +27,82 @@ if (isset($_POST['submit'])) {
     $result = mysqli_stmt_execute($stmt);
     if ($result) {
 
-        $_SESSION['message'] = 'Record Updated successfully..';
+        echo json_encode(['status' => 'success', 'message' => 'Record Updated successfully..', 'redirect' => 'View-category.php']);
     } else {
-        $_SESSION['message'] = 'Something went wronh while updating..';
+        echo json_encode(['status' => 'error', 'message' => 'Something went wronh while updating..']);
     }
     mysqli_stmt_close($stmt);
-    header('Location:View-category.php');
     exit();
 }
 
 ?>
 
 
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Update Category</title>
-    <link rel="stylesheet" href="../Bootstrap/css/bootstrap.min.css">
-    <!-- External CSS File Link -->
-    <link rel="stylesheet" href="../CSS/style.css">
-    <!-- Font Icons Link -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
-    <link rel="stylesheet"
-        href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css">
-
-</head>
-
-<body>
-
-
-    <!-----------SideBar Section------------------->
-    <?php include('sidebar.php'); ?>
-
-
-    <!----------------Main Header Section--------------------->
-    <section id="main-page">
-        <?php include('Header.php'); ?>
-
-
-        <!----------------Main Page Design--------------------->
-        <main id="page-content">
-
-
-            <!-- Record Table -->
-            <?php
-
-            include('../connection.php');
-            $id = $_GET['id'];
-            $query = "select * from category where id='$id'";
-            $result = mysqli_query($con, $query);
-            while ($row = mysqli_fetch_array($result)) {
-            ?>
-                <div class="form-parent">
-                    <div class="form-records">
-                        <form method="POST" action="" enctype="multipart/form-data">
-                            <h4 style="text-align:center; margin:10px 0 14px 0">Update Category</h4>
-                            <div class="form-group">
-                                <input type="hidden" name="id" class="form-control" value="<?php echo $row['id']; ?>">
-                            </div>
-
-                            <div class="form-group">
-                                <label style="color:black">Category Name</label>
-                                <input type="text" name="name" placeholder="Enter category" class="form-control" value="<?php echo $row['name']; ?>"
-                                    required>
-                            </div>
-
-
-                            <div class="form-group">
-                                <label style="color:black">Description</label>
-                                <textarea type="text" name="detail" placeholder="Enter details.." class="form-control"
-                                    value="<?php echo $row['detail']; ?>"><?php echo $row['detail']; ?></textarea>
-                            </div>
 
 
 
-                            <div class="form-group">
-                                <?php if (!empty($row['image']) && file_exists($row['image'])) {
-                                    echo '<img src="../Images/' . $row['image'] . '" class="ml-2" style="width:80px;  height:80px; border-radius:5px; border: 3px solid #d5d7da;">';
-                                } else {
-                                    echo '<img src="../Images/productdefault.png " class="ml-2" style="width:80px; height:80px; border-radius:5px; border: 3px solid #d5d7da;">';
-                                } ?>
-                                <input type="hidden" name="img" value="<?php echo $row['image']; ?>" style="text-transform:none;">
-                            </div>
 
 
+<!-- Record Table -->
+<?php
 
-                        <?php } ?>
-                        <div class="form-group">
-                            <b>Upload Image</b><br>
-                            <input type="file" name="image" class="form-control">
-                        </div>
-
-
-                        <div class="form-group">
-                            <button type="submit" name="submit" class="btn btn-info">Update Data
-                            </button>
-                        </div>
-                        </form>
-
-                    </div>
+include('../connection.php');
+$id = $_GET['id'];
+$query = "select * from category where id='$id'";
+$result = mysqli_query($con, $query);
+while ($row = mysqli_fetch_array($result)) {
+?>
+    <div class="form-parent">
+        <div class="form-records">
+            <form method="POST" action="" id="updateForm" enctype="multipart/form-data">
+                <h4 style="text-align:center; margin:10px 0 14px 0">Update Category</h4>
+                <div class="form-group">
+                    <input type="hidden" name="id" class="form-control" value="<?php echo $row['id']; ?>">
                 </div>
 
-        </main>
+                <div class="form-group">
+                    <label style="color:black">Category Name</label>
+                    <input type="text" name="name" placeholder="Enter category" class="form-control" value="<?php echo $row['name']; ?>"
+                        required>
+                </div>
 
-    </section>
-    <script>
-        document.querySelectorAll('input,textarea').forEach(field => {
-            if (field.value.trim() !== '') {
-                field.classList.add('has-value');
-            }
 
-            field.addEventListener('input', () => {
-                if (field.value.trim() !== '') {
-                    field.classList.add('has-value');
-                } else {
-                    field.classList.remove('has-value');
-                }
-            })
-        });
-    </script>
-    <!-- External jquery, popper File Link for bootstrap 4 -->
+                <div class="form-group">
+                    <label style="color:black">Description</label>
+                    <textarea type="text" name="detail" placeholder="Enter details.." class="form-control"
+                        value="<?php echo $row['detail']; ?>"><?php echo $row['detail']; ?></textarea>
+                </div>
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
 
-    <!-- Bootstrap 4 (JS) -->
-    <script src="../Bootstrap/js/bootstrap.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="script.js"></script>
-</body>
 
-</html>
+                <div class="form-group">
+                    <?php if (!empty($row['image']) && file_exists($row['image'])) {
+                        echo '<img src="../Images/' . $row['image'] . '" class="ml-2" style="width:80px;  height:80px; border-radius:5px; border: 3px solid #d5d7da;">';
+                    } else {
+                        echo '<img src="../Images/productdefault.png " class="ml-2" style="width:80px; height:80px; border-radius:5px; border: 3px solid #d5d7da;">';
+                    } ?>
+                    <input type="hidden" name="img" value="<?php echo $row['image']; ?>" style="text-transform:none;">
+                </div>
+
+
+
+            <?php } ?>
+            <div class="form-group">
+                <b>Upload Image</b><br>
+                <input type="file" name="image" class="form-control">
+            </div>
+
+
+            <div class="form-group mt-3">
+                <button type="submit" name="submit" class="btn btn-info">Update Data
+                </button>
+                <button onclick="window.history.back()" class="btn btn-secondary ml-2">Move Back</button>
+
+            </div>
+            </form>
+
+        </div>
+    </div>
+
+
+    

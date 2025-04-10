@@ -93,4 +93,3 @@ $counts = [
     'cancelled' => getCount($cancelledQuery),
     'all' => getCount($allFilesQuery)
 ];
-// echo json_encode($counts);

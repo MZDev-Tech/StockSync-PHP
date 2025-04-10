@@ -125,7 +125,7 @@ include('Check_token.php');
                     <form method="GET" action="view-document.php">
                         <div class="select-box">
                             <label>Show
-                                <select name="select-record" class="select-btn" onchange="this.form.submit()">
+                                <select name="select-record" class="select-btn" id="selectlimit">
                                     <option value="3" <?php echo $limit == 3 ? 'selected' : '' ?>>3</option>
                                     <option value="5" <?php echo $limit == 5 ? 'selected' : '' ?>>5</option>
                                     <option value="10" <?php echo $limit == 10 ? 'selected' : '' ?>>10</option>
@@ -149,20 +149,13 @@ include('Check_token.php');
                                 </tr>
                             </thead>
 
-                            <?php
-                            include('../connection.php');
-                            $page = isset($_GET['page']) ? (int) $_GET['page'] : 1;
-                            $offset = ($page - 1) * $limit;
-                            $CountNumber = 1;
-                            $userId = $_SESSION['id'];
-                            $query = "select * from documents where created_by ='$userId' ORDER BY id LIMIT {$offset},{$limit}";
-                            $stmt = mysqli_prepare($con, $query);
-                            mysqli_stmt_execute($stmt);
-                            $result = mysqli_stmt_get_result($stmt);
-                            if (mysqli_num_rows($result) > 0) {
-                                while ($row = mysqli_fetch_array($result)) {
-                            ?>
-                                    <tbody>
+
+                            <tbody id="documentTable">
+                                <?php
+                                $CountNumber = 1;
+                                if (mysqli_num_rows($result) > 0) {
+                                    while ($row = mysqli_fetch_array($result)) {
+                                ?>
                                         <tr>
                                             <td>#
                                                 <?php echo $CountNumber ?>.
@@ -227,169 +220,158 @@ include('Check_token.php');
 
                                             </td>
                                         </tr>
-                                    </tbody>
 
-                    </div>
 
-                    <!----------------Barcode selection Model For File-------------------->
+                                        <!----------------Barcode selection Model For File-------------------->
 
-                    <div class="container">
-                        <div class="modal fade" id="barcodeModal<?php echo $row['id']; ?>" role="dialog">
-                            <div class="modal-dialog modal-dialog-centered modal-md">
+                                        <div class="container">
+                                            <div class="modal fade" id="barcodeModal<?php echo $row['id']; ?>" role="dialog">
+                                                <div class="modal-dialog modal-dialog-centered modal-md">
 
-                                <!-- Modal content-->
-                                <div class="modal-content barcode-modal">
-                                    <div class="modal-header">
-                                        <h4 class="modal-title" id="barcodeText<?php echo $row['id'] ?>">
-                                            <?php echo $row['barcode'] ?>
-                                        </h4>
-                                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <p>Please click select button if you want to copy the document barcode.
+                                                    <!-- Modal content-->
+                                                    <div class="modal-content barcode-modal">
+                                                        <div class="modal-header">
+                                                            <h4 class="modal-title" id="barcodeText<?php echo $row['id'] ?>">
+                                                                <?php echo $row['barcode'] ?>
+                                                            </h4>
+                                                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <p>Please click select button if you want to copy the document barcode.
 
-                                        </p>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                                        <button type="button" class="btn btn-info"
-                                            onclick="copyBarcode('barcodeText<?php echo $row['id']; ?>')">Select</button>
-                                    </div>
-                                </div>
+                                                            </p>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                                            <button type="button" class="btn btn-info"
+                                                                onclick="copyBarcode('barcodeText<?php echo $row['id']; ?>')">Select</button>
+                                                        </div>
+                                                    </div>
 
-                            </div>
+                                                </div>
 
-                        </div>
-
-                    </div>
-
-                    <!----------------send file Model For document-------------------->
-
-                    <div class="container">
-                        <div class="modal fade" id="sendfileModal<?php echo $row['id']; ?>" role="dialog">
-                            <div class="modal-dialog">
-                                <div class="modal-content sendfile-modal">
-                                    <div class="modal-header">
-                                        <h4 class="modal-title"><i class="fas fa-cog file-icon"></i> Send File</h4>
-                                        <button type="button" data-dismiss="modal" class="close">&times; </button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <form method="" id="sendFileForm<?php echo $row['id'] ?>" enctype="multipart/form-data" action="sendFile.php">
-                                            <div class="form-group">
-                                                <input type="hidden" name="document_id" class="form-control" value="<?php echo $row['id']; ?>">
-                                            </div>
-                                            <div class="form-group">
-                                                <input type="hidden" name="from_user" class="form-control" value="<?php echo $_SESSION['id']; ?>">
                                             </div>
 
-                                            <div class="form-group">
-                                                <label for="actionType">Action: <span>*</span></label>
-                                                <select id="actionType" name="action_type" class="form-control" required>
-                                                    <option value="">...</option>
-                                                    <option value="release">Release</option>
+                                        </div>
 
-                                                </select>
+                                        <!----------------send file Model For document-------------------->
+
+                                        <div class="container">
+                                            <div class="modal fade" id="sendfileModal<?php echo $row['id']; ?>" role="dialog">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content sendfile-modal">
+                                                        <div class="modal-header">
+                                                            <h4 class="modal-title"><i class="fas fa-cog file-icon"></i> Send File</h4>
+                                                            <button type="button" data-dismiss="modal" class="close">&times; </button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <form method="" id="sendFileForm<?php echo $row['id'] ?>" enctype="multipart/form-data" action="sendFile.php">
+                                                                <div class="form-group">
+                                                                    <input type="hidden" name="document_id" class="form-control" value="<?php echo $row['id']; ?>">
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <input type="hidden" name="from_user" class="form-control" value="<?php echo $_SESSION['id']; ?>">
+                                                                </div>
+
+                                                                <div class="form-group">
+                                                                    <label for="actionType">Action: <span>*</span></label>
+                                                                    <select id="actionType" name="action_type" class="form-control" required>
+                                                                        <option value="">...</option>
+                                                                        <option value="release">Release</option>
+
+                                                                    </select>
+                                                                </div>
+
+                                                                <!-- Receiver field, initially hidden -->
+                                                                <div class="form-group" id="receiverField">
+                                                                    <label for="receiver">Receiver: <span>*</span></label>
+                                                                    <select id="receiver" name="to_user" class="form-control" required>
+                                                                        <option value="">...</option>
+                                                                        <?php
+                                                                        $query1 = "SELECT * FROM user WHERE role='user'";
+                                                                        $result1 = mysqli_query($con, $query1);
+                                                                        while ($row1 = mysqli_fetch_assoc($result1)) {
+                                                                            echo "<option value='{$row1['id']}'>{$row1['name']}</option>";
+                                                                        }
+                                                                        ?>
+                                                                    </select>
+                                                                </div>
+
+                                                                <div class="form-group">
+                                                                    <label>File Title: <span>*</span></label>
+                                                                    <input type="text" name="filename" class="form-control" value="<?php echo $row['fileTitle']; ?>" readonly>
+                                                                </div>
+
+
+
+                                                                <div class="form-group">
+                                                                    <label>Remark: <span>*</span></label>
+                                                                    <textarea type="text" name="remark" rows="4" placeholder="Type Message .." class="form-control" required></textarea>
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                                            <button type="button" class="btn btn-info sendFileBtn" data-id="<?php echo $row['id'] ?>">Send</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
-
-                                            <!-- Receiver field, initially hidden -->
-                                            <div class="form-group" id="receiverField">
-                                                <label for="receiver">Receiver: <span>*</span></label>
-                                                <select id="receiver" name="to_user" class="form-control" required>
-                                                    <option value="">...</option>
-                                                    <?php
-                                                    $query1 = "SELECT * FROM user WHERE role='user'";
-                                                    $result1 = mysqli_query($con, $query1);
-                                                    while ($row1 = mysqli_fetch_assoc($result1)) {
-                                                        echo "<option value='{$row1['id']}'>{$row1['name']}</option>";
-                                                    }
-                                                    ?>
-                                                </select>
-                                            </div>
-
-                                            <div class="form-group">
-                                                <label>File Title: <span>*</span></label>
-                                                <input type="text" name="filename" class="form-control" value="<?php echo $row['fileTitle']; ?>" readonly>
-                                            </div>
-
-
-
-                                            <div class="form-group">
-                                                <label>Remark: <span>*</span></label>
-                                                <textarea type="text" name="remark" rows="4" placeholder="Type Message .." class="form-control" required></textarea>
-                                            </div>
-                                        </form>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                                        <button type="button" class="btn btn-info sendFileBtn" data-id="<?php echo $row['id'] ?>">Send</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                                        </div>
 
 
 
 
 
-            <?php $CountNumber++;
+                                <?php $CountNumber++;
+                                    }
+                                } else {
+                                    echo "<tr><td colspan='6' style='text-align:center; color:#130f40;'>No file record available at a moment</td></tr>";
                                 }
-                            } else {
-                                echo "<tr><td colspan='6' style='text-align:center; color:#130f40;'>No file record available at a moment</td></tr>";
-                            }
-            ?>
+                                ?>
+                            </tbody>
 
-            </table>
+                    </div>
+                    </table>
 
 
-            <?php
-            $id = $_SESSION['id'];
-            $query = "select COUNT(*) as total from documents Where created_by = '$id'";
-            $result = mysqli_query($con, $query);
-            $row = mysqli_fetch_assoc($result);
-            $total_records = $row['total'];
-            $total_pages = ceil($total_records / $limit);
-            ?>
-            <div class="pagination-part">
-                <div class="pagination-info">Showing
-                    <?php echo ($offset + 1) ?> to
-                    <?php echo min($offset + $limit, $total_records) ?> of total
-                    <?php echo $total_records ?> entries
-                </div>
+                    <?php
+                    $id = $_SESSION['id'];
+                    $query = "select COUNT(*) as total from documents Where created_by = '$id'";
+                    $result = mysqli_query($con, $query);
+                    $row = mysqli_fetch_assoc($result);
+                    $total_records = $row['total'];
+                    $total_pages = ceil($total_records / $limit);
+                    ?>
+                    <div class="pagination-part">
+                        <div class="pagination-info">Showing
+                            <?php echo ($offset + 1) ?> to
+                            <?php echo min($offset + $limit, $total_records) ?> of total
+                            <?php echo $total_records ?> entries
+                        </div>
 
-                <?php
-                echo '<div class="pagination-btns">';
+                        <div class="pagination-btns">
+                            <!-- Previous Button -->
+                            <a class="paginate_button previous <?php echo ($page > 1) ? '' : 'disabled'; ?>"
+                                href="javascript:void(0)" data-page="<?php echo $page - 1; ?>">
+                                <i class="fas fa-chevron-left"></i>
+                            </a>
 
-                // Previous Button
-                if ($page > 1) {
-                    echo '<a class="paginate_button previous" href="View-document.php?page=' . ($page - 1) . '"><i class="fas fa-chevron-left"></i></a>';
-                } else {
-                    // Disable Previous button if on the first page or only 1 page exists
-                    echo '<a class="paginate_button previous disabled" href="javascript:void(0)"><i class="fas fa-chevron-left"></i></a>';
-                }
+                            <!-- Page Number Buttons -->
+                            <?php for ($i = 1; $i <= $total_pages; $i++) { ?>
+                                <a class="paginate_button <?php echo ($i == $page) ? 'current' : ''; ?>"
+                                    href="javascript:void(0)" data-page="<?php echo $i; ?>">
+                                    <?php echo $i; ?>
+                                </a>
+                            <?php } ?>
 
-                // Page Number Buttons
-                for ($i = 1; $i <= $total_pages; $i++) {
-                    if ($i == $page) {
-                        $active = 'current';
-                    } else {
-                        $active = '';
-                    }
-                    echo '<a class="paginate_button ' . $active . '" href="View-document.php?page=' . $i . '">' . $i . '</a>';
-                }
-
-                // Next Button
-                if ($total_pages > $page) {
-                    echo '<a class="paginate_button next" href="View-document.php?page=' . ($page + 1) . '"><i class="fas fa-chevron-right"></i></a>';
-                } else {
-                    // Disable Next button if on the last page or only 1 page exists
-                    echo '<a class="paginate_button next disabled" href="javascript:void(0)"><i class="fas fa-chevron-right"></i></a>';
-                }
-
-                echo '</div>';
-                ?>
-
-            </div>
+                            <!-- Next Button -->
+                            <a class="paginate_button next <?php echo ($page < $total_pages) ? '' : 'disabled'; ?>"
+                                href="javascript:void(0)" data-page="<?php echo $page + 1; ?>">
+                                <i class="fas fa-chevron-right"></i>
+                            </a>
+                        </div>
+                    </div>
                 </div>
 
             </main>
@@ -519,6 +501,47 @@ include('Check_token.php');
                             }
                         }
                     });
+                });
+            });
+
+            //ajax code to display/fetch record on page
+
+            $(document).ready(function() {
+                function fetchData(page = 1, limit = $('#selectlimit').val()) {
+                    $.ajax({
+                        url: "",
+                        method: "GET",
+                        data: {
+                            "page": page,
+                            "select-record": limit
+                        },
+                        success: function(response) {
+                            // Extract and update the document table
+                            var updatedTable = $(response).find('#documentTable').html();
+                            $('#documentTable').html(updatedTable);
+
+                            // Extract and update pagination part
+                            var updatePagination = $(response).find('.pagination-part').html();
+                            $('.pagination-part').html(updatePagination);
+                        },
+                        error: function(error) {
+                            console.log('AJAX ERROR:', error);
+                        }
+                    });
+                }
+
+                // Fetch new data when selecting a different limit
+                $('#selectlimit').change(function() {
+                    fetchData(1, $(this).val());
+                });
+
+                // Corrected event delegation for pagination buttons
+                $(document).on('click', '.paginate_button', function(e) {
+                    e.preventDefault();
+                    if (!$(this).hasClass('disabled')) {
+                        var page = $(this).attr('data-page');
+                        fetchData(page);
+                    }
                 });
             });
         </script>

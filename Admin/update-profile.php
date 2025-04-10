@@ -9,7 +9,7 @@ include('Check_token.php');
 
 
 // Check if admin has submitted the data
-if (isset($_POST['submit'])) {
+if ($_SERVER['RESUEST_METHOD'] === 'POST' && (isset($_POST['save_data']))) {
 
     $id = mysqli_real_escape_string($con, $_POST['id']);
     $name = mysqli_real_escape_string($con, $_POST['name']);
@@ -49,15 +49,13 @@ if (isset($_POST['submit'])) {
     $result = mysqli_stmt_execute($stmt);
 
     if ($result) {
-        $_SESSION['message'] = 'Record updated successfully.';
+        echo json_encode(['status' => 'success', 'message' => 'Record updated successfully.', 'redirect' => 'Admin-profile.php']);
     } else {
-        $_SESSION['message'] = 'Something went wrong while updating.';
+        echo json_encode(['status' => 'error', 'message' => 'Something went wrong while updating.']);
     }
 
     // Close the statement
     mysqli_stmt_close($stmt);
-
-    header('Location: Admin-profile.php');
     exit();
 }
 ?>
@@ -106,7 +104,7 @@ if (isset($_POST['submit'])) {
             ?>
                 <div class="form-parent">
                     <div class="form-records">
-                        <form method="POST" action="" enctype="multipart/form-data">
+                        <form method="POST" action="" id="updateForm" enctype="multipart/form-data">
                             <h4>Update Admin Profile</h4><br>
                             <div class="form-group">
                                 <input type="hidden" name="id" class="form-control" value="<?php echo $row['id']; ?>">
@@ -195,6 +193,45 @@ if (isset($_POST['submit'])) {
                     filed.classList.remove('has-value');
                 }
             })
+        });
+    </script>
+    <script>
+        $(document).ready(function() {
+            $('#updateForm').on('submit', function(e) {
+                e.preventDefault();
+                let formdata = new FormData(this);
+                formdata.append('save_data', true);
+
+                $.ajax({
+                    url: '',
+                    method: 'POST',
+                    data: formdata,
+                    contentType: false,
+                    processData: false,
+                    dataType: 'json',
+                    success: function(response) {
+                        if (response.status === 'success') {
+                            Swal.fire({
+                                title: 'Success',
+                                text: response.message,
+                                icon: 'success',
+                                showConfirmButton: false,
+                                timer: 2000,
+
+                            }).then(() => {
+                                window.location.href = response.redirect;
+                            });
+                        } else {
+                            Swal.fire('Error', response.message, 'error');
+                        }
+
+                    },
+                    catch (error) {
+                        console.log('Invalid json response while updating profile: ', response);
+                        Swal.fire('Error', 'Invalid Json response', 'error');
+                    }
+                });
+            });
         });
     </script>
 </body>

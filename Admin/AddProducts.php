@@ -9,7 +9,7 @@ include('Check_token.php');
 
 // code to check if admin has submit form
 
-if (isset($_POST['submit'])) {
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_data'])) {
     $category = mysqli_real_escape_string($con, $_POST['category']);
     $brand = mysqli_real_escape_string($con, $_POST['brand']);
     $model = mysqli_real_escape_string($con, $_POST['model']);
@@ -47,8 +47,6 @@ if (isset($_POST['submit'])) {
         $total_age = "not a month";
     }
 
-    // Debugging: Print the calculated total_age
-    echo "Calculated total_age: " . $total_age . "<br>";
 
     $image = $_FILES['image']['name'];
     if ($image) {
@@ -73,15 +71,13 @@ if (isset($_POST['submit'])) {
         $notify_stmt = mysqli_prepare($con, $notify_query);
         mysqli_stmt_bind_param($notify_stmt, 'siss', $image, $product_id, $notify_title, $notify_message);
         mysqli_stmt_execute($notify_stmt);
-
-        $_SESSION['message'] = 'Record added successfully..';
-        header('Location:View-products.php');
-        exit();
+        header('Content-Type: application/json');
+        echo json_encode(['status' => 'success', 'message' => 'New product record added successfully.', 'redirect' => 'View-products.php']);
     } else {
-        $_SESSION['message'] = 'Something went wrong while adding..';
-        header('Location:View-products.php');
-        exit();
+
+        echo json_encode(['status' => 'error', 'message' => 'Something went wrong while adding..']);
     }
+    exit();
 }
 
 ?>
@@ -116,14 +112,11 @@ if (isset($_POST['submit'])) {
         <main id="page-content">
 
             <!-- Record Table -->
-
-
-
             <div class="form-parent">
 
                 <div class="form-records">
                     <div class="container mt-4">
-                        <form method="POST" action="" enctype="multipart/form-data">
+                        <form method="POST" id="insertForm" action="" enctype="multipart/form-data">
                             <h4 class="mb-4 text-center">Add New Product</h4>
 
                             <!-- Information Section -->
@@ -172,108 +165,108 @@ if (isset($_POST['submit'])) {
 
                                     </div>
 
-                                    <di class="col-md-4 mb-3">
+                                    <div class="col-md-4 mb-3">
                                         <label for="delivery_date" class="form-label">Delivery Date</label>
                                         <input type="date" name="delivery_date" class="form-control" required>
 
+                                    </div>
+
+
                                 </div>
 
 
-                            </div>
 
+                                <div class="section">
+                                    <p class="sec-title"><span class="las la-sort"></span> Product Information</p>
+                                    <div class="row">
 
+                                        <div class="col-md-6 mb-3">
+                                            <label for="model" class="form-label">Model</label>
+                                            <input type="text" name="model" class="form-control" placeholder="Enter model"
+                                                required>
 
-                            <div class="section">
-                                <p class="sec-title"><span class="las la-sort"></span> Product Information</p>
-                                <div class="row">
+                                        </div>
 
-                                    <div class="col-md-6 mb-3">
-                                        <label for="model" class="form-label">Model</label>
-                                        <input type="text" name="model" class="form-control" placeholder="Enter model"
-                                            required>
+                                        <div class="col-md-6 mb-3">
+                                            <label for="storage" class="form-label">Storage</label>
+                                            <input type="text" name="storage" class="form-control"
+                                                placeholder="Enter storage" required>
 
-                                    </div>
+                                        </div>
 
-                                    <div class="col-md-6 mb-3">
-                                        <label for="storage" class="form-label">Storage</label>
-                                        <input type="text" name="storage" class="form-control"
-                                            placeholder="Enter storage" required>
+                                        <div class="col-md-6 mb-3">
+                                            <label for="quantity" class="form-label">Quantity</label>
+                                            <input type="text" name="quantity" class="form-control"
+                                                placeholder="Enter quantity" required>
+                                        </div>
 
-                                    </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label for="serialNumber" class="form-label">Serial No.</label>
+                                            <input type="text" name="serialNumber" class="form-control"
+                                                placeholder="Serial number" required>
 
-                                    <div class="col-md-6 mb-3">
-                                        <label for="quantity" class="form-label">Quantity</label>
-                                        <input type="text" name="quantity" class="form-control"
-                                            placeholder="Enter quantity" required>
-                                    </div>
-
-                                    <div class="col-md-6 mb-3">
-                                        <label for="serialNumber" class="form-label">Serial No.</label>
-                                        <input type="text" name="serialNumber" class="form-control"
-                                            placeholder="Serial number" required>
-
-                                    </div>
-                                </div>
-                            </div>
-
-
-                            <div class="section">
-                                <p class="sec-title"><span class="las la-sort"></span> System Status</p>
-                                <div class="row">
-
-
-                                    <div class="col-md-4 mb-3">
-                                        <label for="designation">Designation</label>
-                                        <input type="text" name="designation" class="form-control"
-                                            placeholder="Enter designation" required>
-
-                                    </div>
-
-                                    <div class="col-md-4 mb-3">
-                                        <label for="status">Status</label>
-                                        <input type="text" name="status" class="form-control" placeholder="Enter status"
-                                            required>
-                                    </div>
-
-                                    <div class="col-md-4 mb-3">
-                                        <label for="person_name">Person Name</label>
-                                        <input type="text" name="person_name" class="form-control"
-                                            placeholder="Enter person" required>
+                                        </div>
                                     </div>
                                 </div>
 
 
                                 <div class="section">
-                                    <p class="sec-title"><span class="las la-sort"></span> File Upload Section</p>
+                                    <p class="sec-title"><span class="las la-sort"></span> System Status</p>
                                     <div class="row">
 
-                                        <div class="col-md-12 mb-3">
-                                            <label for="description">Description</label>
-                                            <textarea name="description" class="form-control" placeholder="Type here.."
-                                                required></textarea>
+
+                                        <div class="col-md-4 mb-3">
+                                            <label for="designation">Designation</label>
+                                            <input type="text" name="designation" class="form-control"
+                                                placeholder="Enter designation" required>
 
                                         </div>
 
-                                        <div class="form-group col-md-12 mb-3">
-                                            <label class="form-label">Upload Image</label>
-                                            <input type="file" name="image" class="form-control" required>
+                                        <div class="col-md-4 mb-3">
+                                            <label for="status">Status</label>
+                                            <input type="text" name="status" class="form-control" placeholder="Enter status"
+                                                required>
                                         </div>
 
-                                        <br>
+                                        <div class="col-md-4 mb-3">
+                                            <label for="person_name">Person Name</label>
+                                            <input type="text" name="person_name" class="form-control"
+                                                placeholder="Enter person" required>
+                                        </div>
+                                    </div>
 
-                                        <div class="form-group col-md-12 mb-3 mt-2">
-                                            <button type="submit" name="submit" class="btn btn-info">Add
-                                                Product</button>
+
+                                    <div class="section">
+                                        <p class="sec-title"><span class="las la-sort"></span> File Upload Section</p>
+                                        <div class="row">
+
+                                            <div class="col-md-12 mb-3">
+                                                <label for="description">Description</label>
+                                                <textarea name="description" class="form-control" placeholder="Type here.."
+                                                    required></textarea>
+
+                                            </div>
+
+                                            <div class="form-group col-md-12 mb-3">
+                                                <label class="form-label">Upload Image</label>
+                                                <input type="file" name="image" class="form-control" required>
+                                            </div>
+
+                                            <br>
+
+                                            <div class="form-group col-md-12 mb-3 mt-2">
+                                                <button type="submit" name="submit" class="btn btn-info">Add
+                                                    Product</button>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
 
 
 
 
 
-                            <!-- Full Width Inputs -->
+                                <!-- Full Width Inputs -->
 
 
 
@@ -297,6 +290,48 @@ if (isset($_POST['submit'])) {
     <script src="../Bootstrap/js/bootstrap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="script.js"></script>
+    <!-- Ajax to add data -->
+    <script>
+        $(document).ready(function() {
+            $('#insertForm').on('submit', function(e) {
+                e.preventDefault();
+                var formData = new FormData(this);
+                formData.append("save_data", true); //adds an extra field(save_data)to formData. PHP will check for this field to determine if data was submitted via AJAX.
+
+
+                $.ajax({
+                    url: '',
+                    method: 'POST',
+                    data: formData,
+                    contentType: false, // Required when sending FormData (prevents jQuery from setting a content type)
+                    processData: false, // Ensures data is sent as FormData, not URL-encoded
+                    dataType: "json",
+
+
+                    success: function(respond) {
+                        if (respond.status === 'success') {
+                            swal.fire({
+                                title: 'Success',
+                                text: respond.message,
+                                icon: 'success',
+                                timer: 2000,
+                                showConfirmButton: false,
+                            }).then(() => {
+                                window.location.href = respond.redirect; // Redirect to the specified page
+                            });
+
+                        } else {
+                            swal.fire('Error', respond.message, 'error');
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('AJAX Error:', xhr.responseText);
+                        Swal.fire('Error', 'Something went wrong during the request.', 'error');
+                    }
+                });
+            });
+        });
+    </script>
 </body>
 
 </html>

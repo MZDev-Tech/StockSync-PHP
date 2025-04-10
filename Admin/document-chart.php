@@ -1,11 +1,24 @@
 <?php
-if()
+
 include('../connection.php');
 // Prepare SQL statement
-$sql = "SELECT status, COUNT(*) as total FROM document_tracking GROUP BY status";
+$id = $_SESSION['id'];
+
+$sql = "SELECT dt.status, COUNT(*) as total 
+        FROM document_tracking dt
+        JOIN (
+            SELECT document_id, MAX(date) AS latest_date
+            FROM document_tracking
+            GROUP BY document_id
+        ) latest ON dt.document_id = latest.document_id AND dt.date= latest.latest_date
+        WHERE dt.from_user = ? OR dt.to_user = ?
+        GROUP BY dt.status";
+
 $stmt = mysqli_prepare($con, $sql);
+mysqli_stmt_bind_param($stmt, "ii", $id, $id);
 mysqli_stmt_execute($stmt);
 $result = mysqli_stmt_get_result($stmt);
+
 
 $data = [];
 while ($row = mysqli_fetch_assoc($result)) {
@@ -27,7 +40,7 @@ echo "<script>var chartData = " . json_encode($data) . ";</script>";
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>chart</title>
 </head>
-<canvas id="statusChart" style="width:100%;"></canvas>
+<canvas id="statusChart"></canvas>
 
 <body>
     <script>

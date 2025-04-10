@@ -7,7 +7,7 @@ include('Check_token.php');
 
 
 // Code to check if admin has submitted data
-if (isset($_POST['submit'])) {
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && (isset($_POST['save_data']))) {
     $id = mysqli_real_escape_string($con, $_POST['id']);
     $category = mysqli_real_escape_string($con, $_POST['category']);
     $brand = mysqli_real_escape_string($con, $_POST['brand']);
@@ -59,14 +59,12 @@ if (isset($_POST['submit'])) {
     $result = mysqli_query($con, $query);
 
     if ($result) {
-        $_SESSION['message'] = 'Record Updated successfully..';
-        header('Location: View-products.php');
-        exit();
+
+        echo json_encode(['status' => 'success', 'message' => 'Product record updated successfully', 'redirect' => 'View-products.php']);
     } else {
-        $_SESSION['message'] = 'Something went wrong while updating..';
-        header('Location: View-products.php');
-        exit();
+        echo json_encode(['status' => 'error', 'message' => 'Something went wrong while updating..']);
     }
+    exit();
 }
 ?>
 
@@ -122,7 +120,7 @@ if (isset($_POST['submit'])) {
 
                     <div class="form-records">
                         <div class="container mt-4">
-                            <form method="POST" action="" enctype="multipart/form-data">
+                            <form method="POST" action="" id="updateForm" enctype="multipart/form-data">
                                 <h4 class="mb-4 text-center">Update Product Data</h4>
                                 <div class="form-group">
                                     <input type="hidden" name="id" class="form-control" value="<?php echo $row['id']; ?>">
@@ -348,6 +346,45 @@ if (isset($_POST['submit'])) {
     <script src="../Bootstrap/js/bootstrap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="script.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#updateForm').on('submit', function(e) {
+                e.preventDefault();
+                let formdata = new FormData(this);
+                formdata.append('save_data', true);
+                
+                $.ajax({
+                    url: '',
+                    method: 'POST',
+                    data: formdata,
+                    contentType: false,
+                    processData: false,
+                    dataType: 'json',
+                    success: function(response) {
+                        if (response.status === 'success') {
+                            Swal.fire({
+                                title: 'Success',
+                                text: response.message,
+                                icon: 'success',
+                                showConfirmButton: false,
+                                timer: 2000,
+
+                            }).then(() => {
+                                window.location.href = response.redirect;
+                            });
+                        } else {
+                            Swal.fire('Error', response.message, 'error');
+                        }
+
+                    },
+                    catch (error) {
+                        console.log('Invalid json response while updating product: ', response);
+                        Swal.fire('Error', 'Invalid Json response', 'error');
+                    }
+                });
+            });
+        });
+    </script>
 </body>
 
 </html>

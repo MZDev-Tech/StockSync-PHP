@@ -8,7 +8,7 @@ include('Check_token.php');
 
 
 // code to check if admin has submit data
-if (isset($_POST['submit'])) {
+if (isset($_POST['save_data'])) {
     $id = mysqli_real_escape_string($con, $_POST['id']);
     $filename = mysqli_real_escape_string($con, $_POST['filename']);
     $fileTitle = mysqli_real_escape_string($con, $_POST['fileTitle']);
@@ -25,12 +25,11 @@ if (isset($_POST['submit'])) {
     $result = mysqli_stmt_execute($stmt);
     if ($result) {
 
-        $_SESSION['message'] = 'Record Updated successfully..';
+        echo json_encode(['status' => 'success', 'message' => 'Record Updated successfully..', 'redirect' => 'view-document.php']);
     } else {
-        $_SESSION['message'] = 'Something went wronh while updating..';
+        echo json_encode(['status' => 'error', 'message' => 'Something went wronh while updating..']);
     }
     mysqli_stmt_close($stmt);
-    header('Location:view-document.php');
     exit();
 }
 
@@ -85,7 +84,7 @@ if (isset($_POST['submit'])) {
             ?>
                 <div class="form-parent">
                     <div class="form-records">
-                        <form method="POST" action="" enctype="multipart/form-data">
+                        <form method="POST" id="updateForm" action="" enctype="multipart/form-data">
                             <h4 style="text-align:center; margin:10px 0 14px 0">Update Document</h4>
                             <div class="form-group">
                                 <input type="hidden" name="id" class="form-control" value="<?php echo $row['id']; ?>">
@@ -188,6 +187,44 @@ if (isset($_POST['submit'])) {
                     field.classList.remove('has-value');
                 }
             })
+        });
+    </script>
+    <script>
+        $(document).ready(function() {
+            $('#updateForm').on('submit', function(e) {
+                e.preventDefault();
+                let formdata = new FormData(this);
+                formdata.append('save_data', true);
+                $.ajax({
+                    url: '',
+                    method: 'POST',
+                    data: formdata,
+                    contentType: false,
+                    processData: false,
+                    dataType: 'json',
+                    success: function(response) {
+                        if (response.status === 'success') {
+                            Swal.fire({
+                                title: 'Success',
+                                text: response.message,
+                                icon: 'success',
+                                showConfirmButton: false,
+                                timer: 2000,
+
+                            }).then(() => {
+                                window.location.href = response.redirect;
+                            });
+                        } else {
+                            Swal.fire('Error', response.message, 'error');
+                        }
+
+                    },
+                    catch (error) {
+                        console.log('Invalid json response while updating document: ', response);
+                        Swal.fire('Error', 'Invalid Json response', 'error');
+                    }
+                });
+            });
         });
     </script>
 

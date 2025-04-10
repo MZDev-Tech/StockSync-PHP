@@ -170,7 +170,7 @@ include('Check_token.php');
 
           <div class="select-box">
             <label>Show
-              <select name="select-record" class="select-btn" onchange="this.form.submit()">
+              <select name="select-record" class="select-btn" id="selectlimit">
                 <option value="3" <?php echo $limit == 3 ? 'selected' : '' ?>>3</option>
                 <option value="5" <?php echo $limit == 5 ? 'selected' : '' ?>>5</option>
                 <option value="10" <?php echo $limit == 10 ? 'selected' : '' ?>>10</option>
@@ -193,19 +193,13 @@ include('Check_token.php');
                 <th><span class="las la-sort"></span>Action</th>
             </thead>
 
-            <?php
-            include('../connection.php');
-            $Sr = 1;
-            $page = isset($_GET['page']) ? (int) $_GET['page'] : 1;
-            $offset = ($page - 1) * $limit;
-            $query = "select * from laptops ORDER BY id LIMIT {$offset},{$limit}";
-            $stmt = mysqli_prepare($con, $query);
-            mysqli_stmt_execute($stmt);
-            $result = mysqli_stmt_get_result($stmt);
-            if (mysqli_num_rows($result) > 0) {
-              while ($row = mysqli_fetch_array($result)) {
-            ?>
-                <tbody>
+
+            <tbody id="productData">
+              <?php
+              $Sr = 1;
+              if (mysqli_num_rows($result) > 0) {
+                while ($row = mysqli_fetch_array($result)) {
+              ?>
                   <tr>
                     <td>#
                       <?php echo $Sr ?>
@@ -241,66 +235,58 @@ include('Check_token.php');
                     </td>
                   </tr>
 
-                </tbody>
 
 
 
+
+
+
+              <?php $Sr++;
+                }
+              } else {
+                echo "<tr><td colspan='6' style='text-align:center; color:#130f40;'>No Product record available at a moment</td></tr>";
+              }
+              ?>
+            </tbody>
 
         </div>
+        </table>
+        <?php
+        $query = "select COUNT(*) as total from laptops";
+        $result = mysqli_query($con, $query);
+        $row = mysqli_fetch_assoc($result);
+        $total_records = $row['total'];
+        $total_pages = ceil($total_records / $limit);
+        ?>
+        <div class="pagination-part">
+          <div class="pagination-info">Showing
+            <?php echo ($offset + 1) ?> to
+            <?php echo min($offset + $limit, $total_records) ?> of total
+            <?php echo $total_records ?> entries
+          </div>
 
-    <?php $Sr++;
-              }
-            } else {
-              echo "<tr><td colspan='6' style='text-align:center; color:#130f40;'>No Product record available at a moment</td></tr>";
-            }
-    ?>
-    </table>
-    <?php
-    $query = "select COUNT(*) as total from laptops";
-    $result = mysqli_query($con, $query);
-    $row = mysqli_fetch_assoc($result);
-    $total_records = $row['total'];
-    $total_pages = ceil($total_records / $limit);
-    ?>
-    <div class="pagination-part">
-      <div class="pagination-info">Showing
-        <?php echo ($offset + 1) ?> to
-        <?php echo min($offset + $limit, $total_records) ?> of
-        <?php echo $total_records ?> entries
-      </div>
-      <?php
-      echo '<div class="pagination-btns">';
+          <div class="pagination-btns">
+            <!-- Previous Button -->
+            <a class="paginate_button previous <?php echo ($page > 1) ? '' : 'disabled'; ?>"
+              href="javascript:void(0)" data-page="<?php echo $page - 1; ?>">
+              <i class="fas fa-chevron-left"></i>
+            </a>
 
-      // Previous Button
-      if ($page > 1) {
-        echo '<a class="paginate_button previous" href="View-products.php?page=' . ($page - 1) . '"><i class="fas fa-chevron-left"></i></a>';
-      } else {
-        // Disable Previous button if on the first page or only 1 page exists
-        echo '<a class="paginate_button previous disabled" href="javascript:void(0)"><i class="fas fa-chevron-left"></i></a>';
-      }
+            <!-- Page Number Buttons -->
+            <?php for ($i = 1; $i <= $total_pages; $i++) { ?>
+              <a class="paginate_button <?php echo ($i == $page) ? 'current' : ''; ?>"
+                href="javascript:void(0)" data-page="<?php echo $i; ?>">
+                <?php echo $i; ?>
+              </a>
+            <?php } ?>
 
-      // Page Number Buttons
-      for ($i = 1; $i <= $total_pages; $i++) {
-        if ($i == $page) {
-          $active = 'current';
-        } else {
-          $active = '';
-        }
-        echo '<a class="paginate_button ' . $active . '" href="View-products.php?page=' . $i . '">' . $i . '</a>';
-      }
-
-      // Next Button
-      if ($total_pages > $page) {
-        echo '<a class="paginate_button next" href="View-products.php?page=' . ($page + 1) . '"><i class="fas fa-chevron-right"></i></a>';
-      } else {
-        // Disable Next button if on the last page or only 1 page exists
-        echo '<a class="paginate_button next disabled" href="javascript:void(0)"><i class="fas fa-chevron-right"></i></a>';
-      }
-
-      echo '</div>';
-      ?>
-
-    </div>
+            <!-- Next Button -->
+            <a class="paginate_button next <?php echo ($page < $total_pages) ? '' : 'disabled'; ?>"
+              href="javascript:void(0)" data-page="<?php echo $page + 1; ?>">
+              <i class="fas fa-chevron-right"></i>
+            </a>
+          </div>
+        </div>
       </div>
 
 
@@ -357,6 +343,47 @@ include('Check_token.php');
   <script src="../Bootstrap/js/bootstrap.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script src="script.js"></script>
+  <script>
+    //ajax code tpo fetch product data on dashboard
+    $(document).ready(function() {
+      function fetchData(page = 1, limit = $('#selectlimit').val()) {
+        $.ajax({
+          url: '',
+          method: 'GET',
+          data: {
+            'page': page,
+            'select-record': limit
+          },
+          success: function(response) {
+            var updatedData = $(response).find('#productData').html();
+            $('#productData').html(updatedData);
+
+            var updatedPagination = $(response).find('.pagination-part').html();
+            $('.pagination-part').html(updatedPagination);
+
+          },
+          error: function(error) {
+            console.log('AJAX ERROR', error);
+
+          }
+
+        });
+      }
+
+      $('#selectlimit').change(function() {
+        var limit = $(this).val();
+        fetchData(1, limit);
+      });
+      $(document).on('click', '.paginate_button', function(e) {
+        e.preventDefault();
+        if (!$(this).hasClass("disabled")) {
+          var page = $(this).attr("data-page");
+          fetchData(page);
+        }
+      })
+
+    });
+  </script>
 </body>
 
 </html>

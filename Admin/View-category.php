@@ -58,21 +58,11 @@ include('Check_token.php');
                 <h2>Categories</h2>
                 <h5>Home / category</h5>
             </div>
-            <!-----------alert message------------->
-            <?php if (isset($_SESSION['message'])) { ?>
-                <div class="alert alert-warning data-dismissible fade show" id="alertMessage" style="margin:10px 25px">
-                    <strong>Category! </strong>
-                    <?php echo $_SESSION['message'] ?>
-                    <button type="button" data-dismiss="alert" class="close" aria-label="close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-            <?php unset($_SESSION['message']);
-            } ?>
+
 
             <!---------------Admin Record Table ------------------------->
 
-            <div class="row" style="margin:10px 25px">
+            <div class="row row-style">
                 <div class="col-12 bg-white">
                     <div class="d-flex justify-content-between align-items-center py-3 top-recordParent">
                         <div class="d-flex align-items-center top-recordPart">
@@ -85,6 +75,7 @@ include('Check_token.php');
 
                     </div>
                 </div>
+
             </div>
 
             <div class="records">
@@ -93,34 +84,50 @@ include('Check_token.php');
                         <h4>Category Details</h4>
                     </div>
 
-                    <a href="AddCategory.php" class="add-topbtn"> + Add Category</a>
-                </div>
+                    <div class="d-flex align-items-center justify-content-center ">
 
+                        <form method="POST" action="" style="margin-right:10px">
+                            <div class="input-group search-box1">
+
+                                <input type="text" id="searchTable" style="text-decoration:none;" class="form-control" placeholder="Search...">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fa fa-search"></i></span>
+                                </div>
+                            </div>
+                        </form>
+                        <a href="AddCategory.php" class="add-topbtn insert-link"> +Add <span class="table-name">Category</span></a>
+                    </div>
+                </div>
                 <?php
-                //query to fetch data with the select box
+                // Fetch limit and page number
                 $limit = isset($_GET['select-record']) ? (int) $_GET['select-record'] : 3;
                 $page = isset($_GET['page']) ? (int) $_GET['page'] : 1;
                 $offset = ($page - 1) * $limit;
 
-                $query = "select * from category ORDER BY id LIMIT {$offset}, {$limit}";
+                // Get the search query if provided
+                $searchQuery = isset($_GET['search']) ? $_GET['search'] : '';
+                $searchQueryData = mysqli_real_escape_string($con, $searchQuery);
+                // Modify the query to include the search functionality
+                $query = "SELECT * FROM category WHERE name LIKE '%$searchQueryData%' OR detail LIKE '%$searchQueryData%' ORDER BY id LIMIT {$offset}, {$limit}";
                 $result = mysqli_query($con, $query);
-
                 ?>
+
+
                 <form method="GET" action="View-category.php">
                     <div class="select-box">
                         <label>Show
-                            <select name="select-record" class="select-btn" onchange="this.form.submit()">
+                            <select name="select-record" id="selectlimit" class="select-btn">
                                 <option value="3" <?php echo $limit == 3 ? 'selected' : '' ?>>3</option>
                                 <option value="5" <?php echo $limit == 5 ? 'selected' : '' ?>>5</option>
                                 <option value="10" <?php echo $limit == 10 ? 'selected' : '' ?>>10</option>
                                 <option value="15" <?php echo $limit == 15 ? 'selected' : '' ?>>15</option>
                                 <option value="20" <?php echo $limit == 20 ? 'selected' : '' ?>>20</option>
                                 <option value="30" <?php echo $limit == 30 ? 'selected' : '' ?>>30</option>
-
-
-                            </select> entries</label>
+                            </select> entries
+                        </label>
                     </div>
                 </form>
+
                 <div class="table-section">
                     <table width="100%">
                         <thead>
@@ -129,119 +136,91 @@ include('Check_token.php');
                                 <th><span class="las la-sort"></span>Name</th>
                                 <th><span class="las la-sort"></span>Image</th>
                                 <th style="width:340px"><span class="las la-sort"></span>Detail</th>
-
                                 <th><span class="las la-sort"></span>Action</th>
+                            </tr>
                         </thead>
-
-                        <?php
-                        include('../connection.php');
-                        $page = isset($_GET['page']) ? (int) $_GET['page'] : 1;
-                        $offset = ($page - 1) * $limit;
-                        $CountNumber = 1;
-                        $query = "select * from category ORDER BY id LIMIT {$offset},{$limit}";
-                        $stmt = mysqli_prepare($con, $query);
-                        mysqli_stmt_execute($stmt);
-                        $result = mysqli_stmt_get_result($stmt);
-                        if (mysqli_num_rows($result) > 0) {
-                            while ($row = mysqli_fetch_array($result)) {
-                        ?>
-                                <tbody>
+                        <tbody id="categoryTable"> <!-- Moved tbody here -->
+                            <?php
+                            $CountNumber = 1;
+                            if (mysqli_num_rows($result) > 0) {
+                                while ($row = mysqli_fetch_array($result)) {
+                            ?>
                                     <tr>
-                                        <td>#
-                                            <?php echo $CountNumber ?>.
-                                        </td>
-                                        <td>
-                                            <?php echo $row['name']; ?>
-                                        </td>
+                                        <td>#<?php echo $CountNumber; ?>.</td>
+                                        <td><?php echo $row['name']; ?></td>
                                         <td class="single-img">
                                             <?php if (!empty($row['image']) && file_exists($row['image'])) {
                                                 echo '<img src="../Images/' . $row['image'] . ' ">';
                                             } else {
                                                 echo '<img src="../Images/productdefault.png ">';
                                             } ?>
-
                                         </td>
-
-                                        <td class="des">
-                                            <?php echo $row['detail']; ?>
-                                        </td>
-
-
+                                        <td class="des"><?php echo $row['detail']; ?></td>
                                         <td class="action">
-
-                                            <a href="update-category.php?id=<?php echo $row['id']; ?>"><i
-                                                    class="fa-solid fa-pen-to-square"></i></a>
-                                            <a href="javascript:void(0);" onclick="confirmDelete(<?php echo $row['id']; ?>)"><i
-                                                    class="fa-solid fa-trash"></i></a>
-
-
+                                            <a href="update-category.php?id=<?php echo $row['id']; ?>" class="update-link" data-id="<?php echo $row['id']; ?>">
+                                                <i class="fa-solid fa-pen-to-square"></i>
+                                            </a>
+                                            <a href="javascript:void(0);" onclick="confirmDelete(<?php echo $row['id']; ?>)"><i class="fa-solid fa-trash"></i></a>
                                         </td>
                                     </tr>
+                            <?php
+                                    $CountNumber++;
+                                }
+                            } else {
+                                echo "<tr><td colspan='5' style='text-align:center; color:#130f40;'>No category record available at the moment</td></tr>";
+                            }
+                            ?>
+                        </tbody>
+                    </table>
 
-                                </tbody>
+
+                    <?php
+                    // Fetch search term if it's present
+                    $search = isset($_GET['search']) ? $_GET['search'] : '';
+
+                    $query = "SELECT * FROM category WHERE name LIKE '%$search%' OR detail LIKE '%$search%' ORDER BY id LIMIT {$offset}, {$limit}";
+                    $result = mysqli_query($con, $query);
+
+                    // Fetch the total number of records based on search query
+                    $total_query = "SELECT COUNT(*) as total FROM category WHERE name LIKE '%$search%' OR detail LIKE '%$search%'";
+                    $result_count = mysqli_query($con, $total_query);
+                    $row_count = mysqli_fetch_assoc($result_count);
+                    $total_records = $row_count['total'];
+
+                    $total_pages = ceil($total_records / $limit);
+                    ?>
+                    <div class="pagination-part">
+                        <div class="pagination-info">Showing
+                            <?php echo ($offset + 1) ?> to
+                            <?php echo min($offset + $limit, $total_records) ?> of total
+                            <?php echo $total_records ?> entries
+                        </div>
+
+                        <div class="pagination-btns">
+                            <!-- Previous Button -->
+                            <a class="paginate_button previous <?php echo ($page > 1) ? '' : 'disabled'; ?>"
+                                href="javascript:void(0)" data-page="<?php echo $page - 1; ?>">
+                                <i class="fas fa-chevron-left"></i>
+                            </a>
+
+                            <!-- Page Number Buttons -->
+                            <?php for ($i = 1; $i <= $total_pages; $i++) { ?>
+                                <a class="paginate_button <?php echo ($i == $page) ? 'current' : ''; ?>"
+                                    href="javascript:void(0)" data-page="<?php echo $i; ?>">
+                                    <?php echo $i; ?>
+                                </a>
+                            <?php } ?>
+
+                            <!-- Next Button -->
+                            <a class="paginate_button next <?php echo ($page < $total_pages) ? '' : 'disabled'; ?>"
+                                href="javascript:void(0)" data-page="<?php echo $page + 1; ?>">
+                                <i class="fas fa-chevron-right"></i>
+                            </a>
+                        </div>
+
+                    </div>
 
                 </div>
-
-        <?php $CountNumber++;
-                            }
-                            // Close the statement
-                            mysqli_stmt_close($stmt);
-                        } else {
-                            echo "<tr><td colspan='6' style='text-align:center; color:#130f40;'>No category record available at a moment</td></tr>";
-                        }
-        ?>
-        </table>
-
-        <?php
-        $query = "select COUNT(*) as total from category";
-        $result = mysqli_query($con, $query);
-        $row = mysqli_fetch_assoc($result);
-        $total_records = $row['total'];
-        $total_pages = ceil($total_records / $limit);
-        ?>
-        <div class="pagination-part">
-            <div class="pagination-info">Showing
-                <?php echo ($offset + 1) ?> to
-                <?php echo min($offset + $limit, $total_records) ?> of total
-                <?php echo $total_records ?> entries
-            </div>
-
-            <?php
-            echo '<div class="pagination-btns">';
-
-            // Previous Button
-            if ($page > 1) {
-                echo '<a class="paginate_button previous" href="View-category.php?page=' . ($page - 1) . '"><i class="fas fa-chevron-left"></i></a>';
-            } else {
-                // Disable Previous button if on the first page or only 1 page exists
-                echo '<a class="paginate_button previous disabled" href="javascript:void(0)"><i class="fas fa-chevron-left"></i></a>';
-            }
-
-            // Page Number Buttons
-            for ($i = 1; $i <= $total_pages; $i++) {
-                if ($i == $page) {
-                    $active = 'current';
-                } else {
-                    $active = '';
-                }
-                echo '<a class="paginate_button ' . $active . '" href="View-category.php?page=' . $i . '">' . $i . '</a>';
-            }
-
-            // Next Button
-            if ($total_pages > $page) {
-                echo '<a class="paginate_button next" href="View-category.php?page=' . ($page + 1) . '"><i class="fas fa-chevron-right"></i></a>';
-            } else {
-                // Disable Next button if on the last page or only 1 page exists
-                echo '<a class="paginate_button next disabled" href="javascript:void(0)"><i class="fas fa-chevron-right"></i></a>';
-            }
-
-            echo '</div>';
-            ?>
-
-
-
-        </div>
-            </div>
 
         </main>
 
@@ -270,6 +249,7 @@ include('Check_token.php');
                                 setTimeout(() => {
                                     location.reload();
                                 }, 2000);
+
                             } else {
                                 Swal.fire("Error!", "Failed to delete the product.", "error");
                             }
@@ -291,6 +271,128 @@ include('Check_token.php');
     <script src="../Bootstrap/js/bootstrap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="script.js"></script>
+    <script src="category-ajax.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            function fetchCategories(page = 1, limit = $("#selectlimit").val(), searchQuery = $("#searchTable").val()) {
+                $.ajax({
+                    url: "View-category.php", // Ensure you use the correct URL (your PHP script that serves the content)
+                    type: "GET",
+                    data: {
+                        "page": page,
+                        "select-record": limit,
+                        "search": searchQuery // Pass the search query here
+                    },
+                    success: function(response) {
+                        var updatedTable = $(response).find("#categoryTable").html();
+                        $("#categoryTable").html(updatedTable);
+
+                        var updatedPagination = $(response).find(".pagination-part").html();
+                        $(".pagination-part").html(updatedPagination);
+
+                        // Update the URL without reloading the page
+                        var newUrl = "View-category.php?page=" + page + "&select-record=" + limit + "&search=" + searchQuery;
+                        window.history.pushState({
+                            path: newUrl
+                        }, '', newUrl);
+                    },
+                    error: function(error) {
+                        console.error("AJAX Error:", error);
+                    }
+                });
+            }
+
+            // Fetch new data when selecting a different limit
+            $("#selectlimit").change(function() {
+                var limit = $(this).val(); // The selected limit
+                var searchQuery = $("#searchTable").val(); // The current search term
+                fetchCategories(1, limit, searchQuery); // Always start from page 1 when the limit is changed
+            });
+
+            // Event delegation for pagination links
+            $(document).on("click", ".paginate_button", function(e) {
+                e.preventDefault();
+                if (!$(this).hasClass("disabled")) {
+                    var page = $(this).attr("data-page");
+                    var limit = $("#selectlimit").val();
+                    var searchQuery = $("#searchTable").val(); // Get the current search term
+                    fetchCategories(page, limit, searchQuery);
+                }
+            });
+
+            // Trigger search on keyup event (when the user types something)
+            $("#searchTable").keyup(function() {
+                var searchQuery = $(this).val();
+                fetchCategories(1, $("#selectlimit").val(), searchQuery); // Always start from page 1 on search
+            });
+        });
+
+        //access update page through ajax code
+        document.addEventListener('DOMContentLoaded', function() {
+            const updatePage = document.querySelectorAll('.update-link');
+
+            updatePage.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+
+                    // Get the ID of the category
+                    const id = this.getAttribute('data-id');
+
+                    $.ajax({
+                        url: "update-category.php",
+                        method: "GET",
+                        data: {
+                            id: id
+                        },
+                        dataType: "html",
+                        success: function(response) {
+                            // Place the fetched content into the page content div
+                            $('#page-content').html(response);
+
+                            // function in js file to style update form fields if then have value
+                            setTimeout(() => {
+                                applyHasValueClass();
+                            }, 100);
+                            //function in category-ajax file to update data
+                            bindUpdateForm();
+                        },
+                        error: function(error) {
+                            console.error('Error fetching content:', error);
+                        }
+                    });
+                });
+            });
+        });
+
+        //ajax code to get add form 
+        document.addEventListener('DOMContentLoaded', function() {
+            const addCategoryLinks = document.querySelectorAll('.insert-link');
+
+            addCategoryLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+
+                    // Perform AJAX request to load the Add Category page content
+                    $.ajax({
+                        url: 'AddCategory.php',
+                        method: 'GET',
+                        dataType: 'html',
+                        success: function(response) {
+                            // Replace the page content with the response from AddCategory.php
+                            $('#page-content').html(response);
+
+                            // Call the function to bind the insert form (after the content is loaded)
+                            bindInsertForm();
+                        },
+                        error: function(error) {
+                            console.log('Error fetching form data', error);
+                        }
+                    });
+                });
+            });
+        });
+    </script>
 </body>
 
 </html>

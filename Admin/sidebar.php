@@ -90,57 +90,57 @@ $is_document_page = ($current_page == 'view-document.php' || $current_page == 'A
             <ul class="side-menu">
                 <li>
                     <a href="Dashboard.php"
-                        class="list-item <?php echo $is_dashboard_page ? 'active' : '' ?>"><i
+                        class="ajax-link list-item <?php echo $is_dashboard_page ? 'active' : '' ?>"><i
                             class="fa-brands fa-windows list-icon"></i> Dashboard</a>
                 </li>
 
 
                 <li>
-                    <a href="View-category.php" class="list-item <?php echo $is_category_page ? 'active' : '' ?>"> <i
+                    <a href="View-category.php" class="ajax-link list-item <?php echo $is_category_page ? 'active' : '' ?>"> <i
                             class="far fa-plus list-icon"></i>Categories</a>
                 </li>
 
                 <li>
 
-                    <a href="View-products.php" class="list-item <?php echo $is_product_page ? 'active' : '' ?>"><i
+                    <a href="View-products.php" class="ajax-link list-item <?php echo $is_product_page ? 'active' : '' ?>"><i
                             class="fas fa-list list-icon"></i> View Products</a>
                 </li>
 
                 <li>
 
                     <a href="View-user.php"
-                        class="list-item <?php echo ($is_user_page == 'View-user.php') ? 'active' : '' ?>"><i
+                        class="ajax-link list-item <?php echo ($is_user_page == 'View-user.php') ? 'active' : '' ?>"><i
                             class="fas fa-users list-icon"></i> User Record</a>
                 </li>
 
                 <li class="list-dropdown">
 
                     <a href="view-document.php"
-                        class="list-item <?php echo ($is_document_page == 'view-document.php') ? 'active' : '' ?>"><i
+                        class="ajax-link list-item <?php echo ($is_document_page == 'view-document.php') ? 'active' : '' ?>"><i
                             class="far fa-folder list-icon"></i> Files Record <span>
                             <i class="fas fa-caret-right arrow-right" id="arrowIcon"></i></span></a>
 
                     <div class="sub-listItems">
                         <div class="list-menu">
-                            <a href="IncomingFile.php"><i class="fa fa-inbox"></i> Incoming </a><span class="fileCount"><?php echo $counts['incoming'] ?></span>
+                            <a href="IncomingFile.php" class="ajax-link"><i class="fa fa-inbox"></i> Incoming </a><span class="fileCount"><?php echo $counts['incoming'] ?></span>
                         </div>
                         <div class="list-menu">
-                            <a href="ReceivedFile.php"><i class="fa fa-download"></i> Received </a><span class="fileCount"><?php echo $counts['received'] ?></span>
+                            <a href="ReceivedFile.php" class="ajax-link"><i class="fa fa-download"></i> Received </a><span class="fileCount"><?php echo $counts['received'] ?></span>
                         </div>
                         <div class="list-menu">
-                            <a href="OutgoingFile.php"><i class="far fa-paper-plane"></i> Outgoing</a><span class="fileCount"><?php echo $counts['outgoing'] ?></span>
+                            <a href="OutgoingFile.php" class="ajax-link"><i class="far fa-paper-plane"></i> Outgoing</a><span class="fileCount"><?php echo $counts['outgoing'] ?></span>
                         </div>
                         <div class="list-menu">
-                            <a href="OnholdFile.php"><i class="far fa-pause-circle"></i> Onhold</a><span class="fileCount"><?php echo $counts['onhold'] ?></span>
+                            <a href="OnholdFile.php" class="ajax-link"><i class="far fa-pause-circle"></i> Onhold</a><span class="fileCount"><?php echo $counts['onhold'] ?></span>
                         </div>
                         <div class="list-menu">
-                            <a href="CompleteFile.php"><i class="far fa-check-circle"></i> Complete</a><span class="fileCount"><?php echo $counts['complete'] ?></span>
+                            <a href="CompleteFile.php" class="ajax-link"><i class="far fa-check-circle"></i> Complete</a><span class="fileCount"><?php echo $counts['complete'] ?></span>
                         </div>
                         <div class="list-menu">
-                            <a href="CancelFile.php"><i class=" far fa-times-circle"></i> Cancelled</a><span class="fileCount"><?php echo $counts['cancelled'] ?></span>
+                            <a href="CancelFile.php" class="ajax-link"><i class=" far fa-times-circle"></i> Cancelled</a><span class="fileCount"><?php echo $counts['cancelled'] ?></span>
                         </div>
                         <div class="list-menu">
-                            <a href="AllFiles.php"><i class="far fa-file-alt"></i> All Files</a><span class="fileCount"><?php echo $counts['all'] ?></span>
+                            <a href="AllFiles.php" class="ajax-link"><i class="far fa-file-alt"></i> All Files</a><span class="fileCount"><?php echo $counts['all'] ?></span>
                         </div>
                     </div>
 
@@ -149,13 +149,13 @@ $is_document_page = ($current_page == 'view-document.php' || $current_page == 'A
 
                 <li>
 
-                    <a href="Admin-Profile.php" class="list-item <?php echo $is_Admin_page ? 'active' : '' ?>"><i
+                    <a href="Admin-Profile.php" class="ajax-link list-item <?php echo $is_Admin_page ? 'active' : '' ?>"><i
                             class="far fa-user list-icon"></i> Manage Profile</a>
                 </li>
 
                 <li>
 
-                    <a href="#" onclick="confirmLogout(event)" class="list-item <?php echo ($current_page == 'logout.php') ? 'active' : '' ?>"><i
+                    <a href="#" onclick="confirmLogout(event)" class="ajax-link list-item <?php echo ($current_page == 'logout.php') ? 'active' : '' ?>"><i
                             class="far fa-arrow-alt-circle-right list-icon"></i> Logout</a>
                 </li>
             </ul>
@@ -170,6 +170,7 @@ $is_document_page = ($current_page == 'view-document.php' || $current_page == 'A
                     <p class="theme-option" id="light-darkmode"> <span><i class="fas fa-cloud-moon"></i></span> Dark Purple Mode </p>
                 </div>
             </div>
+            <div id="main-content"></div>
 
 
     </section>
@@ -264,7 +265,12 @@ $is_document_page = ($current_page == 'view-document.php' || $current_page == 'A
 
         function updateFileCounts() {
             fetch('file_counts.php')
-                .then(response => response.json())
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json(); // Parse the response as JSON
+                })
                 .then(data => {
                     document.querySelector(".sub-listItems a[href='IncomingFile.php'] .fileCount").textContent = data.incoming;
                     document.querySelector(".sub-listItems a[href='ReceivedFile.php'] .fileCount").textContent = data.received;
@@ -281,6 +287,35 @@ $is_document_page = ($current_page == 'view-document.php' || $current_page == 'A
         setInterval(updateFileCounts, 5000);
         updateFileCounts(); // Initial call on page load
     </script>
+
+    <!-- Jquery to add ajax to naigate pages -->
+    <!-- <script>
+        $(document).ready(function() {
+            $('.ajax-link').click(function(e) {
+                e.preventDefault();
+                let pageUrl = $(this).attr('href');
+                console.log('current page url:', pageUrl);
+                $.ajax({
+                    url: pageUrl,
+                    type: 'GET',
+                    beforeSend: function() {
+                        $('#main-content').html("<p>Loading...</p>");
+                    },
+                    success: function(response) {
+                        $('#main-content').html(response);
+                    },
+                    error: function() {
+                        $("#main-content").html("<p>Error loading page.</p>");
+
+                    }
+
+                })
+
+
+            })
+
+        })
+    </script> -->
 </body>
 
 </html>

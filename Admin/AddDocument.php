@@ -7,7 +7,7 @@ include('../connection.php');
 include('Check_token.php');
 
 // Code to check if admin has submitted the form
-if (isset($_POST['submit'])) {
+if (isset($_POST['save_data'])) {
     $filename = mysqli_real_escape_string($con, $_POST['filename']);
     $fileTitle = mysqli_real_escape_string($con, $_POST['fileTitle']);
 
@@ -38,14 +38,11 @@ if (isset($_POST['submit'])) {
         $notify_stmt = mysqli_prepare($con, $notify_query);
         mysqli_stmt_bind_param($notify_stmt, 'siss', $image, $document_id, $notify_title, $notify_message);
         mysqli_stmt_execute($notify_stmt);
-        $_SESSION['message'] = 'Document created successfully.';
+        echo json_encode(['status' => 'success', 'message' => 'Document created successfully.', 'redirect' => 'view-document.php']);
     } else {
-        $_SESSION['message'] = 'Something went wrong while creating the document.';
+        echo json_encode(['status' => 'error', 'message' => 'Something went wrong while creating the document.']);
     }
 
-    // Close the statement
-    mysqli_stmt_close($stmt);
-    header('Location: view-document.php');
     exit();
 }
 ?>
@@ -87,7 +84,7 @@ if (isset($_POST['submit'])) {
             <!-- Record Table -->
             <div class="form-parent">
                 <div class="form-records">
-                    <form method="POST" action="" enctype="multipart/form-data">
+                    <form id="insertForm" method="POST" action="" enctype="multipart/form-data">
                         <h4 class="text-center">Create New Document</h4><br>
                         <div class="section">
                             <p class="sec-title"><span class="las la-sort"></span> File Specification</p>
@@ -152,15 +149,16 @@ if (isset($_POST['submit'])) {
                 tabsize: 2,
                 toolbar: [
                     ['style', ['style']],
-                    ['font', ['bold', 'italic', 'underline']],
+                    ['font', ['bold', 'italic', 'underline', 'strikethrough', 'clear']],
                     ['fontsize', ['fontsize']],
                     ['fontname', ['fontname']],
                     ['color', ['color']],
                     ['para', ['ul', 'ol', 'paragraph']],
                     ['height', ['height']],
                     ['table', ['table']],
-                    ['insert', ['link', 'picture', 'video']],
-                    ['view', ['help']]
+                    ['misc', ['undo', 'redo']],
+
+                    ['view', ['fullscreen', 'codeview', 'help']]
                 ],
                 callbacks: {
                     onImageUpload: function(files) {
@@ -184,6 +182,46 @@ if (isset($_POST['submit'])) {
                         });
                     }
                 }
+            });
+        });
+    </script>
+    <!-- Ajax to add data -->
+    <script>
+        $(document).ready(function() {
+            $('#insertForm').on('submit', function(e) {
+                e.preventDefault();
+                let formData = new FormData(this);
+                formData.append('save_data', true);
+                $.ajax({
+                    url: '',
+                    method: 'POST',
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    dataType: 'json',
+                    success: function(response) {
+                        if (response.status === 'success') {
+                            Swal.fire({
+                                title: 'Success',
+                                text: response.message,
+                                icon: 'success',
+                                timer: 2000,
+                                showConfirmButton: false,
+                            }).then(() => {
+                                window.location.href = response.redirect;
+                            })
+                        } else {
+                            Swal.fire('Error', response.message, 'error');
+                        }
+                    },
+
+                    catch (error) {
+                        console.log('Invalid Json response', response);
+                        Swal.fire('Error', response.message, 'error')
+                    }
+
+                });
+
             });
         });
     </script>
