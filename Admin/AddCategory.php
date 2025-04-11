@@ -65,7 +65,7 @@ if (isset($_POST['save_data'])) {
             <div class="form-group mt-3">
                 <button type="submit" id="submitbtn" name="submit" class="btn btn-info">Add Data
                 </button>
-                <button onclick="window.history.back()" class="btn btn-secondary ml-2">Move Back</button>
+                <button onclick="window.location.href='View-category.php'" class="btn btn-secondary ml-2">Move Back</button>
 
             </div>
         </form>
@@ -74,9 +74,7 @@ if (isset($_POST['save_data'])) {
 </div>
 
 
-</main>
 
-</section>
 
 
 </body>

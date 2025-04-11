@@ -276,7 +276,7 @@ include('Check_token.php');
               <h4>Recent Products</h4>
               <p>Reviewing the entries to make the required updates</p>
             </div>
-            <a href="view-products.php" class="add-topbtn">View Record</a>
+            <a href="view-products.php" onclick="loadPage(event)" class="add-topbtn">View Record</a>
           </div>
 
           <?php
@@ -416,6 +416,8 @@ include('Check_token.php');
     </main>
 
   </section>
+  <div id="content"></div>
+
 
   <!-- External jquery, popper File Link for bootstrap 4 -->
 
@@ -506,7 +508,16 @@ include('Check_token.php');
 
     });
   </script>
-
+  <script>
+    function loadPage(event) {
+      event.preventDefault();
+      fetch('View-products.php')
+        .then(response => response.text())
+        .then(data => {
+          document.getElementById('content').innerHTML = data;
+        });
+    }
+  </script>
 </body>
 
 </html>

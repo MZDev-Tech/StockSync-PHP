@@ -24,6 +24,7 @@ include('Check_token.php');
     <link rel="stylesheet"
         href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css">
     <link rel="stylesheet" href="sweetalert2.min.css">
+
 </head>
 
 <body>
@@ -38,9 +39,6 @@ include('Check_token.php');
 
         <!----------------Main Page Design--------------------->
         <main id="page-content">
-            <div id="content">
-
-            </div>
         </main>
 
     </section>
@@ -56,6 +54,7 @@ include('Check_token.php');
     <script src="../Bootstrap/js/bootstrap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="script.js"></script>
+
 
 </body>
 

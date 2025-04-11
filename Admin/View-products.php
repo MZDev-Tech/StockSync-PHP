@@ -152,15 +152,31 @@ include('Check_token.php');
           <div>
             <h4>Product Details</h4>
           </div>
+          <div class="d-flex align-items-center justify-content-center ">
 
-          <a href="AddProducts.php" class="add-topbtn"> + Add Product</a>
+            <form method="POST" action="" style="margin-right:10px">
+              <div class="input-group search-box1">
+
+                <input type="text" id="searchTable" style="text-decoration:none;" value="<?php echo isset($_GET['search']) ? htmlspecialchars($_GET['search']) : ''; ?>" class="form-control" placeholder="Search...">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"><i class="fa fa-search"></i></span>
+                </div>
+              </div>
+            </form>
+
+            <a href="AddProducts.php" class="add-topbtn insert-link"> + Add Product</a>
+          </div>
         </div>
         <?php
         include('../connection.php');
         $limit = isset($_GET['select-record']) ? (int) $_GET['select-record'] : 3;
         $page = isset($_GET['page']) ? (int) $_GET['page'] : 1;
         $offset = ($page - 1) * $limit;
-        $query = "select * from laptops ORDER BY id LIMIT {$offset},{$limit}";
+
+        $searchQuery = isset($_GET['search']) ? $_GET['search'] : '';
+        $searchQueryData = mysqli_real_escape_string($con, $searchQuery);
+        // Modify the query to include the search functionality
+        $query = "SELECT * FROM laptops WHERE category LIKE '%$searchQueryData%' OR brand LIKE '%$searchQueryData%' OR model LIKE '%$searchQueryData%' OR processor LIKE '%$searchQueryData%'OR RAM LIKE '%$searchQueryData%'OR storage LIKE '%$searchQueryData%' OR price LIKE '%$searchQueryData%'OR quantity LIKE '%$searchQueryData%'OR serialNumber LIKE '%$searchQueryData%'OR date LIKE '%$searchQueryData%'OR delivery_date LIKE '%$searchQueryData%'OR total_age LIKE '%$searchQueryData%' OR designation LIKE '%$searchQueryData%' OR person_name LIKE '%$searchQueryData%' OR status LIKE '%$searchQueryData%' ORDER BY id LIMIT {$offset}, {$limit}";
         $stmt = mysqli_prepare($con, $query);
         mysqli_stmt_execute($stmt);
         $result = mysqli_stmt_get_result($stmt);
@@ -194,7 +210,7 @@ include('Check_token.php');
             </thead>
 
 
-            <tbody id="productData">
+            <tbody id="productTable">
               <?php
               $Sr = 1;
               if (mysqli_num_rows($result) > 0) {
@@ -226,11 +242,11 @@ include('Check_token.php');
 
                     <td class="action">
 
-                      <a href="update-product.php?id=<?php echo $row['id']; ?>"><i
+                      <a href="update-product.php?id=<?php echo $row['id']; ?>" class="update-link" data-id="<?php echo $row['id']; ?>"><i
                           class="fa-solid fa-pen-to-square"></i></a>
                       <a href="javascript:void(0);" onclick="confirmDelete(<?php echo $row['id']; ?>)"><i
                           class="fa-solid fa-trash"></i></a>
-                      <a href="single-product.php?id=<?php echo $row['id']; ?>"><i class="fa-solid fa-eye"></i></a>
+                      <a href="single-product.php?id=<?php echo $row['id']; ?>" class="singlePage-link"><i class="fa-solid fa-eye"></i></a>
 
                     </td>
                   </tr>
@@ -252,11 +268,19 @@ include('Check_token.php');
         </div>
         </table>
         <?php
-        $query = "select COUNT(*) as total from laptops";
-        $result = mysqli_query($con, $query);
-        $row = mysqli_fetch_assoc($result);
-        $total_records = $row['total'];
+        // Fetch search term if it's present
+        $search = isset($_GET['search']) ? $_GET['search'] : '';
+
+        $query = "SELECT * FROM laptops WHERE category LIKE '%$searchQueryData%' OR brand LIKE '%$searchQueryData%' OR model LIKE '%$searchQueryData%' OR processor LIKE '%$searchQueryData%'OR RAM LIKE '%$searchQueryData%'OR storage LIKE '%$searchQueryData%' OR price LIKE '%$searchQueryData%'OR quantity LIKE '%$searchQueryData%'OR serialNumber LIKE '%$searchQueryData%'OR date LIKE '%$searchQueryData%'OR delivery_date LIKE '%$searchQueryData%'OR total_age LIKE '%$searchQueryData%' OR designation LIKE '%$searchQueryData%' OR person_name LIKE '%$searchQueryData%' OR status LIKE '%$searchQueryData%' ORDER BY id LIMIT {$offset}, {$limit}";
+        $result = mysqli_query($con, query: $query);
+        // Fetch the total number of records based on search query
+        $total_query = "SELECT COUNT(*) as total FROM laptops WHERE category LIKE '%$searchQueryData%' OR brand LIKE '%$searchQueryData%' OR model LIKE '%$searchQueryData%' OR processor LIKE '%$searchQueryData%'OR RAM LIKE '%$searchQueryData%'OR storage LIKE '%$searchQueryData%' OR price LIKE '%$searchQueryData%'OR quantity LIKE '%$searchQueryData%'OR serialNumber LIKE '%$searchQueryData%'OR date LIKE '%$searchQueryData%'OR delivery_date LIKE '%$searchQueryData%'OR total_age LIKE '%$searchQueryData%' OR designation LIKE '%$searchQueryData%' OR person_name LIKE '%$searchQueryData%' OR status LIKE '%$searchQueryData%'";
+        $result_count = mysqli_query($con, $total_query);
+        $row_count = mysqli_fetch_assoc($result_count);
+        $total_records = $row_count['total'];
+
         $total_pages = ceil($total_records / $limit);
+
         ?>
         <div class="pagination-part">
           <div class="pagination-info">Showing
@@ -286,6 +310,7 @@ include('Check_token.php');
               <i class="fas fa-chevron-right"></i>
             </a>
           </div>
+
         </div>
       </div>
 
@@ -297,7 +322,10 @@ include('Check_token.php');
   </section>
   <script>
     function confirmDelete(productId) {
-      console.log("Delete function called with productId:", productId);
+      const selectedLimit = $("#selectlimit").val();
+      const currentSearchQuery = $("#searchTable").val();
+      const currentPage = new URLSearchParams(window.location.search).get('page') || 1;
+
       Swal.fire({
         title: "Are you sure?",
         text: "You won't be able to revert this!",
@@ -312,21 +340,30 @@ include('Check_token.php');
             url: 'delete-product.php',
             type: 'GET',
             data: {
-              id: productId
+              id: productId,
+              page: currentPage,
+              search: currentSearchQuery,
+              "select-record": selectedLimit
             },
             success: function(response) {
-              console.log("Response from server:", response);
-              if (response.trim() == 'success') {
-                Swal.fire("Deleted!", "Your file has been deleted.", "success");
+              let res;
+              try {
+                res = JSON.parse(response);
+              } catch (e) {
+                Swal.fire("Error!", "Invalid response from server.", "error");
+                return;
+              }
+
+              if (res.status === 'success') {
+                Swal.fire("Deleted!", "Your record has been deleted.", "success");
                 setTimeout(() => {
-                  location.reload();
-                }, 2000);
+                  window.location.href = `View-products.php?page=${res.redirectPage}&select-record=${selectedLimit}&search=${encodeURIComponent(currentSearchQuery)}`;
+                }, 1500);
               } else {
-                Swal.fire("Error!", "Failed to delete the product.", "error");
+                Swal.fire("Error!", res.message || "Failed to delete the product.", "error");
               }
             },
             error: function(xhr, status, error) {
-              console.error("AJAX error:", status, error);
               Swal.fire("Error!", "An unexpected error occurred.", "error");
             }
           });
@@ -343,47 +380,130 @@ include('Check_token.php');
   <script src="../Bootstrap/js/bootstrap.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script src="script.js"></script>
+  <script src="ajax-product.js"></script>
+
   <script>
     //ajax code tpo fetch product data on dashboard
     $(document).ready(function() {
-      function fetchData(page = 1, limit = $('#selectlimit').val()) {
+      function fetchData(page = 1, limit = $("#selectlimit").val(), searchQuery = $("#searchTable").val()) {
         $.ajax({
-          url: '',
-          method: 'GET',
+          url: "View-products.php",
+          type: "GET",
           data: {
-            'page': page,
-            'select-record': limit
+            "page": page,
+            "select-record": limit,
+            "search": searchQuery // Pass the search query here
           },
           success: function(response) {
-            var updatedData = $(response).find('#productData').html();
-            $('#productData').html(updatedData);
+            var updatedTable = $(response).find("#productTable").html();
+            $("#productTable").html(updatedTable);
 
-            var updatedPagination = $(response).find('.pagination-part').html();
-            $('.pagination-part').html(updatedPagination);
+            var updatedPagination = $(response).find(".pagination-part").html();
+            $(".pagination-part").html(updatedPagination);
 
+            // Update the URL without reloading the page
+            var newUrl = "View-products.php?page=" + page + "&select-record=" + limit + "&search=" + searchQuery;
+            window.history.pushState({
+              path: newUrl
+            }, '', newUrl);
           },
           error: function(error) {
-            console.log('AJAX ERROR', error);
-
+            console.error("AJAX Error:", error);
           }
-
         });
       }
 
-      $('#selectlimit').change(function() {
-        var limit = $(this).val();
-        fetchData(1, limit);
+      // Fetch new data when selecting a different limit
+      $("#selectlimit").change(function() {
+        var limit = $(this).val(); // The selected limit
+        var searchQuery = $("#searchTable").val(); // The current search term
+        fetchData(1, limit, searchQuery); // Always start from page 1 when the limit is changed
       });
-      $(document).on('click', '.paginate_button', function(e) {
+
+      // Event delegation for pagination links
+      $(document).on("click", ".paginate_button", function(e) {
         e.preventDefault();
         if (!$(this).hasClass("disabled")) {
           var page = $(this).attr("data-page");
-          fetchData(page);
+          var limit = $("#selectlimit").val();
+          var searchQuery = $("#searchTable").val(); // Get the current search term
+          fetchData(page, limit, searchQuery);
         }
-      })
+      });
 
+      // Trigger search on keyup event (when the user types something)
+      $("#searchTable").keyup(function() {
+        var searchQuery = $(this).val();
+        fetchData(1, $("#selectlimit").val(), searchQuery); // Always start from page 1 on search
+      });
+    });
+
+    //access update page through ajax code
+    $(document).on('click', '.update-link', function(e) {
+      e.preventDefault();
+
+      const id = $(this).data('id');
+
+      $.ajax({
+        url: "update-product.php",
+        method: "GET",
+        data: {
+          id: id
+        },
+        dataType: "html",
+        success: function(response) {
+          $('#page-content').html(response);
+          window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+          });
+
+          setTimeout(() => {
+            applyHasValueClass(); // function to style fields with values
+          }, 100);
+
+          bindUpdateForm(); // Bind form update handler
+        },
+        error: function(error) {
+          console.error('Error fetching content:', error);
+        }
+      });
+    });
+
+    //ajax code to get add form 
+    document.addEventListener('DOMContentLoaded', function() {
+      const addCategoryLinks = document.querySelectorAll('.insert-link');
+
+      addCategoryLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+          e.preventDefault();
+
+          // Perform AJAX request to load the Add Category page content
+          $.ajax({
+            url: 'AddProducts.php',
+            method: 'GET',
+            dataType: 'html',
+            success: function(response) {
+              // Replace the page content with the response from AddCategory.php
+              $('#page-content').html(response);
+              window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+              });
+
+
+              // Call the function to bind the insert form (after the content is loaded)
+              bindInsertForm();
+            },
+            error: function(error) {
+              console.log('Error fetching form data', error);
+            }
+          });
+        });
+      });
     });
   </script>
+
 </body>
 
 </html>

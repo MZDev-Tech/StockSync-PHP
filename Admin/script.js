@@ -147,4 +147,77 @@ function applyHasValueClass() {
 // Make function accessible globally
 window.applyHasValueClass = applyHasValueClass;
 
+//main ajax code for page navigation
+// document.querySelectorAll(".ajax-link ").forEach((link) => {
+//   console.log("click on ajax link");
+//   link.addEventListener("click", function (e) {
+//     e.preventDefault();
+//     const pageUrl = this.getAttribute("href");
 
+//     fetch(pageUrl)
+//       .then((response) => response.text())
+//       .then((data) => {
+//         document.getElementById("main-content").innerHTML = data;
+
+//         // Optional: Update browser URL for history support
+//         history.pushState(
+//           {
+//             path: pageUrl,
+//           },
+//           "",
+//           pageUrl
+//         );
+//       });
+//   });
+// });
+
+// //Support browser back/forward buttons
+// window.addEventListener("popstate", function (e) {
+//   if (e.state && e.state.path) {
+//     fetch(e.state.path)
+//       .then((response) => response.text())
+//       .then((data) => {
+//         document.getElementById("main-content").innerHTML = data;
+//       });
+//   }
+// });
+
+// document.addEventListener("DOMContentLoaded", function () {
+//   document.body.addEventListener("click", function (e) {
+//     if (e.target.classList.contains("ajax-link")) {
+//       e.preventDefault();
+//       console.log("AJAX link clicked!");
+
+//       const pageUrl = e.target.getAttribute("href");
+//       console.log("Page URL to fetch:", pageUrl);
+
+//       fetch(pageUrl)
+//         .then((response) => response.text())
+//         .then((data) => {
+//           console.log("AJAX success! Loaded content.");
+//           document.getElementById("main-page").innerHTML = data;
+//           history.pushState({ path: pageUrl }, "", pageUrl);
+
+//           // Update active class manually
+//           document
+//             .querySelectorAll(".ajax-link")
+//             .forEach((el) => el.classList.remove("active"));
+//           e.target.classList.add("active");
+//         })
+//         .catch((err) => {
+//           console.log("Fetch error:", err);
+//         });
+//     }
+//   });
+
+//   // Handle back/forward buttons
+//   window.addEventListener("popstate", function (e) {
+//     if (e.state && e.state.path) {
+//       fetch(e.state.path)
+//         .then((response) => response.text())
+//         .then((data) => {
+//           document.getElementById("main-page").innerHTML = data;
+//         });
+//     }
+//   });
+// });

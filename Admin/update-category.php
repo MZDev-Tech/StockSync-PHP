@@ -96,13 +96,10 @@ while ($row = mysqli_fetch_array($result)) {
             <div class="form-group mt-3">
                 <button type="submit" name="submit" class="btn btn-info">Update Data
                 </button>
-                <button onclick="window.history.back()" class="btn btn-secondary ml-2">Move Back</button>
+                <button onclick="window.location.href='View-category.php'" class="btn btn-secondary ml-2">Move Back</button>
 
             </div>
             </form>
 
         </div>
     </div>
-
-
-    

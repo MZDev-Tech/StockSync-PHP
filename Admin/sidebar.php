@@ -44,6 +44,8 @@ $is_document_page = ($current_page == 'view-document.php' || $current_page == 'A
     <link rel="stylesheet"
         href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="script.js"></script>
+
 
 
 </head>
@@ -185,7 +187,6 @@ $is_document_page = ($current_page == 'view-document.php' || $current_page == 'A
     <!-- Bootstrap 4 (JS) -->
     <script src="../Bootstrap/js/bootstrap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="script.js"></script>
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             const settingsBtn = document.querySelector(".setting-btn");
@@ -289,33 +290,8 @@ $is_document_page = ($current_page == 'view-document.php' || $current_page == 'A
     </script>
 
     <!-- Jquery to add ajax to naigate pages -->
-    <!-- <script>
-        $(document).ready(function() {
-            $('.ajax-link').click(function(e) {
-                e.preventDefault();
-                let pageUrl = $(this).attr('href');
-                console.log('current page url:', pageUrl);
-                $.ajax({
-                    url: pageUrl,
-                    type: 'GET',
-                    beforeSend: function() {
-                        $('#main-content').html("<p>Loading...</p>");
-                    },
-                    success: function(response) {
-                        $('#main-content').html(response);
-                    },
-                    error: function() {
-                        $("#main-content").html("<p>Error loading page.</p>");
-
-                    }
-
-                })
 
 
-            })
-
-        })
-    </script> -->
 </body>
 
 </html>

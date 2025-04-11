@@ -89,7 +89,7 @@ include('Check_token.php');
                         <form method="POST" action="" style="margin-right:10px">
                             <div class="input-group search-box1">
 
-                                <input type="text" id="searchTable" style="text-decoration:none;" class="form-control" placeholder="Search...">
+                                <input type="text" id="searchTable" style="text-decoration:none;" value="<?php echo isset($_GET['search']) ? htmlspecialchars($_GET['search']) : ''; ?>" class="form-control" placeholder="Search...">
                                 <div class="input-group-prepend">
                                     <span class="input-group-text"><i class="fa fa-search"></i></span>
                                 </div>
@@ -227,6 +227,10 @@ include('Check_token.php');
     </section>
     <script>
         function confirmDelete(productId) {
+            const selectedLimit = $("#selectlimit").val();
+            const currentSearchQuery = $("#searchTable").val();
+            const currentPage = new URLSearchParams(window.location.search).get('page') || 1;
+
             Swal.fire({
                 title: "Are you sure?",
                 text: "You won't be able to revert this!",
@@ -241,17 +245,28 @@ include('Check_token.php');
                         url: 'delete-category.php',
                         type: 'GET',
                         data: {
-                            id: productId
+                            id: productId,
+                            page: currentPage,
+                            search: currentSearchQuery,
+                            "select-record": selectedLimit
                         },
                         success: function(response) {
-                            if (response.trim() == 'success') {
+                            let res;
+                            try {
+                                res = JSON.parse(response);
+                            } catch (e) {
+                                Swal.fire("Error!", "Invalid response from server.", "error");
+                                return;
+                            }
+
+                            if (res.status === 'success') {
                                 Swal.fire("Deleted!", "Your file has been deleted.", "success");
                                 setTimeout(() => {
-                                    location.reload();
-                                }, 2000);
-
+                                    // Redirect to updated page based on response
+                                    window.location.href = `View-category.php?page=${res.redirectPage}&select-record=${selectedLimit}&search=${encodeURIComponent(currentSearchQuery)}`;
+                                }, 1500);
                             } else {
-                                Swal.fire("Error!", "Failed to delete the product.", "error");
+                                Swal.fire("Error!", res.message || "Failed to delete the product.", "error");
                             }
                         },
                         error: function(xhr, status, error) {
@@ -271,7 +286,7 @@ include('Check_token.php');
     <script src="../Bootstrap/js/bootstrap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="script.js"></script>
-    <script src="category-ajax.js"></script>
+    <script src="ajax-category.js"></script>
 
     <script>
         $(document).ready(function() {
@@ -329,39 +344,34 @@ include('Check_token.php');
         });
 
         //access update page through ajax code
-        document.addEventListener('DOMContentLoaded', function() {
-            const updatePage = document.querySelectorAll('.update-link');
+        $(document).on('click', '.update-link', function(e) {
+            e.preventDefault();
 
-            updatePage.forEach(link => {
-                link.addEventListener('click', function(e) {
-                    e.preventDefault();
+            const id = $(this).data('id');
 
-                    // Get the ID of the category
-                    const id = this.getAttribute('data-id');
-
-                    $.ajax({
-                        url: "update-category.php",
-                        method: "GET",
-                        data: {
-                            id: id
-                        },
-                        dataType: "html",
-                        success: function(response) {
-                            // Place the fetched content into the page content div
-                            $('#page-content').html(response);
-
-                            // function in js file to style update form fields if then have value
-                            setTimeout(() => {
-                                applyHasValueClass();
-                            }, 100);
-                            //function in category-ajax file to update data
-                            bindUpdateForm();
-                        },
-                        error: function(error) {
-                            console.error('Error fetching content:', error);
-                        }
+            $.ajax({
+                url: "update-category.php",
+                method: "GET",
+                data: {
+                    id: id
+                },
+                dataType: "html",
+                success: function(response) {
+                    $('#page-content').html(response);
+                    window.scrollTo({
+                        top: 0,
+                        behavior: 'smooth'
                     });
-                });
+
+                    setTimeout(() => {
+                        applyHasValueClass(); // function to style fields with values
+                    }, 100);
+
+                    bindUpdateForm(); // Bind form update handler
+                },
+                error: function(error) {
+                    console.error('Error fetching content:', error);
+                }
             });
         });
 
@@ -381,6 +391,11 @@ include('Check_token.php');
                         success: function(response) {
                             // Replace the page content with the response from AddCategory.php
                             $('#page-content').html(response);
+                            window.scrollTo({
+                                top: 0,
+                                behavior: 'smooth'
+                            });
+
 
                             // Call the function to bind the insert form (after the content is loaded)
                             bindInsertForm();
