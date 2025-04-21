@@ -164,7 +164,7 @@ include('Check_token.php');
               </div>
             </form>
 
-            <a href="AddProducts.php" class="add-topbtn insert-link"> + Add Product</a>
+            <a href="AddProducts.php" class="add-topbtn insert-link"> + Add <span class="table-name">Product</span></a>
           </div>
         </div>
         <?php
@@ -246,7 +246,7 @@ include('Check_token.php');
                           class="fa-solid fa-pen-to-square"></i></a>
                       <a href="javascript:void(0);" onclick="confirmDelete(<?php echo $row['id']; ?>)"><i
                           class="fa-solid fa-trash"></i></a>
-                      <a href="single-product.php?id=<?php echo $row['id']; ?>" class="singlePage-link"><i class="fa-solid fa-eye"></i></a>
+                      <a href="single-product.php?id=<?php echo $row['id']; ?>" class="singlePage-link" data-id="<?php echo $row['id'] ?>"><i class="fa-solid fa-eye"></i></a>
 
                     </td>
                   </tr>
@@ -443,7 +443,6 @@ include('Check_token.php');
       e.preventDefault();
 
       const id = $(this).data('id');
-
       $.ajax({
         url: "update-product.php",
         method: "GET",
@@ -500,6 +499,33 @@ include('Check_token.php');
             }
           });
         });
+      });
+    });
+
+    $(document).on('click', '.singlePage-link', function(e) {
+      e.preventDefault();
+
+      const id = $(this).data('id');
+
+      $.ajax({
+        url: "single-product.php",
+        method: "GET",
+        data: {
+          id: id
+        },
+        dataType: "html",
+        success: function(response) {
+          $('#page-content').html(response);
+          window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+          });
+
+
+        },
+        error: function(error) {
+          console.error('Error fetching content:', error);
+        }
       });
     });
   </script>

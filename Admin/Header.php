@@ -205,15 +205,16 @@ ob_end_flush();
                     <div class="admin">
                         <a href="admin-profile.php">
                             <?php if (!empty($row['image']) && file_exists('../Images/' . $row['image'])) {
-                                echo '<img src="../Images/' . $row['image'] . '">';
+                                echo '<img class="profileImg" src="../Images/' . $row['image'] . '">';
                             } else {
-                                echo '<img src="../Images/user-profile.jpg">';
+                                echo '<img class="profileImg" src="../Images/user-profile.jpg">';
                             } ?> <div class="bg-wrapper1">
                                 <span></span>
                             </div>
                         </a>
 
                         <div class="header-dropdown">
+
                             <!-- Dropdown Container -->
                             <div class="dropdown">
                                 <!-- Dots Icon (Dropdown Toggle) -->
@@ -224,14 +225,17 @@ ob_end_flush();
 
                                 <!-- Dropdown Menu -->
                                 <ul class="dropdown-menu" aria-labelledby="dotsDropdown">
+
                                     <li>
-                                        <a class="dropdown-item" href="Admin-profile.php">
-                                            <i class="far fa-user"></i> Manage Profile
+                                        <a class="dropdown-item" shref="Admin-profile.php">
+                                            <img src="../Images/success.gif" width="32px" height="32px">
+                                            <span>Manage Profile</span>
                                         </a>
                                     </li>
                                     <li>
                                         <a class="dropdown-item" href="update-profile.php">
-                                            <i class="fas fa-unlock-alt"></i> Handle Password
+                                            <img src="../Images/padlock.gif" width="30px" height="30px">
+                                            <span>Handle Password</span>
                                         </a>
                                     </li>
                                     <li>
@@ -239,7 +243,8 @@ ob_end_flush();
                                     </li>
                                     <li>
                                         <a class="dropdown-item" href="#" onclick="confirmLogout(event)">
-                                            <i class="fas fa-arrow-right-from-bracket"></i> Logout
+                                            <img src="../Images/logout.gif" width="30px" height="30px">
+                                            <span>Logout</span>
                                         </a>
                                     </li>
 
@@ -271,68 +276,58 @@ ob_end_flush();
         document.addEventListener('DOMContentLoaded', () => {
             const header = document.getElementById('header-part');
             const menuIcon = document.getElementById('menuIcon');
-            let isMenuActive = false; // Track menu state
+            let isMenuActive = false;
 
-            // Toggle menu event
             menuIcon.addEventListener('click', () => {
                 isMenuActive = !isMenuActive;
                 adjustHeaderOnScroll();
             });
 
-            // Scroll event listener
             window.addEventListener('scroll', adjustHeaderOnScroll);
-            window.addEventListener('resize', adjustHeaderOnScroll); // Adjust on screen resize
+
+            // Throttle resize
+            let resizeTimeout;
+            window.addEventListener('resize', () => {
+                clearTimeout(resizeTimeout);
+                resizeTimeout = setTimeout(adjustHeaderOnScroll, 100);
+            });
 
             function adjustHeaderOnScroll() {
+                // Reset styles to avoid leftovers from other states
+                header.style.left = '';
+                header.style.width = '';
+                header.style.top = '';
+                header.style.borderRadius = '';
+                header.style.borderBottom = '';
+
                 const scrolled = window.scrollY > 10;
-                const isSmallScreen = window.innerWidth <= 768; // Adjust threshold as needed
+                const isSmallScreen = window.innerWidth <= 768;
 
                 if (isSmallScreen) {
-                    // Small screen styles
-                    header.style.borderRadius = '0';
+                    header.style.position = 'fixed';
                     header.style.top = '0';
-                    header.style.borderBottom = '1px solid rgb(43, 144, 151)';
                     header.style.left = '0';
                     header.style.width = '100%';
-                    header.style.position = 'fixed';
                     header.style.zIndex = '999';
+                    header.style.borderBottom = '1px solid rgb(43, 144, 151)';
+                    header.style.borderRadius = '0';
+                } else {
+                    header.style.position = 'fixed';
+                    header.style.top = scrolled ? '0' : '8px';
+                    header.style.borderBottom = scrolled ? '1px solid rgb(43, 144, 151)' : 'none';
+                    header.style.borderRadius = scrolled ? '0' : '4px';
 
                     if (isMenuActive) {
-                        // Keep header fixed when sidebar is over it
-                        header.style.left = '0';
-                        header.style.width = '100%';
-                    }
-                } else {
-                    // Large screen styles
-                    if (scrolled) {
-                        header.style.borderRadius = '0';
-                        header.style.top = '0';
-                        header.style.borderBottom = '1px solid rgb(43, 144, 151)';
-
-                        if (isMenuActive) {
-                            header.style.left = '0';
-                            header.style.width = '100%';
-                        } else {
-                            header.style.left = '245px';
-                            header.style.width = 'calc(100% - 245px)';
-                        }
+                        header.style.left = scrolled ? '0' : '40px';
+                        header.style.width = scrolled ? '100%' : 'calc(100% - 80px)';
                     } else {
-                        header.style.borderRadius = '4px';
-                        header.style.top = '8px';
-                        header.style.borderBottom = 'none';
-
-                        if (isMenuActive) {
-                            header.style.left = '40px';
-                            header.style.width = 'calc(100% - 80px)';
-                        } else {
-                            header.style.left = '260px';
-                            header.style.width = 'calc(100% - 280px)';
-                        }
+                        header.style.left = scrolled ? '245px' : '260px';
+                        header.style.width = scrolled ? 'calc(100% - 245px)' : 'calc(100% - 280px)';
                     }
                 }
             }
 
-            adjustHeaderOnScroll(); // Apply styles on page load
+            adjustHeaderOnScroll(); // Initial run
         });
 
         // Pass token expiration details from PHP to JS

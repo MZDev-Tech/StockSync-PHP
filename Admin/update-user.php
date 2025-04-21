@@ -43,185 +43,84 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && (isset($_POST['save_data']))) {
 ?>
 
 
-<!DOCTYPE html>
-<html lang="en">
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Update User</title>
-    <link rel="stylesheet" href="../Bootstrap/css/bootstrap.min.css">
-    <!-- External CSS File Link -->
-    <link rel="stylesheet" href="../CSS/style.css">
-    <!-- Font Icons Link -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
-    <link rel="stylesheet"
-        href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css">
+<!-- Record Table -->
+<?php
 
-
-</head>
-
-<body>
-
-
-    <!-----------SideBar Section------------------->
-    <?php include('sidebar.php'); ?>
-
-
-    <!----------------Main Header Section--------------------->
-    <section id="main-page">
-        <?php include('Header.php'); ?>
-
-
-        <!----------------Main Page Design--------------------->
-        <main id="page-content">
-
-
-            <!-- Record Table -->
-            <?php
-
-            include('../connection.php');
-            $id = $_GET['id'];
-            $role = 'user';
-            $query = "select * from user where id='$id' && role='$role'";
-            $result = mysqli_query($con, $query);
-            while ($row = mysqli_fetch_array($result)) {
-            ?>
-                <div class="form-parent">
-                    <div class="form-records">
-                        <form method="POST" action="" id="updateForm" enctype="multipart/form-data">
-                            <h4 style="text-align:center; margin:10px 0 14px 0">Update User</h4>
-                            <div class="form-group">
-                                <input type="hidden" name="id" class="form-control" value="<?php echo $row['id']; ?>">
-                            </div>
-
-                            <div class="form-group">
-                                <label style="color:black">Username</label>
-                                <input type="text" name="name" placeholder="Enter user" class="form-control" value="<?php echo $row['name']; ?>"
-                                    required>
-                            </div>
-
-                            <div class="form-group">
-                                <label style="color:black">Email ID</label>
-                                <input type="text" name="email" placeholder="Enter email" class="form-control" value="<?php echo $row['email']; ?>"
-                                    required>
-                            </div>
-
-                            <div class="form-group">
-                                <label style="color:black">Company Designation</label>
-                                <input type="text" name="designation" placeholder="Enter designation" class="form-control" value="<?php echo $row['designation']; ?>"
-                                    required>
-                            </div>
-
-                            <div class="form-group">
-                                <label style="color:black">Phone Number</label>
-                                <input type="text" name="phone" placeholder="Enter contact" class="form-control" value="<?php echo $row['phone']; ?>"
-                                    required>
-                            </div>
-                            <div class="form-group">
-                                <label style="color:black">User Address</label>
-                                <input type="text" name="address" placeholder="Enter address" class="form-control" value="<?php echo $row['address']; ?>"
-                                    required>
-                            </div>
-                            <div class="form-group">
-                                <label style="color:black">Password</label>
-                                <input type="text" name="password" placeholder="Enter password" class="form-control" value="<?php echo $row['password']; ?>"
-                                    required>
-                            </div>
-
-                            <div class="form-group">
-
-                                <?php if (!empty($row['image']) && file_exists($row['image'])) {
-                                    echo '<img src="../Images/' . $row['image'] . '" class="ml-2" style="width:80px;  height:80px; border-radius:5px; border: 3px solid #d5d7da;">';
-                                } else {
-                                    echo '<img src="../Images/imgdefault.png " class="ml-2" style="width:80px; height:80px; border-radius:5px; border: 3px solid #d5d7da;">';
-                                } ?>
-                                <input type="hidden" name="img" value="<?php echo $row['image']; ?>" style="text-transform:none;">
-                            </div>
-
-
-
-                        <?php } ?>
-                        <div class="form-group">
-                            <b>Upload Image</b><br>
-                            <input type="file" name="image" class="form-control">
-                        </div>
-
-
-                        <div class="form-group">
-                            <button type="submit" name="submit" class="btn btn-info">Update Data
-                            </button>
-                        </div>
-                        </form>
-
-                    </div>
+include('../connection.php');
+$id = $_GET['id'];
+$role = 'user';
+$query = "select * from user where id='$id' && role='$role'";
+$result = mysqli_query($con, $query);
+while ($row = mysqli_fetch_array($result)) {
+?>
+    <div class="form-parent">
+        <div class="form-records">
+            <form method="POST" action="" id="updateForm" enctype="multipart/form-data">
+                <h4 style=" margin:10px 0 14px 0">Update Registered User</h4>
+                <div class="form-group">
+                    <input type="hidden" name="id" class="form-control" value="<?php echo $row['id']; ?>">
                 </div>
 
-        </main>
+                <div class="form-group">
+                    <label style="color:black">Username</label>
+                    <input type="text" name="name" placeholder="Enter user" class="form-control" value="<?php echo $row['name']; ?>"
+                        required>
+                </div>
 
-    </section>
-    <script>
-        document.querySelectorAll('input').forEach(field => {
-            if (field.value.trim() !== '') {
-                field.classList.add('has-value');
-            }
+                <div class="form-group">
+                    <label style="color:black">Email ID</label>
+                    <input type="text" name="email" placeholder="Enter email" class="form-control" value="<?php echo $row['email']; ?>"
+                        required>
+                </div>
 
-            field.addEventListener('input', () => {
-                if (field.value.trim() !== '') {
-                    field.classList.add('has-value');
-                } else {
-                    field.classList.remove('has-value');
-                }
-            })
-        });
-    </script>
-    <!-- External jquery, popper File Link for bootstrap 4 -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+                <div class="form-group">
+                    <label style="color:black">Company Designation</label>
+                    <input type="text" name="designation" placeholder="Enter designation" class="form-control" value="<?php echo $row['designation']; ?>"
+                        required>
+                </div>
 
-    <!-- Bootstrap 4 (JS) -->
-    <script src="../Bootstrap/js/bootstrap.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="script.js"></script>
-    <script>
-        $(document).ready(function() {
-            $('#updateForm').on('submit', function(e) {
-                e.preventDefault();
-                let formdata = new FormData(this);
-                formdata.append('save_data', true);
+                <div class="form-group">
+                    <label style="color:black">Phone Number</label>
+                    <input type="text" name="phone" placeholder="Enter contact" class="form-control" value="<?php echo $row['phone']; ?>"
+                        required>
+                </div>
+                <div class="form-group">
+                    <label style="color:black">User Address</label>
+                    <input type="text" name="address" placeholder="Enter address" class="form-control" value="<?php echo $row['address']; ?>"
+                        required>
+                </div>
+                <div class="form-group">
+                    <label style="color:black">Password</label>
+                    <input type="text" name="password" placeholder="Enter password" class="form-control" value="<?php echo $row['password']; ?>"
+                        required>
+                </div>
 
-                $.ajax({
-                    url: '',
-                    method: 'POST',
-                    data: formdata,
-                    contentType: false,
-                    processData: false,
-                    dataType: 'json',
-                    success: function(response) {
-                        if (response.status === 'success') {
-                            Swal.fire({
-                                title: 'Success',
-                                text: response.message,
-                                icon: 'success',
-                                showConfirmButton: false,
-                                timer: 2000,
+                <div class="form-group">
 
-                            }).then(() => {
-                                window.location.href = response.redirect;
-                            });
-                        } else {
-                            Swal.fire('Error', response.message, 'error');
-                        }
+                    <?php if (!empty($row['image']) && file_exists($row['image'])) {
+                        echo '<img src="../Images/' . $row['image'] . '" class="ml-2" style="width:80px;  height:80px; border-radius:5px; border: 3px solid #d5d7da;">';
+                    } else {
+                        echo '<img src="../Images/imgdefault.png " class="ml-2" style="width:80px; height:80px; border-radius:5px; border: 3px solid #d5d7da;">';
+                    } ?>
+                    <input type="hidden" name="img" value="<?php echo $row['image']; ?>" style="text-transform:none;">
+                </div>
 
-                    },
-                    catch (error) {
-                        console.log('Invalid json response while updating user ', response);
-                        Swal.fire('Error', 'Invalid Json response', 'error');
-                    }
-                });
-            });
-        });
-    </script>
-</body>
 
-</html>
+
+            <?php } ?>
+            <div class="form-group">
+                <b>Upload Image</b><br>
+                <input type="file" name="image" class="form-control">
+            </div>
+
+
+            <div class="form-group">
+                <button type="submit" name="submit" class="btn btn-info">Update Data
+                </button>
+                <button type="button" class="btn btn-secondary ml-2" onclick="window.location.href='View-user.php'">Move Back</button>
+            </div>
+            </form>
+
+        </div>
+    </div>

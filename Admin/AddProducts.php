@@ -32,6 +32,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_data'])) {
 
     $totalYears = $interval->y;
     $totalMonths = $interval->m;
+    $totalDays = $interval->d;
 
     // // Create total_age in years and months with singular/plural terms
     // $yearLabel = ($totalYears == 1) ? 'y' : 'years';
@@ -43,8 +44,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_data'])) {
         $total_age = "{$totalYears}y";
     } elseif ($totalMonths > 0) {
         $total_age = "{$totalMonths}m";
+    } elseif ($totalDays > 0) {
+        $total_age = "{$totalDays}d";
     } else {
-        $total_age = "not a month";
+        $total_age = "Today";
     }
 
 

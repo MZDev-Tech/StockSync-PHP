@@ -1,4 +1,4 @@
-//function to update category using ajax
+//function to update user using ajax
 function bindUpdateForm() {
   $("#updateForm").on("submit", function (e) {
     e.preventDefault();
@@ -7,7 +7,7 @@ function bindUpdateForm() {
     console.log("Form data being sent:", formdata);
 
     $.ajax({
-      url: "update-product.php",
+      url: "update-user.php",
       method: "POST",
       data: formdata,
       contentType: false,
@@ -38,7 +38,7 @@ function bindUpdateForm() {
 //make function global
 window.bindUpdateForm = bindUpdateForm;
 
-//insert product data from
+//insert user data from
 function bindInsertForm() {
   $("#insertForm").on("submit", function (e) {
     e.preventDefault();

@@ -31,21 +31,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && (isset($_POST['save_data']))) {
 
     $totalYears = $interval->y;
     $totalMonths = $interval->m;
+    $totalDays = $interval->d;
 
     // Create total_age in years and months with singular/plural terms
-    $yearLabel = ($totalYears == 1) ? 'year' : 'years';
-    $monthLabel = ($totalMonths == 1) ? 'month' : 'months';
+    // $yearLabel = ($totalYears == 1) ? 'year' : 'years';
+    // $monthLabel = ($totalMonths == 1) ? 'month' : 'months';
 
     if ($totalYears > 0 && $totalMonths > 0) {
-        $total_age = "{$totalYears} {$yearLabel}, {$totalMonths} {$monthLabel}";
+        $total_age = "{$totalYears}y, {$totalMonths}m";
     } elseif ($totalYears > 0) {
-        $total_age = "{$totalYears} {$yearLabel}";
+        $total_age = "{$totalYears}y";
     } elseif ($totalMonths > 0) {
-        $total_age = "{$totalMonths} {$monthLabel}";
+        $total_age = "{$totalMonths}m";
+    } elseif ($totalDays > 0) {
+        $total_age = "{$totalDays}d";
     } else {
-        $total_age = "Less than 1 month";
+        $total_age = "Today";
     }
-
 
     $image = $_FILES['image']['name'];
     if ($image) {

@@ -829,7 +829,7 @@ div.setting-btn i#settingsIcon {
   color: var(--black);
 }
 
-#header-part .admin img {
+#header-part .admin img.profileImg {
   width: 45px;
   height: 45px;
   line-height: 45px;
@@ -2187,7 +2187,7 @@ ul.data-product {
 .admin-card .admin-card-cover {
   position: relative;
   width: 100%;
-  height: 140px !important;
+  height: 160px !important;
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
@@ -2229,7 +2229,7 @@ ul.data-product {
 }
 
 .admin-card .admin-card-profile .admin-card-avatar {
-  width: 85px;
+  width: 95px;
   border-radius: 50%;
   box-shadow: 0 8px 20px 0 rgba(0, 0, 0, 0.15);
   overflow: hidden;
@@ -2760,7 +2760,7 @@ ul.data-product {
   min-width: 180px;
   border-radius: 8px;
   border: none;
-  padding: 8px 0;
+  padding: 14px 0;
   box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.15);
   transform: scale(0.1);
   opacity: 0;
@@ -2771,9 +2771,9 @@ ul.data-product {
   z-index: 1000 !important;
 }
 .header-dropdown .dropdown-menu {
-  min-width: 190px !important;
+  min-width: 196px !important;
   border: none;
-  padding: 14px 0;
+  padding: 18px 0 12px 0;
   box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.15);
   transform: scale(0.1);
   opacity: 0;
@@ -2783,6 +2783,7 @@ ul.data-product {
   left: -140px !important;
   top: 30px !important;
   z-index: 1000 !important;
+  border-radius: 6px;
 }
 .header-dropdown .dropdown-menu::after {
   content: "";
@@ -2807,6 +2808,13 @@ ul.data-product {
     top: auto !important;
     bottom: 100% !important; 
 } */
+.header-dropdown a.dropdown-item {
+  display: flex;
+  align-items: center;
+  gap:8px;
+  padding-left: 16px;
+  padding-right: 16px;
+}
 .header-dropdown .dropdown-item,
 .dots-btn .dropdown-item {
   font-size: 15px;
@@ -2835,7 +2843,7 @@ ul.data-product {
 }
 /* Dropdown item icons */
 .dots-btn .dropdown-item i {
-  color: #353535 !important;
+  color: #353535;
   margin-right: 8px !important;
   transition: color 0.2s ease;
 }
@@ -3674,12 +3682,12 @@ ul.data-product {
     display: block;
   }
 
-  #header-part {
-    width: calc(100% - 20px);
-    position: fixed;
-    top: 8px;
-    left: 10px;
-  }
+  /* #header-part {
+    left: 0 !important;
+    top: 0 !important;
+    right: 0 !important;
+    width: 100%;
+  } */
 
   #main-page,
   #main-page.active {

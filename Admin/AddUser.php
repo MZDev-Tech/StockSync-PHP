@@ -14,7 +14,7 @@ function validateInput($data)
 // Array to store validation errors
 $error = [];
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+if (isset($_POST['save_data'])) {
     // Validate name (letters and spaces only)
     $name = validateInput($_POST['name']);
     if (!preg_match("/^[a-zA-Z\s]+$/", $name)) {
@@ -60,7 +60,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         $error['image'] = "Image upload is required.";
     }
-
+    if (!empty($error)) {
+        echo json_encode(['status' => 'Input Error', 'message' => reset($error)]);
+        exit();
+    }
     // If no errors, insert into database
     if (empty($error)) {
         $name = mysqli_real_escape_string($con, $_POST['name']);
@@ -91,118 +94,85 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             mysqli_stmt_bind_param($notify_stmt, 'siss',  $image, $user_id,  $notify_title, $notify_message);
 
             mysqli_stmt_execute($notify_stmt);
-            $_SESSION['message'] = 'User added successfully.';
-            header('Location: View-user.php');
-            exit();
+            echo json_encode(['status' => 'success', 'message' => 'New user record added successfully.', 'redirect' => 'View-user.php']);
         } else {
-            $_SESSION['message'] = 'Something went wrong while adding.';
-        }
 
-        mysqli_stmt_close($stmt);
+            echo json_encode(['status' => 'error', 'message' => 'Something went wrong while adding..']);
+        }
+        exit();
     }
+
+    mysqli_stmt_close($stmt);
 }
+
 ?>
 
 
-<!DOCTYPE html>
-<html lang="en">
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add User</title>
-    <link rel="stylesheet" href="../Bootstrap/css/bootstrap.min.css">
-    <!-- External CSS File Link -->
-    <link rel="stylesheet" href="../CSS/style.css">
-    <!-- Font Icons Link -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
-    <link rel="stylesheet"
-        href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css">
-</head>
+<!-- Record Table -->
+<div class="form-parent">
 
-<body>
+    <div class="form-records">
+        <form method="POST" action="" id="insertForm">
+            <h4>Add New User</h4><br>
+            <div class="form-group">
+                <label class="form-label">UserName</label>
 
+                <input type="text" name="name" placeholder="Username " value="<?php echo (isset($_POST['name']) ? htmlspecialchars($_POST['name']) : '') ?>" class="form-control" required>
+                <?php if (isset($error['name']))  echo "<p style='font-size:12px; color:red'> {$error['name']} </p>" ?>
+            </div>
 
-    <!-----------SideBar Section------------------->
-    <?php include('sidebar.php'); ?>
+            <div class="form-group">
+                <label class="form-label">Email ID</label>
 
-    <!----------------Main Header Section--------------------->
-    <section id="main-page">
-        <?php include('Header.php') ?>
+                <input type="text" name="email" placeholder="Email ID" value="<?php echo (isset($_POST['email']) ? htmlspecialchars($_POST['email']) : '') ?>" class="form-control" required>
+                <?php if (isset($error['email'])) echo "<p style='font-size:12px; color:red;'>{$error['email']}</p>"; ?>
 
+            </div>
+            <div class="form-group">
+                <label class="form-label">Designation</label>
 
-        <!----------------Main Page Design--------------------->
-        <main id="page-content">
+                <input type="text" name="designation" placeholder="Company designation" value="<?php echo (isset($_POST['designation']) ? htmlspecialchars($_POST['designation']) : '') ?>" class="form-control" required>
 
+            </div>
 
-            <!-- Record Table -->
-            <div class="form-parent">
+            <div class="form-group">
+                <label class="form-label">Phone Number</label>
 
-                <div class="form-records">
-                    <form method="POST" action="" enctype="multipart/form-data">
-                        <h4>Add New User</h4><br>
-                        <div class="form-group">
-                            <input type="text" name="name" placeholder="Username " value="<?php echo (isset($_POST['name']) ? htmlspecialchars($_POST['name']) : '') ?>" class="form-control" required>
-                            <?php if (isset($error['name']))  echo "<p style='font-size:12px; color:red'> {$error['name']} </p>" ?>
-                        </div>
+                <input type="text" name="phone" placeholder="Phone Number" class="form-control" value="<?php echo (isset($_POST['phone']) ? htmlspecialchars($_POST['phone']) : '') ?>" required>
+                <?php if (isset($error['phone']))  echo "<p style='font-size:12px; color:red'> {$error['phone']} </p>" ?>
 
-                        <div class="form-group">
-                            <input type="text" name="email" placeholder="Email ID" value="<?php echo (isset($_POST['email']) ? htmlspecialchars($_POST['email']) : '') ?>" class="form-control" required>
-                            <?php if (isset($error['email'])) echo "<p style='font-size:12px; color:red;'>{$error['email']}</p>"; ?>
+            </div>
 
-                        </div>
-                        <div class="form-group">
-                            <input type="text" name="designation" placeholder="Company designation" value="<?php echo (isset($_POST['designation']) ? htmlspecialchars($_POST['designation']) : '') ?>" class="form-control" required>
+            <div class="form-group">
+                <label class="form-label">Permanent Address</label>
 
-                        </div>
+                <input type="text" name="address" value="<?php echo (isset($_POST['address']) ? htmlspecialchars($_POST['address']) : '') ?>" placeholder="Address" class="form-control" required>
 
-                        <div class="form-group">
-                            <input type="text" name="phone" placeholder="Phone Number" class="form-control" value="<?php echo (isset($_POST['phone']) ? htmlspecialchars($_POST['phone']) : '') ?>" required>
-                            <?php if (isset($error['phone']))  echo "<p style='font-size:12px; color:red'> {$error['phone']} </p>" ?>
+            </div>
 
-                        </div>
+            <div class="form-group">
+                <label class="form-label">Password</label>
 
-                        <div class="form-group">
-                            <input type="text" name="address" value="<?php echo (isset($_POST['address']) ? htmlspecialchars($_POST['address']) : '') ?>" placeholder="Address" class="form-control" required>
+                <input type="text" name="password" placeholder="Password " value="<?php echo (isset($_POST['password']) ? htmlspecialchars($_POST['password']) : '') ?>" class="form-control" required>
+                <?php if (isset($error['password']))  echo "<p style='font-size:12px; color:red'> {$error['password']} </p>" ?>
 
-                        </div>
-
-                        <div class="form-group">
-                            <input type="text" name="password" placeholder="Password " value="<?php echo (isset($_POST['password']) ? htmlspecialchars($_POST['password']) : '') ?>" class="form-control" required>
-                            <?php if (isset($error['password']))  echo "<p style='font-size:12px; color:red'> {$error['password']} </p>" ?>
-
-                        </div>
-
-
-                        <div class="form-group">
-                            <label style="font-weight:500;">Upload Image</label><br>
-                            <input type="file" name="image" class="form-control" required>
-                        </div>
-
-
-                        <div class="form-group">
-                            <button type="submit" name="submit" class="btn btn-info">Register User
-                            </button>
-                        </div>
-                    </form>
-
-                </div>
             </div>
 
 
-        </main>
+            <div class="form-group">
+                <label style="font-weight:500;">Upload Image</label><br>
+                <input type="file" name="image" class="form-control" required>
+            </div>
 
-    </section>
 
-    <!-- External jquery, popper File Link for bootstrap 4  -->
+            <div class="form-group mt-4">
+                <button type="submit" name="submit" class="btn btn-info">Register User
+                </button>
+                <button type="button" onclick="window.location.href='View-user.php'" class="btn btn-secondary ml-2">Move Back
+                </button>
+            </div>
+        </form>
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-
-    <!-- Bootstrap 4 (JS) -->
-    <script src="../Bootstrap/js/bootstrap.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="script.js"></script>
-</body>
-
-</html>
+    </div>
+</div>

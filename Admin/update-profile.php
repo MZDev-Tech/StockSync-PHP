@@ -9,7 +9,7 @@ include('Check_token.php');
 
 
 // Check if admin has submitted the data
-if ($_SERVER['RESUEST_METHOD'] === 'POST' && (isset($_POST['save_data']))) {
+if (isset($_POST['save_data'])) {
 
     $id = mysqli_real_escape_string($con, $_POST['id']);
     $name = mysqli_real_escape_string($con, $_POST['name']);

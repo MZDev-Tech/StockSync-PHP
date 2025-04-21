@@ -72,11 +72,3 @@ if (isset($_POST['save_data'])) {
 
     </div>
 </div>
-
-
-
-
-
-</body>
-
-</html>

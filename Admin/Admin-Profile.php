@@ -150,7 +150,7 @@ if (isset($_COOKIE['access_token'])) {
             ?>
 
                 <div class="adminprofile-part" style="margin-left:20px; margin-right:30px">
-                    <div class="container mt-4">
+                    <div class="container mt-4" style="padding-left:8px;padding-right:0;">
                         <div class="row">
                             <div class="col-lg-4 pb-3 adminprofile-part1">
                                 <!-- Admin profile Sidebar-->
