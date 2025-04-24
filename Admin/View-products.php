@@ -383,7 +383,7 @@ include('Check_token.php');
   <script src="ajax-product.js"></script>
 
   <script>
-    //ajax code tpo fetch product data on dashboard
+    //ajax code tpo fetch product data
     $(document).ready(function() {
       function fetchData(page = 1, limit = $("#selectlimit").val(), searchQuery = $("#searchTable").val()) {
         $.ajax({

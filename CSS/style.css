@@ -1559,6 +1559,13 @@ div.setting-btn i#settingsIcon {
   color: rgb(136, 136, 136);
   font-style: italic;
 }
+#page-content .records a.add-topbtn1 {
+  padding: 8px 24px;
+  border: 2px dashed #7380ec;
+  color: #7380ec;
+  font-size: 15px;
+  transition: 0.3s all ease;
+}
 #page-content .records a.add-topbtn {
   padding: 8px 28px;
   border: 2px dashed #7380ec;
@@ -1567,6 +1574,7 @@ div.setting-btn i#settingsIcon {
   transition: 0.3s all ease;
 }
 
+#page-content .records a.add-topbtn1:hover,
 #page-content .records .record-header a.add-topbtn:hover {
   border: 2px dashed #222f9e;
   color: #222f9e;
@@ -2380,7 +2388,7 @@ ul.data-product {
 .single-recordParent .single-recordChild {
   width: 75%;
   margin: 20px 22px 60px 10px;
-  padding: 42px 50px;
+  padding: 30px 25px;
   border-radius: 4px;
   background-color: #fff;
 }
@@ -2388,17 +2396,26 @@ ul.data-product {
 .single-recordParent .single-recordChild .file-header {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  border-bottom: 1px solid rgb(221, 221, 221);
-  padding-top: 20px;
-  padding-bottom: 8px;
+  justify-content: center;
+  gap: 12px;
+  padding: 8px 12px 8px 12px;
+}
+.single-recordParent .single-recordChild .file-header img.logo-left {
+  width: 88px;
+  height: 85px;
+  margin-top: -6px;
 }
 
-.single-recordParent .single-recordChild .file-header h2 {
+.single-recordParent .single-recordChild .file-header img.logo-right {
+  width: 76px;
+  height: 65px;
+}
+
+.single-recordParent .single-recordChild .file-header p.header-title {
   font-family: "YAFdJjbTu24 1", _fb_, auto;
-  font-size: 34px;
-  font-weight: 600;
-  color: rgb(0, 0, 0);
+  font-size: 23px;
+  font-weight: 700;
+  color: rgb(9, 4, 36);
   line-height: 46px;
   letter-spacing: 0em;
   --pY_8zA: 0;
@@ -2406,6 +2423,29 @@ ul.data-product {
   --oJepFA: 0;
   --uYCVzQ: none;
   list-style-type: none;
+  margin: 0;
+}
+.header-bottomfooter {
+  width: 100%;
+  text-align: center;
+  margin-bottom: 12px;
+}
+
+.header-bottomfooter::before,
+.header-bottomfooter::after {
+  content: "";
+  display: block;
+  margin: 0 auto;
+  width: 100%; /* adjust width as needed */
+}
+
+.header-bottomfooter::after {
+  border-top: 3px solid #0e375f; /* bold dark line */
+}
+
+.header-bottomfooter::before {
+  border-top: 1px solid #093868;
+  margin-bottom: 3px;
 }
 
 .single-recordParent .single-recordChild .file-header .user-data {
@@ -2474,10 +2514,32 @@ ul.data-product {
 
 .single-recordParent .file-footer p {
   text-align: center;
-  font-style: italic;
   font-weight: 400;
-  color: #222222;
-  font-size: 14px;
+  color: #2c2c2c;
+  font-size: 13px;
+  margin-bottom: 0;
+}
+.footer-lines {
+  width: 100%;
+  text-align: center;
+  margin-bottom: 12px;
+}
+
+.footer-lines::before,
+.footer-lines::after {
+  content: "";
+  display: block;
+  margin: 0 auto;
+  width: 100%; /* adjust width as needed */
+}
+
+.footer-lines::before {
+  border-top: 4px solid #0e375f; /* bold dark line */
+  margin-bottom: 4px;
+}
+
+.footer-lines::after {
+  border-top: 1px solid #13385c; /* thin navy blue line */
 }
 
 .file-topics {
@@ -2771,7 +2833,7 @@ ul.data-product {
   z-index: 1000 !important;
 }
 .header-dropdown .dropdown-menu {
-  min-width: 196px !important;
+  min-width: 194px !important;
   border: none;
   padding: 18px 0 12px 0;
   box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.15);
@@ -2811,10 +2873,17 @@ ul.data-product {
 .header-dropdown a.dropdown-item {
   display: flex;
   align-items: center;
-  gap:8px;
+  gap: 8px;
   padding-left: 16px;
   padding-right: 16px;
+  padding-bottom: 4px;
+  padding-top: 4px;
 }
+.header-dropdown a.dropdown-item span {
+  font-style: italic;
+  font-size: 14px;
+}
+
 .header-dropdown .dropdown-item,
 .dots-btn .dropdown-item {
   font-size: 15px;
@@ -2849,6 +2918,7 @@ ul.data-product {
 }
 
 /* Hover effect */
+.header-dropdown a.dropdown-item:hover span,
 .header-dropdown .dropdown-item:hover i,
 .dots-btn .dropdown-item:hover i {
   color: var(--blue) !important;
@@ -3518,6 +3588,15 @@ ul.data-product {
 }
 
 @media screen and (max-width: 1020px) {
+  #page-content .records a.add-topbtn1 {
+    padding: 6px 24px;
+    border: 2px dashed #7380ec;
+    font-size: 14px;
+  }
+  #page-content .records a.add-topbtn1:hover {
+    border: 1px dashed #222f9e;
+    color: #222f9e;
+  }
   #page-content .dashboard-parent {
     flex-wrap: wrap !important;
   }
@@ -3532,6 +3611,17 @@ ul.data-product {
     padding: 50px 50px 230px 50px;
     margin-right: 20px;
     margin-left: 30px;
+  }
+}
+
+@media screen and (max-width: 920px) {
+  #page-content .records a.add-topbtn span.table-name1 {
+    display: none;
+  }
+  #page-content .records a.add-topbtn1 {
+    padding: 6px 8px;
+    font-size: 12px;
+    border: 1px dashed #7380ec;
   }
 }
 
@@ -3551,9 +3641,9 @@ ul.data-product {
     margin: 6px 12px 16px 12px;
   }
   .single-recordParent .single-recordChild {
-    width: 90%;
-    margin: 10px 8px 12px 28px;
-    padding: 32px 28px;
+    width: 96%;
+    margin: 10px 8px 12px 8px;
+    padding: 25px 20px;
   }
   .single-recordParent .single-recordChild .file-header h2 {
     font-size: 19px;
@@ -3815,6 +3905,13 @@ ul.data-product {
   }
 }
 
+@media screen and (max-width: 560px) {
+  .trackfile-btn {
+    margin-left: 60px;
+    margin-top: 12px;
+  }
+}
+
 @media screen and (max-width: 420px) {
   #header-part {
     padding: 0 14px;
@@ -4009,7 +4106,7 @@ ul.data-product {
   .single-recordParent .single-recordChild {
     width: 95%;
     margin: 10px 8px 12px 8px;
-    padding: 32px 20px;
+    padding: 32px 15px;
   }
   .single-recordParent .single-recordChild .file-header h2 {
     font-size: 17px;

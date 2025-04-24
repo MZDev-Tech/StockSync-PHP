@@ -47,7 +47,7 @@ while ($row = mysqli_fetch_array($result)) {
 ?>
     <div class="profile-records" style="margin: 30px 28px 20px 28px;">
         <div class="row gutters-sm">
-            <div class="col-md-4 mb-3">
+            <div class="col-lg-4 mb-3">
                 <div class="card mb-3  pb-4 shadow-sm">
                     <div class="card-body p-0">
                         <!-- Upper Background Image -->
@@ -82,7 +82,7 @@ while ($row = mysqli_fetch_array($result)) {
 
 
             </div>
-            <div class="col-md-8">
+            <div class="col-lg-8">
                 <div class="card mb-3">
                     <!-- Card Header -->
                     <div class="card-header text-center bg-white py-3" style="background:linear-gradient(250deg, rgb(66 146 155 / 54%), rgb(119 108 122 / 71%));">
@@ -93,10 +93,10 @@ while ($row = mysqli_fetch_array($result)) {
                     <div class="card-body">
                         <!-- Full Name -->
                         <div class="row mb-2">
-                            <div class="col-sm-3">
+                            <div class="col-lg-3 col-md-4">
                                 <h6 class="mb-0"><span class="las la-sort"></span> Full Name</h6>
                             </div>
-                            <div class="col-sm-9 text-secondary text-data">
+                            <div class="col-lg-9 col-md-8 text-secondary text-data">
                                 <?php echo htmlspecialchars($row['name']); ?>
                             </div>
                         </div>

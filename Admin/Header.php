@@ -227,7 +227,7 @@ ob_end_flush();
                                 <ul class="dropdown-menu" aria-labelledby="dotsDropdown">
 
                                     <li>
-                                        <a class="dropdown-item" shref="Admin-profile.php">
+                                        <a class="dropdown-item" href="Admin-profile.php">
                                             <img src="../Images/success.gif" width="32px" height="32px">
                                             <span>Manage Profile</span>
                                         </a>

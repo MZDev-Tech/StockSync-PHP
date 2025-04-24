@@ -28,6 +28,10 @@ include('Check_token.php');
     <link rel="stylesheet"
         href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css">
     <link rel="stylesheet" href="sweetalert2.min.css">
+    <!-- Summernote CSS (Bootstrap 4 compatible) -->
+    <link href="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote-bs4.min.css" rel="stylesheet">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
 
 </head>
@@ -107,9 +111,23 @@ include('Check_token.php');
                         <div>
                             <h4>Files Record</h4>
                         </div>
+                        <div class="d-flex align-items-center justify-content-center  ">
 
-                        <a href="AddDocument.php" class="add-topbtn"> + Create File</a>
+                            <form method="POST" action="" style="margin-right:10px">
+                                <div class="input-group search-box1">
+
+                                    <input type="text" id="searchTable" style="text-decoration:none;" value="<?php echo isset($_GET['search']) ? htmlspecialchars($_GET['search']) : ''; ?>" class="form-control" placeholder="Search...">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fa fa-search"></i></span>
+                                    </div>
+                                </div>
+                            </form>
+                            <a href="AddDocument.php" class="add-topbtn1 insert-link" style="margin-right:10px">+Upload <span class="table-name1">File</span></a>
+
+                            <a href="AddDocument.php" class="add-topbtn1 insert-link"> +Create <span class="table-name1">File</span></a>
+                        </div>
                     </div>
+
 
                     <?php
                     //query to fetch data with the select box
@@ -117,9 +135,12 @@ include('Check_token.php');
                     $page = isset($_GET['page']) ? (int) $_GET['page'] : 1;
                     $offset = ($page - 1) * $limit;
                     $userId = $_SESSION['id'];
-
-                    $query = "select * from documents where created_by= '$userId' ORDER BY id LIMIT {$offset}, {$limit}";
-                    $result = mysqli_query($con, $query);
+                    $searchQuery = isset($_GET['search']) ? $_GET['search'] : '';
+                    $searchQueryData = mysqli_real_escape_string($con, $searchQuery);
+                    $query = "SELECT * FROM documents WHERE created_by='$userId' AND (fileNumber LIKE '%$searchQueryData%' OR fileTitle LIKE '%$searchQueryData%' OR barcode LIKE '%$searchQueryData%' OR created_at LIKE '%$searchQueryData%') ORDER BY id LIMIT {$offset}, {$limit}";
+                    $stmt = mysqli_prepare($con, $query);
+                    mysqli_stmt_execute($stmt);
+                    $result = mysqli_stmt_get_result($stmt);
 
                     ?>
                     <form method="GET" action="view-document.php">
@@ -132,7 +153,6 @@ include('Check_token.php');
                                     <option value="15" <?php echo $limit == 15 ? 'selected' : '' ?>>15</option>
                                     <option value="20" <?php echo $limit == 20 ? 'selected' : '' ?>>20</option>
 
-
                                 </select> entries</label>
                         </div>
                     </form>
@@ -141,7 +161,7 @@ include('Check_token.php');
                             <thead width="100%">
                                 <tr>
                                     <th style="width:90px">S-N</th>
-                                    <th style="width:190px"><span class="las la-sort"></span>Filename</th>
+                                    <th style="width:190px"><span class="las la-sort"></span>FileNumber</th>
                                     <th style="width:260px"><span class="las la-sort"></span>Title</th>
                                     <th style="width:210px; padding-left:40px"><span class="las la-sort"></span>Date</th>
                                     <th style="width:160px"><span class="las la-sort"></span>Operations</th>
@@ -160,8 +180,8 @@ include('Check_token.php');
                                             <td>#
                                                 <?php echo $CountNumber ?>.
                                             </td>
-                                            <td>
-                                                <?php echo $row['filename']; ?>
+                                            <td style="font-size: 13px;">
+                                                <?php echo $row['fileNumber']; ?>
                                             </td>
                                             <td class="des filedes">
                                                 <?php echo $row['fileTitle']; ?>
@@ -209,13 +229,12 @@ include('Check_token.php');
                                             </td>
 
                                             <td class="action">
-                                                <a href="update-document.php?id=<?php echo $row['id']; ?>"><i
+
+                                                <a href="update-document.php?id=<?php echo $row['id']; ?>" class="update-link" data-id="<?php echo $row['id']; ?>"><i
                                                         class="fa-solid fa-pen-to-square"></i></a>
                                                 <a href="javascript:void(0);" onclick="confirmDelete(<?php echo $row['id']; ?>)"><i
                                                         class="fa-solid fa-trash"></i></a>
-
-                                                <a href="single-document.php?id=<?php echo $row['id']; ?>"><i
-                                                        class="fa-solid fa-eye"></i></a>
+                                                <a href="single-document.php?id=<?php echo $row['id']; ?>" class="singlePage-link" data-id="<?php echo $row['id'] ?>"><i class="fa-solid fa-eye"></i></a>
 
 
                                             </td>
@@ -335,12 +354,20 @@ include('Check_token.php');
                     </table>
 
 
+
                     <?php
+                    // Fetch search term if it's present
+                    $search = isset($_GET['search']) ? $_GET['search'] : '';
                     $id = $_SESSION['id'];
-                    $query = "select COUNT(*) as total from documents Where created_by = '$id'";
+                    $query = "SELECT * FROM documents WHERE created_by='$id' AND (fileNumber LIKE '%$search%' OR fileTitle LIKE '%$search%' OR barcode LIKE '%$search%' OR created_at LIKE '%$search%')";
                     $result = mysqli_query($con, $query);
-                    $row = mysqli_fetch_assoc($result);
-                    $total_records = $row['total'];
+
+                    // Fetch the total number of records based on search query
+                    $total_query = "SELECT COUNT(*) as total FROM documents WHERE created_by='$id' AND (fileNumber LIKE '%$search%' OR fileTitle LIKE '%$search%' OR barcode LIKE '%$search%' OR created_at LIKE '%$search%')";
+                    $result_count = mysqli_query($con, $total_query);
+                    $row_count = mysqli_fetch_assoc($result_count);
+                    $total_records = $row_count['total'];
+
                     $total_pages = ceil($total_records / $limit);
                     ?>
                     <div class="pagination-part">
@@ -371,6 +398,7 @@ include('Check_token.php');
                                 <i class="fas fa-chevron-right"></i>
                             </a>
                         </div>
+
                     </div>
                 </div>
 
@@ -504,43 +532,231 @@ include('Check_token.php');
                 });
             });
 
-            //ajax code to display/fetch record on page
 
+            //ajax code to fetch document data and perform search
             $(document).ready(function() {
-                function fetchData(page = 1, limit = $('#selectlimit').val()) {
+                function fetchData(page = 1, limit = $("#selectlimit").val(), searchQuery = $("#searchTable").val()) {
                     $.ajax({
-                        url: "",
-                        method: "GET",
+                        url: "view-document.php",
+                        type: "GET",
                         data: {
                             "page": page,
-                            "select-record": limit
+                            "select-record": limit,
+                            "search": searchQuery // Pass the search query here
                         },
                         success: function(response) {
-                            // Extract and update the document table
-                            var updatedTable = $(response).find('#documentTable').html();
-                            $('#documentTable').html(updatedTable);
+                            var updatedTable = $(response).find("#documentTable").html();
+                            $("#documentTable").html(updatedTable);
 
-                            // Extract and update pagination part
-                            var updatePagination = $(response).find('.pagination-part').html();
-                            $('.pagination-part').html(updatePagination);
+                            var updatedPagination = $(response).find(".pagination-part").html();
+                            $(".pagination-part").html(updatedPagination);
+
+                            // Update the URL without reloading the page
+                            var newUrl = "view-document.php?page=" + page + "&select-record=" + limit + "&search=" + searchQuery;
+                            window.history.pushState({
+                                path: newUrl
+                            }, '', newUrl);
                         },
                         error: function(error) {
-                            console.log('AJAX ERROR:', error);
+                            console.error("AJAX Error:", error);
                         }
                     });
                 }
 
                 // Fetch new data when selecting a different limit
-                $('#selectlimit').change(function() {
-                    fetchData(1, $(this).val());
+                $("#selectlimit").change(function() {
+                    var limit = $(this).val(); // The selected limit
+                    var searchQuery = $("#searchTable").val(); // The current search term
+                    fetchData(1, limit, searchQuery); // Always start from page 1 when the limit is changed
                 });
 
-                // Corrected event delegation for pagination buttons
-                $(document).on('click', '.paginate_button', function(e) {
+                // Event delegation for pagination links
+                $(document).on("click", ".paginate_button", function(e) {
                     e.preventDefault();
-                    if (!$(this).hasClass('disabled')) {
-                        var page = $(this).attr('data-page');
-                        fetchData(page);
+                    if (!$(this).hasClass("disabled")) {
+                        var page = $(this).attr("data-page");
+                        var limit = $("#selectlimit").val();
+                        var searchQuery = $("#searchTable").val(); // Get the current search term
+                        fetchData(page, limit, searchQuery);
+                    }
+                });
+
+                // Trigger search on keyup event (when the user types something)
+                $("#searchTable").keyup(function() {
+                    var searchQuery = $(this).val();
+                    fetchData(1, $("#selectlimit").val(), searchQuery); // Always start from page 1 on search
+                });
+            });
+
+            //access update page through ajax code
+            $(document).on('click', '.update-link', function(e) {
+                e.preventDefault();
+
+                const id = $(this).data('id');
+                $.ajax({
+                    url: "update-document.php",
+                    method: "GET",
+                    data: {
+                        id: id
+                    },
+                    dataType: "html",
+                    success: function(response) {
+                        $('#page-content').html(response);
+                        // Wait until the DOM is updated, then initialize Summernote
+                        $('#summernote').ready(function() {
+                            $('#summernote').summernote({
+                                placeholder: 'Enter Description',
+                                height: 200,
+                                tabsize: 2,
+                                toolbar: [
+                                    ['style', ['style']],
+                                    ['font', ['bold', 'italic', 'underline', 'strikethrough', 'clear']],
+                                    ['fontsize', ['fontsize']],
+                                    ['fontname', ['fontname']],
+                                    ['color', ['color']],
+                                    ['para', ['ul', 'ol', 'paragraph']],
+                                    ['height', ['height']],
+                                    ['table', ['table']],
+                                    ['misc', ['undo', 'redo']],
+                                    ['view', ['fullscreen', 'codeview', 'help']]
+                                ],
+                                callbacks: {
+                                    onImageUpload: function(files) {
+                                        var data = new FormData();
+                                        data.append("file", files[0]);
+
+                                        $.ajax({
+                                            url: 'handleFileMedia.php',
+                                            type: 'POST',
+                                            data: data,
+                                            contentType: false,
+                                            processData: false,
+                                            success: function(response) {
+                                                $('#summernote').summernote('insertImage', response);
+                                            },
+                                            error: function(xhr, status, error) {
+                                                console.error("Error uploading file: " + error);
+                                            }
+                                        });
+                                    }
+                                }
+                            });
+                        });
+                        window.scrollTo({
+                            top: 0,
+                            behavior: 'smooth'
+                        });
+
+                        setTimeout(() => {
+                            applyHasValueClass(); // function to style fields with values
+                        }, 100);
+
+                        bindUpdateForm(); // Bind form update handler
+                    },
+                    error: function(error) {
+                        console.error('Error fetching content:', error);
+                    }
+                });
+            });
+
+            //ajax code to get add form 
+            document.addEventListener('DOMContentLoaded', function() {
+                const addCategoryLinks = document.querySelectorAll('.insert-link');
+
+                addCategoryLinks.forEach(link => {
+                    link.addEventListener('click', function(e) {
+                        e.preventDefault();
+
+                        // Perform AJAX request to load the Add Category page content
+                        $.ajax({
+                            url: 'AddDocument.php',
+                            method: 'GET',
+                            dataType: 'html',
+                            success: function(response) {
+                                // Replace the page content with the response from AddCategory.php
+                                $('#page-content').html(response);
+                                // Wait until the DOM is updated, then initialize Summernote
+                                $('#summernote').ready(function() {
+                                    $('#summernote').summernote({
+                                        placeholder: 'Enter Description',
+                                        height: 200,
+                                        tabsize: 2,
+                                        toolbar: [
+                                            ['style', ['style']],
+                                            ['font', ['bold', 'italic', 'underline', 'strikethrough', 'clear']],
+                                            ['fontsize', ['fontsize']],
+                                            ['fontname', ['fontname']],
+                                            ['color', ['color']],
+                                            ['para', ['ul', 'ol', 'paragraph']],
+                                            ['height', ['height']],
+                                            ['table', ['table']],
+                                            ['misc', ['undo', 'redo']],
+                                            ['view', ['fullscreen', 'codeview', 'help']]
+                                        ],
+                                        callbacks: {
+                                            onImageUpload: function(files) {
+                                                var data = new FormData();
+                                                data.append("file", files[0]);
+
+                                                $.ajax({
+                                                    url: 'handleFileMedia.php',
+                                                    type: 'POST',
+                                                    data: data,
+                                                    contentType: false,
+                                                    processData: false,
+                                                    success: function(response) {
+                                                        $('#summernote').summernote('insertImage', response);
+                                                    },
+                                                    error: function(xhr, status, error) {
+                                                        console.error("Error uploading file: " + error);
+                                                    }
+                                                });
+                                            }
+                                        }
+                                    });
+                                });
+                                window.scrollTo({
+                                    top: 0,
+                                    behavior: 'smooth'
+                                });
+
+
+                                bindInsertForm();
+
+                            },
+                            error: function(error) {
+                                console.log('Error fetching form data', error);
+                            }
+                        });
+                    });
+                });
+            });
+
+
+            //ajax code to display single file 
+            $(document).on('click', '.singlePage-link', function(e) {
+                e.preventDefault();
+
+                const id = $(this).data('id');
+
+                $.ajax({
+                    url: "single-document.php",
+                    method: "GET",
+                    data: {
+                        id: id
+                    },
+                    dataType: "html",
+                    success: function(response) {
+                        $('#page-content').html(response);
+                        window.scrollTo({
+                            top: 0,
+                            behavior: 'smooth'
+                        });
+
+
+                    },
+                    error: function(error) {
+                        console.error('Error fetching content:', error);
                     }
                 });
             });
@@ -548,13 +764,17 @@ include('Check_token.php');
 
         <!-- External jquery, popper File Link for bootstrap 4 -->
 
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
 
         <!-- Bootstrap 4 (JS) -->
         <script src="../Bootstrap/js/bootstrap.min.js"></script>
+        <!-- Summernote JS (Bootstrap 4 compatible) -->
+        <script src="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote-bs4.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         <script src="script.js"></script>
+        <script src="ajax-document.js"></script>
+
+
     </body>
 
 </html>
